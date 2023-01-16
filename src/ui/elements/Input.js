@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Input, InputNumber, Row, Col, ConfigProvider, theme } from 'antd';
-import MaskedInput from 'antd-mask-input';
+import MaskedInput from 'antd-mask-input-for-andtv5';
 import { formatNumber, parser } from 'utils/functions/common';
 
 import './index.css';

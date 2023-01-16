@@ -6,22 +6,17 @@ import {
   Checkbox,
   Col,
   Form,
-  InputNumber,
   Row,
   Select,
   Input as AInput,
 } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
 import UploadPhoto from 'ui/components/common/UploadPhoto';
 import { useSelector } from 'react-redux';
-import { currentUser } from 'services/firebase';
 import { showWarn } from 'utils/functions/common';
 import { useTranslation } from 'react-i18next';
 import { ROW_GUTTER } from 'constants/Styles';
 import { getRules } from 'utils/functions/validator';
 import Input from 'ui/elements/Input';
-import { thaiTambols } from 'constants/thaiTambol';
-import { distinctArr } from 'utils/functions/array';
 import { Provinces } from 'constants/thaiTambol';
 import { getAmphoesFromProvince } from 'constants/thaiTambol';
 import { getTambolsFromAmphoe } from 'constants/thaiTambol';
@@ -144,36 +139,7 @@ const Profile = () => {
     </Form.Item>
   );
 
-  const phonePrefixSelector = (
-    <Form.Item name="phonePrefix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
-      </Select>
-    </Form.Item>
-  );
-
-  const suffixSelector = (
-    <Form.Item name="suffix" noStyle>
-      <Select style={{ width: 70 }}>
-        <Option value="USD">$</Option>
-        <Option value="CNY">¥</Option>
-      </Select>
-    </Form.Item>
-  );
-
-  const [autoCompleteResult, setAutoCompleteResult] = useState([]);
   const [emailAutoCompleteResult, setEmailAutoCompleteResult] = useState([]);
-
-  const onWebsiteChange = (value) => {
-    if (!value) {
-      setAutoCompleteResult([]);
-    } else {
-      setAutoCompleteResult(
-        ['.com', '.org', '.net'].map((domain) => `${value}${domain}`)
-      );
-    }
-  };
 
   const onEmailChange = (value) => {
     if (!value) {
@@ -186,11 +152,6 @@ const Profile = () => {
       );
     }
   };
-
-  const websiteOptions = autoCompleteResult.map((website) => ({
-    label: website,
-    value: website,
-  }));
 
   const emailOptions = emailAutoCompleteResult.map((email) => ({
     label: email,
@@ -213,7 +174,6 @@ const Profile = () => {
     <div className="h-full bg-background1 p-4 overflow-y-auto">
       <h5 className="text-tw-black text-center">PROFILE</h5>
       <Form
-        // {...formItemLayout}
         form={form}
         name="register"
         onFinish={onFinish}
@@ -365,17 +325,13 @@ const Profile = () => {
                         : Promise.reject(new Error('Should accept agreement')),
                   },
                 ]}
-                // {...tailFormItemLayout}
                 className="text-center"
               >
                 <Checkbox>
                   {t('ฉันยอมรับ')} <a href="">{t('ข้อตกลงและเงื่อนไข')}</a>
                 </Checkbox>
               </Form.Item>
-              <Form.Item
-                // {...tailFormItemLayout}
-                className="text-center"
-              >
+              <Form.Item className="text-center">
                 <Button type="primary" htmlType="submit">
                   Register
                 </Button>

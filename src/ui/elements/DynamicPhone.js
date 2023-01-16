@@ -1,4 +1,4 @@
-const { MaskedInput } = require('antd-mask-input');
+const { MaskedInput } = require('antd-mask-input-for-andtv5');
 const { useMemo } = require('react');
 
 const DynamicPhone = (props) => {
