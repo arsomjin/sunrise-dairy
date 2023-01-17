@@ -4,7 +4,7 @@ const Delayed = ({ children, delay = 500 }) => {
   const [isShown, setIsShown] = useState(false);
 
   useEffect(() => {
-    console.log(delay);
+    // console.log(delay);
     setTimeout(() => {
       setIsShown(true);
     }, delay);

@@ -7,6 +7,8 @@ import {
   sendEmailVerification,
   signOut,
   updateProfile,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -90,6 +92,53 @@ export const firebaseSignOut = () =>
   new Promise(async (r, j) => {
     try {
       let res = await signOut(auth);
+      r(res);
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const firebaseRecaptchaVerifier = () =>
+  new Promise(async (r, j) => {
+    try {
+      auth.languageCode = 'th';
+      window.recaptchaVerifier = new RecaptchaVerifier(
+        'sign-in-button',
+        {
+          size: 'invisible',
+          callback: (res) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+            // onSignInSubmit();
+            r(res);
+          },
+        },
+        auth
+      );
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const firebaseSignInWithPhoneNumber = (phoneNumber) =>
+  new Promise(async (r, j) => {
+    try {
+      const appVerifier = window.recaptchaVerifier;
+      let confirmationResult = await signInWithPhoneNumber(
+        auth,
+        phoneNumber,
+        appVerifier
+      );
+      window.confirmationResult = confirmationResult;
+      r(confirmationResult);
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const firebaseSignInWithSmsCode = (smsCode, confirmationResult) =>
+  new Promise(async (r, j) => {
+    try {
+      let res = await confirmationResult.confirm(smsCode);
       r(res);
     } catch (e) {
       j(e);
