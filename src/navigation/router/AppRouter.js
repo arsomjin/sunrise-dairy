@@ -11,13 +11,11 @@ import Logout from './Logout';
 import { useSelector } from 'react-redux';
 import { NotFound } from 'ui/components/common/NotFound';
 import RequireAuth from './RequireAuth';
-import { showLog } from 'utils/functions/common';
 import MainContainer from 'ui/components/common/Container/MainContainer';
 import Dashboard from 'modules/Dashboard';
-import Topbar from 'ui/components/common/layout/Topbar';
 import Screen1 from 'ui/screens/Screen1';
 import Screen2 from 'ui/screens/Screen2';
-import Profile from 'ui/screens/profile';
+import Profile from 'ui/screens/Profile/index';
 
 const AuthLayout = React.lazy(() =>
   import('ui/components/common/Container/AuthContainer')

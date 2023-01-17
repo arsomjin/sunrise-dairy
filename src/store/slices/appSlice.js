@@ -14,7 +14,7 @@ export const appSlicer = createSlice({
   name: 'appSlice',
   initialState: initialStates,
   reducers: {
-    swithTheme: (state, action) => {
+    switchTheme: (state, action) => {
       const { theme } = action.payload;
       return {
         ...state,
@@ -43,7 +43,7 @@ export const appSlicer = createSlice({
 });
 
 export const {
-  swithTheme,
+  switchTheme,
   getDevice,
   updateLan,
   getCurrentScene,

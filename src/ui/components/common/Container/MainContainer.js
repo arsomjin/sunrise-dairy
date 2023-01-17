@@ -61,7 +61,7 @@ const MainContainer = () => {
       />
       <div className="flex" style={{ height: `calc(100% - 65px)` }}>
         <MainSideBar collapsed={collapsed} menu={menu} />
-        <div className="h-full flex-1 overflow-y-auto">
+        <div className="h-full flex-1 bg-background1 p-1 overflow-y-auto">
           <Outlet />
         </div>
       </div>

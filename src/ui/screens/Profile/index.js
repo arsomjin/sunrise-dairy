@@ -1,0 +1,411 @@
+import React, { useEffect, useState } from 'react';
+import {
+  AutoComplete,
+  Button,
+  Cascader,
+  Checkbox,
+  Col,
+  Form,
+  Row,
+  Select,
+  Input as AInput,
+  Divider,
+} from 'antd';
+import { useSelector } from 'react-redux';
+import { showWarn } from 'utils/functions/common';
+import { useTranslation } from 'react-i18next';
+import { ROW_GUTTER } from 'constants/Styles';
+import { getRules } from 'utils/functions/validator';
+import Input from 'ui/elements/Input';
+import { showLog } from 'utils/functions/common';
+import { capitalize } from 'utils/functions/common';
+import { getResidences } from 'constants/thaiTambol';
+import UploadImage from 'ui/components/common/UploadImage';
+import { setDoc } from 'firebase/firestore';
+import { cleanValuesBeforeSave, showConfirm } from 'utils/functions/common';
+import { errorHandler } from 'utils/functions/common';
+import { notificationController } from 'controllers/notificationController';
+import { setFirestore } from 'services/firebase';
+import { useLoading } from 'hooks/useLoading';
+import { getFirestoreDoc } from 'services/firebase';
+import { getFirestoreCollection } from 'services/firebase';
+
+const { Option } = Select;
+
+const Profile = ({ parent, notRequired, disabled, readOnly }) => {
+  const { USER, currentUser } = useSelector((state) => state.user);
+  const [form] = Form.useForm();
+  const { t } = useTranslation();
+  const [loading, setLoading] = useLoading();
+
+  const [residences2, setRes] = useState(null);
+
+  useEffect(() => {
+    const getAddresses = async () => {
+      let res = await getResidences();
+      setRes(res);
+    };
+    const getProfile = async () => {
+      let doc = await getFirestoreDoc(`users/${USER?.uid}/info`, 'profile');
+      let col = await getFirestoreCollection(`users/${USER?.uid}/info`, [
+        ['firstName', '==', 'อาศรม'],
+        ['nickName', '==', 'อา'],
+      ]);
+      showLog({ doc, col });
+    };
+    getAddresses();
+    getProfile();
+  }, []);
+
+  const preFinish = (values) => {
+    showConfirm({
+      title: t('ยืนยัน').toUpperCase(),
+      content: `${t('บันทึกข้อมูล')} ?`,
+      onOk: () => onFinish(values),
+    });
+  };
+
+  const onFinish = async (values) => {
+    try {
+      setLoading(true);
+      console.log('Received values of form: ', values);
+      const mValues = cleanValuesBeforeSave(values);
+      let profileCol = `users/${USER.uid}/info`;
+      let res = await setFirestore(profileCol, 'profile', mValues);
+      setLoading(false);
+      notificationController.success({
+        message: `${capitalize(t('บันทึกข้อมูล'))} ${t(
+          'สำเร็จ'
+        ).toLowerCase()}.`,
+      });
+    } catch (e) {
+      showWarn(e);
+      setLoading(false);
+      errorHandler({
+        code: e?.code || '',
+        message: e?.message || '',
+        snap: { ...cleanValuesBeforeSave(values), module: 'Profile' },
+      });
+    }
+  };
+
+  const [emailAutoCompleteResult, setEmailAutoCompleteResult] = useState([]);
+
+  const onEmailChange = (value) => {
+    if (!value) {
+      setEmailAutoCompleteResult([]);
+    } else {
+      setEmailAutoCompleteResult(
+        ['@gmail.com', '@hotmail.com', '.co.th'].map(
+          (domain) => `${value}${domain}`
+        )
+      );
+    }
+  };
+
+  const emailOptions = emailAutoCompleteResult.map((email) => ({
+    label: email,
+    value: email,
+  }));
+
+  const getParent = (field) =>
+    parent ? [...parent, field] : ['address', field];
+
+  if (!residences2) {
+    return null;
+  }
+
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      <Select
+        style={{ width: 80 }}
+        options={[
+          {
+            value: 'นาย',
+            label: t('นาย'),
+          },
+          {
+            value: 'นาง',
+            label: t('นาง'),
+          },
+          {
+            value: 'นางสาว',
+            label: t('นางสาว'),
+          },
+        ]}
+      />
+    </Form.Item>
+  );
+
+  return (
+    <div className="h-full p-2 ">
+      <Form
+        form={form}
+        name="register"
+        onFinish={onFinish}
+        initialValues={{
+          residence: ['นครราชสีมา', 'สูงเนิน', 'สูงเนิน', '30170'],
+          prefix: 'นาย',
+          phonePrefix: '86',
+          email: USER?.email,
+        }}
+        scrollToFirstError
+      >
+        {(values) => {
+          showLog({ values });
+          return (
+            <div className="py-2">
+              <div className="flex flex-col items-center">
+                <p className="text-lg text-primary mb-4">
+                  {t('ข้อมูลส่วนตัว').toUpperCase()}
+                </p>
+                <Form.Item name="url">
+                  <UploadImage
+                    storeRef={`images/users/${USER.uid}/profile`}
+                    title="รูปภาพ"
+                  />
+                </Form.Item>
+              </div>
+              <div className="pt-6 rounded-lg shadow-md bg-background2 px-2">
+                <Row gutter={ROW_GUTTER}>
+                  <Col span={12}>
+                    <Form.Item
+                      name="firstName"
+                      label={t('ชื่อ')}
+                      rules={[
+                        {
+                          required: true,
+                          message: t('กรุณาป้อนข้อมูล'),
+                        },
+                      ]}
+                    >
+                      <Input addonBefore={prefixSelector} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="lastName"
+                      label={t('นามสกุล')}
+                      rules={[
+                        {
+                          required: true,
+                          message: t('กรุณาป้อนข้อมูล'),
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={ROW_GUTTER}>
+                  <Col span={12}>
+                    <Form.Item
+                      name="nickName"
+                      label={t('ชื่อเล่น')}
+                      tooltip={t('อยากให้คนเรียกชื่อคุณว่าอะไร?')}
+                      rules={[
+                        {
+                          required: true,
+                          message: t('กรุณาป้อนข้อมูล'),
+                          whitespace: true,
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="email"
+                      label={t('อีเมล')}
+                      rules={[
+                        {
+                          type: 'email',
+                          message: t('รูปแบบอีเมลไม่ถูกต้อง'),
+                        },
+                        {
+                          required: true,
+                          message: t('กรุณาป้อนข้อมูล'),
+                        },
+                      ]}
+                    >
+                      <AutoComplete
+                        options={emailOptions}
+                        onChange={onEmailChange}
+                        placeholder="name@mail.com"
+                      >
+                        <Input />
+                      </AutoComplete>
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={ROW_GUTTER}>
+                  <Col span={12}>
+                    <Form.Item
+                      name="phone"
+                      label={capitalize(t('เบอร์โทรศัพท์'))}
+                      rules={getRules(['required', 'mobileNumber'])}
+                    >
+                      <Input
+                        addonBefore="+66"
+                        mask="000-0000000"
+                        placeholder="082-3456789"
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="gender"
+                      label={t('เพศ')}
+                      rules={[
+                        {
+                          required: true,
+                          message: `${t('กรุณาเลือก')}${t('เพศ')}`,
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder={`${t('ชาย')}, ${t('หญิง')}, ${t('อื่นๆ')}`}
+                      >
+                        <Option value="male">{t('ชาย')}</Option>
+                        <Option value="female">{t('หญิง')}</Option>
+                        <Option value="other">{t('อื่นๆ')}</Option>
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </div>
+              <div className="py-3 rounded-lg shadow-md bg-background2 px-3 mt-4">
+                <label className="text-tw-muted m-2">{t('ที่อยู่')}</label>
+                <Row gutter={ROW_GUTTER}>
+                  <Col span="6">
+                    <Form.Item
+                      name={getParent('h_number')}
+                      label={t('บ้านเลขที่')}
+                      rules={[
+                        { required: !notRequired, message: 'กรุณาป้อนข้อมูล' },
+                      ]}
+                    >
+                      <Input
+                        placeholder={t('บ้านเลขที่')}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span="6">
+                    <Form.Item name={getParent('moo')} label={t('หมู่ที่')}>
+                      <Input
+                        placeholder={t('หมู่ที่')}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span="12">
+                    <Form.Item
+                      name={getParent('village')}
+                      label={t('หมู่บ้าน')}
+                    >
+                      <Input
+                        placeholder={t('หมู่บ้าน')}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row gutter={ROW_GUTTER}>
+                  <Col span="7">
+                    <Form.Item name={getParent('soi')} label={t('ซอย')}>
+                      <Input
+                        placeholder={t('ซอย')}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span="7">
+                    <Form.Item name={getParent('road')} label={t('ถนน')}>
+                      <Input
+                        placeholder={t('ถนน')}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span="7">
+                    <Form.Item name={getParent('building')} label={t('อาคาร')}>
+                      <Input
+                        placeholder={t('อาคาร')}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                  <Col span="3">
+                    <Form.Item name={getParent('floor')} label={t('ชั้น')}>
+                      <Input
+                        placeholder={t('ชั้น')}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        style={{ width: '100%' }}
+                      />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Form.Item
+                  name="residence"
+                  label={`${t('จังหวัด')} / ${t('อำเภอ')} / ${t('ตำบล')} / ${t(
+                    'รหัสไปรษณีย์'
+                  )}`}
+                  rules={[
+                    {
+                      type: 'array',
+                      required: true,
+                      message: t('กรุณาป้อนข้อมูล'),
+                    },
+                  ]}
+                >
+                  <Cascader options={residences2} />
+                </Form.Item>
+              </div>
+              <Divider />
+              <Form.Item
+                name="agreement"
+                valuePropName="checked"
+                rules={[
+                  {
+                    validator: (_, value) =>
+                      value
+                        ? Promise.resolve()
+                        : Promise.reject(new Error('Should accept agreement')),
+                  },
+                ]}
+                className="text-center"
+              >
+                <Checkbox>
+                  {t('ฉันยอมรับ')} <a href="">{t('ข้อตกลงและเงื่อนไข')}</a>
+                </Checkbox>
+              </Form.Item>
+              <Form.Item className="text-center">
+                <Button type="primary" htmlType="submit">
+                  {t('บันทึก').toUpperCase()}
+                </Button>
+              </Form.Item>
+            </div>
+          );
+        }}
+      </Form>
+    </div>
+  );
+};
+
+export default Profile;

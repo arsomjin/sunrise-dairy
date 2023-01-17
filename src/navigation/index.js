@@ -14,6 +14,8 @@ import { resetUserStates } from 'store/slices/userSlice';
 import { HelmetProvider } from 'react-helmet-async';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import Firebase from 'services/firebase/api';
+import { showLog } from 'utils/functions/common';
+import Delayed from 'ui/components/common/Delayed';
 
 const Navigation = () => {
   const { lan, nightMode } = useSelector((state) => state.global);
@@ -27,14 +29,16 @@ const Navigation = () => {
     let currentUser = !!currentFirebaseUser
       ? Firebase.getFirebaseUserFromObject(currentFirebaseUser)
       : currentFirebaseUser;
+    showLog('1st_effect');
     if (!firstMounted.current) {
       // Avoid flickering to auth page.
-      firstMounted.current = false;
       dispatch(getCurrentUser({ currentUser }));
     }
+    firstMounted.current = false;
   }, [currentFirebaseUser, dispatch]);
 
   useEffect(() => {
+    showLog('2nd_effect');
     // dispatch(resetUserStates());
     i18n.changeLanguage(typeof lan === 'undefined' ? i18n.language : lan);
     dispatch(
@@ -43,25 +47,28 @@ const Navigation = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Delay re-render to avoid flickering to auth pages when auth state change.
   return (
-    <ProSidebarProvider>
-      <ConfigProvider
-        locale={lan === 'en' ? enUS : thTH}
-        theme={{
-          algorithm: nightMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
-        }}
-      >
-        <StyleProvider hashPriority="high">
-          <div className="bg-background1">
-            <HelmetProvider>
-              <LoadingProvider>
-                <AppRouter />
-              </LoadingProvider>
-            </HelmetProvider>
-          </div>
-        </StyleProvider>
-      </ConfigProvider>
-    </ProSidebarProvider>
+    <Delayed delay={500}>
+      <ProSidebarProvider>
+        <ConfigProvider
+          locale={lan === 'en' ? enUS : thTH}
+          theme={{
+            algorithm: nightMode ? theme.darkAlgorithm : theme.defaultAlgorithm,
+          }}
+        >
+          <StyleProvider hashPriority="high">
+            <div className="bg-background1">
+              <HelmetProvider>
+                <LoadingProvider>
+                  <AppRouter />
+                </LoadingProvider>
+              </HelmetProvider>
+            </div>
+          </StyleProvider>
+        </ConfigProvider>
+      </ProSidebarProvider>
+    </Delayed>
   );
 };
 

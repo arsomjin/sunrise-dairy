@@ -20,7 +20,6 @@ function App() {
   const onBeforeLift = () => {
     // showLog('PersistGate OPEN!');
   };
-
   return (
     <Provider store={store}>
       <PersistGate

@@ -1,32 +1,4 @@
-import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, List } from 'antd';
-import i18n from 'translations/i18n';
-
-export const avatar_items = [
-  {
-    key: 'profile',
-    label: i18n.t('ข้อมูลส่วนตัว'),
-    icon: <UserOutlined className="text-primary" />,
-  },
-  {
-    key: 'signout',
-    label: i18n.t('ออกจากระบบ'),
-    icon: <LogoutOutlined className="text-danger" />,
-  },
-];
-
-export const bell_items = [
-  {
-    key: 'profile',
-    label: i18n.t('ข้อมูลส่วนตัว'),
-    icon: <UserOutlined className="text-primary" />,
-  },
-  {
-    key: 'signout',
-    label: i18n.t('ออกจากระบบ'),
-    icon: <LogoutOutlined className="text-danger" />,
-  },
-];
 
 export const notif_data = [
   {

@@ -147,22 +147,16 @@ export default forwardRef((props, ref) => {
   }
 
   return !!mask ? (
-    <ConfigProvider
-      theme={{
-        algorithm: theme.darkAlgorithm,
-      }}
-    >
-      <MaskedInput
-        ref={input}
-        mask={mask}
-        className={alignClass}
-        onKeyPress={_onKeyPress}
-        size={size}
-        addonAfter={addonAfter}
-        addonBefore={addonBefore}
-        {...mProps}
-      />
-    </ConfigProvider>
+    <MaskedInput
+      ref={input}
+      mask={mask}
+      className={alignClass}
+      onKeyPress={_onKeyPress}
+      size={size}
+      addonAfter={addonAfter}
+      addonBefore={addonBefore}
+      {...mProps}
+    />
   ) : (
     <InputComponent
       ref={input}

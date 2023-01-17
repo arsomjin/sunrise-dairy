@@ -303,7 +303,7 @@
   "ทำรายการโดยไม่เปิดลิ้นชัก": "continue without opening drawer",
   "และไม่พิมพ์ใบสรุป": "and printing sales summary",
   "และไม่พิมพ์ใบเสร็จ": "and printing receipt",
-  "บันทึกข้อมูล": "saving data",
+  "บันทึกข้อมูล": "Save data",
   "เปิดลิ้นชัก": "Opening drawer",
   "เปิดลิ้นชักไม่สำเร็จ": "Open drawer failed",
   "กรุณาตรวจสอบลิ้นชัก": "Please check drawer",
@@ -1275,7 +1275,14 @@
   "ฉันยอมรับ": "I accept ",
   "ชื่อเล่น": "Nickname",
   "อัปโหลด": "Upload",
-  "อยากให้คนเรียกชื่อคุณว่าอะไร?": "What do you want others to call you?"
+  "อยากให้คนเรียกชื่อคุณว่าอะไร?": "What do you want others to call you?",
+  "บ้านเลขที่": "House No.",
+  "หมู่ที่": "Moo",
+  "หมู่บ้าน": "Village",
+  "ซอย": "Soi",
+  "ตำบล": "Tambol",
+  "อาคาร": "Building",
+  "ชั้น": "Floor"
 
 
 }

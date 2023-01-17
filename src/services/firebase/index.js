@@ -9,15 +9,23 @@ import {
 } from 'firebase/auth';
 import {
   getFirestore,
-  collection,
   doc,
   addDoc,
   setDoc,
+  updateDoc,
+  getDoc,
+  getDocs,
+  collection,
+  query,
+  where,
+  orderBy,
+  limit,
 } from 'firebase/firestore';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
 import { getMessaging } from 'firebase/messaging';
 import { showLog } from 'utils/functions/common';
+import { appendArgumentsByArray } from 'utils/functions/common';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -35,7 +43,7 @@ const auth = getAuth();
 export const firestore = getFirestore(app);
 export const database = getDatabase(app);
 export const storage = getStorage(app);
-export const messaging = getMessaging(app);
+export const messaging = getMessaging(app); // (messaging/unsupported-browser) Supports only localhost and https
 
 export const firebaseSignIn = (email, password) =>
   new Promise(async (r, j) => {
@@ -89,16 +97,7 @@ export const firebaseSignOut = () =>
 
 export const setFirestore = (col, docId, data) =>
   new Promise(async (r, j) => {
-    let setRef = firestore;
     try {
-      // collection.split('/').map((txt, n) => {
-      //   if (n % 2 === 0) {
-      //     setRef = setRef.collection(txt);
-      //   } else {
-      //     setRef = setRef.doc(txt);
-      //   }
-      //   return txt;
-      // });
       let res = await setDoc(doc(firestore, col, docId), data);
       r(res);
     } catch (e) {
@@ -109,18 +108,70 @@ export const setFirestore = (col, docId, data) =>
 export const addFirestore = (col, data) =>
   new Promise(async (r, j) => {
     try {
-      // let addRef = firestore;
-      // collection.split('/').map((txt, n) => {
-      //   if (n % 2 === 0) {
-      //     addRef = addRef.collection(txt);
-      //   } else {
-      //     addRef = addRef.doc(txt);
-      //   }
-      //   return txt;
-      // });
-      // let res = await addRef.add(data);
       let res = await addDoc(collection(firestore, col), data);
       r(res);
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const updateFirestore = (col, docId, data) =>
+  new Promise(async (r, j) => {
+    try {
+      let res = await updateDoc(doc(firestore, col, docId), data);
+      r(res);
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const getFirestoreDoc = (col, docId) =>
+  new Promise(async (r, j) => {
+    try {
+      const docRef = doc(firestore, col, docId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        r(docSnap.data());
+      } else {
+        // doc.data() will be undefined in this case
+        console.log('No such document!');
+        r(null);
+      }
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const getFirestoreCollection = (col, wheresArr, order, limited, isDec) =>
+  new Promise(async (r, j) => {
+    try {
+      let colRef = collection(firestore, col);
+      let args_arr = [colRef];
+      if (!!wheresArr) {
+        wheresArr.map((wh) => {
+          args_arr = [...args_arr, where(wh[0], wh[1], wh[2])];
+          return wh;
+        });
+      }
+      if (!!order) {
+        args_arr = [...args_arr, orderBy(order, isDec ? 'desc' : 'asc')];
+      }
+      if (!!limited) {
+        args_arr = [...args_arr, limit(limited)];
+      }
+      let lFnc = appendArgumentsByArray(query, args_arr);
+
+      let q = lFnc();
+      let result = {};
+      const querySnapshot = await getDocs(q);
+      // showLog('empty', querySnapshot.empty);
+      if (querySnapshot.empty) return r(null);
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, ' => ', doc.data());
+        result[doc.id] = doc.data();
+      });
+      r(result);
     } catch (e) {
       j(e);
     }

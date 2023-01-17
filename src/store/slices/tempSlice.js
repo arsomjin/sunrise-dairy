@@ -28,7 +28,7 @@ export const tempSlicer = createSlice({
     },
     updateCurrentRoute: (state, action) => {
       const { currentRoute, keyPath } = action.payload;
-      Object.assign(state, { currentRoute, keyPath });
+      Object.assign(state, { currentRoute, ...(keyPath && { keyPath }) });
     },
   },
 });

@@ -1,3 +1,4 @@
+import { arrayForEach } from 'utils/functions/array';
 import { distinctArr } from 'utils/functions/array';
 
 export const thaiTambols = [
@@ -44963,7 +44964,7 @@ export const thaiTambols = [
 
 export const Tambols = JSON.parse(JSON.stringify(thaiTambols));
 
-export const Provinces = () => distinctArr(Tambols, ['p']);
+export const Provinces = () => Promise.resolve(distinctArr(Tambols, ['p']));
 
 export const getAmphoesFromProvince = (pv) => {
   let mAmphoes = Tambols.filter((l) => l.p === pv);
@@ -44974,7 +44975,7 @@ export const getAmphoesFromProvince = (pv) => {
 export const getPostcodeFromProvince = (pv) => {
   let mPostcodes = Tambols.filter((l) => l.p === pv);
   mPostcodes = distinctArr(mPostcodes, ['z']);
-  return mPostcodes;
+  return Promise.resolve(mPostcodes);
 };
 
 export const getPostcodeFromProvinceAndAmphoe = (pv, ap) => {
@@ -44983,21 +44984,50 @@ export const getPostcodeFromProvinceAndAmphoe = (pv, ap) => {
     ...it,
     z: it.z.toString(),
   }));
-  return mPostcodes;
-};
-
-export const getTambolsFromAmphoe = (ap) => {
-  let mTambols = getTambols(ap);
-  mTambols = mTambols.map((tb) => ({
-    value: tb.d,
-    label: tb.d,
-  }));
-  return mTambols;
+  return Promise.resolve(mPostcodes);
 };
 
 export const getTambols = (ap) => {
   let mTambols = Tambols.filter((l) => l.a === ap);
   // console.log('mTambols', mTambols)
   mTambols = distinctArr(mTambols, ['d']);
-  return mTambols;
+  return Promise.resolve(mTambols);
 };
+
+export const getTambolsFromAmphoe = async (ap) => {
+  let mTambols = await getTambols(ap);
+  mTambols = mTambols.map((tb) => ({
+    value: tb.d,
+    label: tb.d,
+  }));
+  return Promise.resolve(mTambols);
+};
+
+export const getResidences = () =>
+  new Promise(async (r, j) => {
+    try {
+      let result = [];
+      let mProvinces = await Provinces();
+      const provinces = mProvinces.map((it) => ({ value: it.p, label: it.p }));
+      await arrayForEach(provinces, async (pv) => {
+        let child1 = [];
+        let amphoes = await getAmphoesFromProvince(pv.value);
+        amphoes = amphoes.map((ap) => ap.a);
+        await arrayForEach(amphoes, async (ap) => {
+          let tb = await getTambolsFromAmphoe(ap);
+          const arr_pc = await getPostcodeFromProvinceAndAmphoe(pv.value, ap);
+          let pc = arr_pc.map((itp) => ({ value: itp.z, label: itp.z }));
+          tb = tb.map((itm) => ({
+            ...itm,
+            children: pc,
+          }));
+          child1.push({ value: ap, label: ap, children: tb });
+        });
+        result.push({ ...pv, children: child1 });
+        return pv;
+      });
+      r(result);
+    } catch (e) {
+      j(e);
+    }
+  });

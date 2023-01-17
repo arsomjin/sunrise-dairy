@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 export const useCurrentUser = () => {
@@ -10,5 +10,5 @@ export const useCurrentUser = () => {
     });
     return () => listener?.();
   }, [auth]);
-  return currentUser;
+  return useMemo(() => currentUser, [currentUser]);
 };

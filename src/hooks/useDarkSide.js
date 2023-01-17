@@ -1,24 +1,31 @@
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { swithTheme } from 'store/slices/appSlice';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
-export default function useDarkSide() {
-  const [colorTheme, setTheme] = useState(localStorage.getItem('theme'));
-  const dispatch = useDispatch();
-  useEffect(() => {
-    let theme = localStorage.getItem('theme');
+const localTheme = localStorage.getItem('theme');
+
+const useDarkSide = () => {
+  const [colorTheme, setColorTheme] = useState(localStorage.getItem('theme'));
+
+  const handleThemeChange = useCallback(async (nTheme) => {
     if (
-      theme === 'dark' ||
-      (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      nTheme === 'dark' ||
+      (!nTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
     ) {
       document.documentElement.classList.add('dark');
-      dispatch(swithTheme({ theme: 'dark' }));
+      setColorTheme('dark');
     } else {
       document.documentElement.classList.remove('dark');
-      dispatch(swithTheme({ theme: 'light' }));
+      setColorTheme('light');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [colorTheme]);
+  }, []);
 
-  return [colorTheme, setTheme];
-}
+  useEffect(() => {
+    localTheme && handleThemeChange(localTheme);
+  }, [handleThemeChange]);
+
+  return useMemo(
+    () => ({ colorTheme, setTheme: handleThemeChange }),
+    [colorTheme, handleThemeChange]
+  );
+};
+
+export default useDarkSide;

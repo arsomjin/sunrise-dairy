@@ -1,5 +1,23 @@
 import namor from 'namor';
-import { Numb } from './common';
+import { Numb, showWarn } from './common';
+
+export const arrayForEach = async (array, callback) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+};
+
+export const chunkArray = (array, chunkLength) => {
+  if (!(Array.isArray(array) && chunkLength > 0)) {
+    return showWarn('Input Error at chankArray function!');
+  }
+  let cArray = [];
+  while (array.length > 0) {
+    let chunk = array.splice(0, chunkLength);
+    cArray.push(chunk);
+  }
+  return cArray;
+};
 
 export const distinctArr = (arrItems, distinctKeys, sumKeys) => {
   // arrItems: Array, distinctKeys: Array, sumKeys: Array
