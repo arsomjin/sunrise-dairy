@@ -11,7 +11,7 @@ import {
   Input as AInput,
   Divider,
 } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { showWarn } from 'utils/functions/common';
 import { useTranslation } from 'react-i18next';
 import { ROW_GUTTER } from 'constants/Styles';
@@ -20,15 +20,16 @@ import Input from 'ui/elements/Input';
 import { showLog } from 'utils/functions/common';
 import { capitalize } from 'utils/functions/common';
 import { getResidences } from 'constants/thaiTambol';
-import UploadImage from 'ui/components/common/UploadImage';
-import { setDoc } from 'firebase/firestore';
 import { cleanValuesBeforeSave, showConfirm } from 'utils/functions/common';
 import { errorHandler } from 'utils/functions/common';
 import { notificationController } from 'controllers/notificationController';
 import { setFirestore } from 'services/firebase';
 import { useLoading } from 'hooks/useLoading';
 import { getFirestoreDoc } from 'services/firebase';
-import { getFirestoreCollection } from 'services/firebase';
+import { formatValuesBeforeLoad } from 'utils/functions/common';
+import UploadAvatar from 'ui/components/common/UploadAvatar';
+import { updateProfile } from 'store/slices/userSlice';
+import { firebaseUpdateProfile } from 'services/firebase';
 
 const { Option } = Select;
 
@@ -40,6 +41,8 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
 
   const [residences2, setRes] = useState(null);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const getAddresses = async () => {
       let res = await getResidences();
@@ -47,15 +50,15 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
     };
     const getProfile = async () => {
       let doc = await getFirestoreDoc(`users/${USER?.uid}/info`, 'profile');
-      let col = await getFirestoreCollection(`users/${USER?.uid}/info`, [
-        ['firstName', '==', 'อาศรม'],
-        ['nickName', '==', 'อา'],
-      ]);
-      showLog({ doc, col });
+      showLog({ doc });
+      if (doc) {
+        let val = formatValuesBeforeLoad(doc);
+        form.setFieldsValue(val);
+      }
     };
     getAddresses();
     getProfile();
-  }, []);
+  }, [USER?.uid, form]);
 
   const preFinish = (values) => {
     showConfirm({
@@ -72,12 +75,18 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
       const mValues = cleanValuesBeforeSave(values);
       let profileCol = `users/${USER.uid}/info`;
       let res = await setFirestore(profileCol, 'profile', mValues);
+      dispatch(updateProfile({ profile: mValues }));
+      await firebaseUpdateProfile({
+        displayName: `${mValues?.firstName || ''} ${mValues?.lastName || ''}`,
+        photoURL: mValues?.url || '',
+      });
       setLoading(false);
       notificationController.success({
         message: `${capitalize(t('บันทึกข้อมูล'))} ${t(
           'สำเร็จ'
         ).toLowerCase()}.`,
       });
+      // form.resetFields();
     } catch (e) {
       showWarn(e);
       setLoading(false);
@@ -142,7 +151,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
       <Form
         form={form}
         name="register"
-        onFinish={onFinish}
+        onFinish={preFinish}
         initialValues={{
           residence: ['นครราชสีมา', 'สูงเนิน', 'สูงเนิน', '30170'],
           prefix: 'นาย',
@@ -156,13 +165,13 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
           return (
             <div className="py-2">
               <div className="flex flex-col items-center">
-                <p className="text-lg text-primary mb-4">
+                <p className="text-md text-primary mb-4">
                   {t('ข้อมูลส่วนตัว').toUpperCase()}
                 </p>
                 <Form.Item name="url">
-                  <UploadImage
+                  <UploadAvatar
                     storeRef={`images/users/${USER.uid}/profile`}
-                    title="รูปภาพ"
+                    title={t('รูปภาพ')}
                   />
                 </Form.Item>
               </div>

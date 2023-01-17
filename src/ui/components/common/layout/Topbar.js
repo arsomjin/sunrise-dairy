@@ -38,6 +38,7 @@ const Topbar = ({
   const [loading, setLoading] = useLoading();
   const { loading: loader, signOutUser } = FirebaseAuth();
   const { nightMode } = useSelector((state) => state.global);
+  const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isCollapsed, setIsCollapsed] = useState(collapsed);
 
@@ -102,7 +103,7 @@ const Topbar = ({
 
   return (
     <div
-      className="sticky top-0 w-full flex bg-background2 dark:bg-background1 justify-between p-3 px-4 items-center"
+      className="sticky top-0 w-full flex shadow-sm bg-background2 dark:bg-background1 justify-between p-3 px-4 items-center"
       style={{
         borderBottom: nightMode ? '2px solid  #1b2538' : '2px solid #f2f2f2',
       }}
@@ -189,7 +190,10 @@ const Topbar = ({
           placement="bottomRight"
           menu={{ items: avatar_items, onClick: onAvatarClick }}
         >
-          <Avatar size="large" src="https://i.pravatar.cc/300" />
+          <Avatar
+            size="large"
+            src={profile?.url || 'https://i.pravatar.cc/300'}
+          />
         </Dropdown>
         {/* <Button className="mr-2" icon={
             <UserOutlined /> } type='ghost' shape="circle" /> */}

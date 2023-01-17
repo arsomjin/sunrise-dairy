@@ -239,7 +239,7 @@ export default forwardRef(
             <div style={styles.metaAside}>
               <i
                 style={styles.removeFileIcon}
-                className="fas fa-eye mx-3"
+                className="fas fa-eye mx-3 cursor-pointer hover:scale-150"
                 onClick={_preview}
               />
               {!(!!readOnly || !!disabled) && (
@@ -251,8 +251,9 @@ export default forwardRef(
                   cancelText="ยกเลิก"
                 >
                   <i
-                    style={styles.removeFileIcon}
-                    className="fas fa-trash-alt mx-3"
+                    style={{}}
+                    // style={styles.removeFileIcon}
+                    className="fas fa-trash-alt mx-3 cursor-pointer hover:scale-150"
                   />
                 </Popconfirm>
               )}

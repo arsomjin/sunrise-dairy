@@ -9,6 +9,7 @@ export const initialStates = {
   USER: null,
   USER_PERSISTED: null,
   currentUser: null,
+  profile: null,
   userEmail: null,
   startScene: '',
   passwordReset: false,
@@ -46,6 +47,13 @@ export const userSlicer = createSlice({
         ...state,
         currentUser,
         USER: currentUser,
+      };
+    },
+    updateProfile: (state, action) => {
+      const { profile } = action.payload;
+      return {
+        ...state,
+        profile,
       };
     },
     addFavorites: (state, action) => {
@@ -89,6 +97,7 @@ export const {
   removeFavorites,
   resetUserStates,
   getCurrentUser,
+  updateProfile,
 } = userSlicer.actions;
 
 export default userSlicer.reducer;

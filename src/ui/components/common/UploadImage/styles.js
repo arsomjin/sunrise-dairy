@@ -25,7 +25,6 @@ const styles = {
   },
   icon: { marginRight: '5px', fontSize: '16px', marginTop: '2px' },
   fileMetaData: {
-    display: 'flex',
     flexDirection: 'column',
     position: 'absolute',
     top: 0,

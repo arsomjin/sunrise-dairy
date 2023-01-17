@@ -6,6 +6,7 @@ import {
   sendPasswordResetEmail,
   sendEmailVerification,
   signOut,
+  updateProfile,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -90,6 +91,18 @@ export const firebaseSignOut = () =>
     try {
       let res = await signOut(auth);
       r(res);
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const firebaseUpdateProfile = (
+  profile // profile: { displayName, photoURL }
+) =>
+  new Promise(async (r, j) => {
+    try {
+      await updateProfile(auth.currentUser, profile);
+      r(true);
     } catch (e) {
       j(e);
     }
