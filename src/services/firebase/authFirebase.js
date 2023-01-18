@@ -7,7 +7,6 @@ import {
   signUpAccount,
   resetAccount,
   logoutAccount,
-  updateProfile,
 } from '../../store/slices/userSlice';
 import { routes } from '../../navigation/routes';
 import { notificationController } from 'controllers/notificationController';
@@ -23,9 +22,6 @@ import {
   firebaseSignOut,
   firebaseSignInWithPhoneNumber,
   firebaseSignInWithGoogle,
-  updateFirestore,
-  getFirestoreDoc,
-  setFirestore,
 } from '.';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { cleanValuesBeforeSave } from 'utils/functions/common';

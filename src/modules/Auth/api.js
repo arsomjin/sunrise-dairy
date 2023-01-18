@@ -13,7 +13,7 @@ export const getAuthErrorMessage = (error) => {
     case 'auth/user-not-found':
       return 'ไม่พบผู้ใช้งานในระบบ กรุณาลงทะเบียน';
     case 'auth/popup-closed-by-user':
-      return 'Popup ถูกปิดโดยผู้ใช้';
+      return 'Popup ถูกปิดโดยผู้ใช้งาน';
     case 'auth/network-request-failed':
       return 'การสื่อสารขัดข้อง';
     default:
