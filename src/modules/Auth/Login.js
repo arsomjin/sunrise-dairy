@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageTitle from 'ui/components/common/PageTitle';
 import { Form, Input } from 'antd';
@@ -24,25 +24,29 @@ const Login = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   const { loading, loginUser } = FirebaseAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // showLog('Login_EFFECT');
+  const firstRef = useRef(true);
 
-    const _checkVerified = async () => {
-      try {
-        if (loading) {
-          return;
+  useEffect(() => {
+    if (firstRef.current) {
+      firstRef.current = false;
+
+      const _checkVerified = async () => {
+        try {
+          if (loading) {
+            return;
+          }
+          let verified = await Firebase.checkVerified();
+          if (verified?.verified === false) {
+            navigate(routes.VERIFICATION, {
+              email: verified.user?.email,
+            });
+          }
+        } catch (e) {
+          showWarn(e);
         }
-        let verified = await Firebase.checkVerified();
-        if (verified?.verified === false) {
-          navigate(routes.VERIFICATION, {
-            email: verified.user?.email,
-          });
-        }
-      } catch (e) {
-        showWarn(e);
-      }
-    };
-    _checkVerified();
+      };
+      _checkVerified();
+    }
   }, [loading, navigate]);
 
   const onLogin = async (values) => {

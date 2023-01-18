@@ -43,11 +43,11 @@ const LoginFull = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   } = FirebaseAuth();
   const navigate = useNavigate();
 
-  const firstRef2 = useRef(true);
+  const firstRef = useRef(true);
 
   useEffect(() => {
-    if (!visible && firstRef2.current) {
-      firstRef2.current = false;
+    if (!show && firstRef.current) {
+      firstRef.current = false;
       const _checkVerified = async () => {
         try {
           if (loading) {
@@ -65,7 +65,7 @@ const LoginFull = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
       };
       _checkVerified();
     }
-  }, [loading, navigate, visible]);
+  }, [loading, navigate, show]);
 
   const onLogin = async (values) => {
     try {

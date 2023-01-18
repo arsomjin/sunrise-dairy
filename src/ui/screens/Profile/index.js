@@ -17,7 +17,6 @@ import { useTranslation } from 'react-i18next';
 import { ROW_GUTTER } from 'constants/Styles';
 import { getRules } from 'utils/functions/validator';
 import Input from 'ui/elements/Input';
-import { showLog } from 'utils/functions/common';
 import { capitalize } from 'utils/functions/common';
 import { getResidences } from 'constants/thaiTambol';
 import { cleanValuesBeforeSave, showConfirm } from 'utils/functions/common';
@@ -27,10 +26,6 @@ import { useLoading } from 'hooks/useLoading';
 import { getFirestoreDoc } from 'services/firebase';
 import { formatValuesBeforeLoad } from 'utils/functions/common';
 import UploadAvatar from 'ui/components/common/UploadAvatar';
-import { updateProfile } from 'store/slices/userSlice';
-import { firebaseUpdateProfile } from 'services/firebase';
-import { updateFirestore } from 'services/firebase';
-import { setFirestore } from 'services/firebase';
 import { updateUserProfile } from 'services/API/app_api';
 
 const { Option } = Select;
@@ -76,10 +71,10 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
       const mValues = cleanValuesBeforeSave(values);
       await updateUserProfile(mValues, USER.uid, dispatch);
 
-      await firebaseUpdateProfile({
-        displayName: `${mValues?.firstName || ''} ${mValues?.lastName || ''}`,
-        photoURL: mValues?.photoURL || '',
-      });
+      // await firebaseUpdateProfile({
+      //   displayName: `${mValues?.firstName || ''} ${mValues?.lastName || ''}`,
+      //   photoURL: mValues?.photoURL || '',
+      // });
       setLoading(false);
       notificationController.success({
         message: `${capitalize(t('บันทึกข้อมูล'))} ${t(
@@ -160,6 +155,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
           phoneNumber: USER?.phoneNumber
             ? `0${USER.phoneNumber.slice(-9)}`
             : undefined,
+          url: USER?.photoURL || undefined,
         }}
         scrollToFirstError
       >
@@ -171,7 +167,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                 <p className="text-md text-primary mb-4">
                   {t('ข้อมูลส่วนตัว').toUpperCase()}
                 </p>
-                <Form.Item name="photoURL">
+                <Form.Item name="url">
                   <UploadAvatar
                     storeRef={`images/users/${USER.uid}/profile`}
                     title={t('รูปภาพ')}
