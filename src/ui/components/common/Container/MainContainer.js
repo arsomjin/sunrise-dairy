@@ -1,6 +1,7 @@
 import { Menu } from 'antd';
+import { initTheme } from 'navigation/api';
 import { routes } from 'navigation/routes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { updateCurrentRoute } from 'store/slices/tempSlice';
@@ -15,6 +16,11 @@ const MainContainer = () => {
   const { currentRoute, keyPath } = useSelector((state) => state.unPersisted);
   const [collapsed, setCollapsed] = useState(false);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    initTheme(dispatch);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);

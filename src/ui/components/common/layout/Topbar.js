@@ -25,6 +25,9 @@ import { useNavigate } from 'react-router-dom';
 import { showConfirm } from 'utils/functions/common';
 import { waitFor } from 'utils/functions/common';
 import { updateCurrentRoute } from 'store/slices/tempSlice';
+
+// const avatar_placeholder = 'https://i.pravatar.cc/300'
+
 const Topbar = ({
   open,
   toggleHided,
@@ -41,10 +44,23 @@ const Topbar = ({
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isCollapsed, setIsCollapsed] = useState(collapsed);
+  const [imgUrl, setImg] = useState(
+    profile?.photoURL ||
+      profile?.url ||
+      require('assets/images/blank-profile.png')
+  );
 
   useEffect(() => {
     setIsCollapsed(collapsed);
   }, [collapsed]);
+
+  useEffect(() => {
+    setImg(
+      profile?.photoURL ||
+        profile?.url ||
+        require('assets/images/blank-profile.png')
+    );
+  }, [profile?.photoURL, profile?.url]);
 
   const onAvatarClick = (e) => {
     switch (e.key) {
@@ -190,10 +206,7 @@ const Topbar = ({
           placement="bottomRight"
           menu={{ items: avatar_items, onClick: onAvatarClick }}
         >
-          <Avatar
-            size="large"
-            src={profile?.url || 'https://i.pravatar.cc/300'}
-          />
+          <Avatar size="large" src={imgUrl} />
         </Dropdown>
         {/* <Button className="mr-2" icon={
             <UserOutlined /> } type='ghost' shape="circle" /> */}

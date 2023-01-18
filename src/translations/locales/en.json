@@ -192,6 +192,9 @@
   "เราไม่ต้องการแสดงหมวดสินค้าในหน้าขายสินค้า": "this category to be 'shown'/'not shown'",
   "แต่ยังคงแสดงในหน้านำสินค้าเข้าสต็อค เป็นต้น": "at storefront. ingredient, material, etc.",
   "รหัส": "ID",
+  "ขอรหัส OTP": "Request OTP",
+  "ส่งรหัส OTP สำเร็จ": "OTP code sent successfully",
+  "ส่งรหัส OTP ไม่สำเร็จ": "Failed to send OTP code",
   "แก้ไขหมวดสินค้า": "Edit category",
   "แสดง": "Show",
   "ลบหมวดสินค้า": "delete",
@@ -985,6 +988,7 @@
   "Sign in ด้วย": "Sign in with",
   "เบอร์โทรศัพท์": "phone number.",
   "อีเมล์": "email",
+  "อีเมล / เบอร์โทร": "email / phone",
   "ยอดรวมก่อนภาษี": "Total before tax",
   "จอแสดงผล": "Monitor",
   "กรอกข้อมูลไม่ครบ": "Fill up all fields",
@@ -1273,6 +1277,7 @@
   "หญิง": "Female",
   "ข้อตกลงและเงื่อนไข": "terms and conditions",
   "ฉันยอมรับ": "I accept ",
+  "กรุณายอมรับข้อตกลง": "Please accept the agreement.",
   "ชื่อเล่น": "Nickname",
   "อัปโหลด": "Upload",
   "อยากให้คนเรียกชื่อคุณว่าอะไร?": "What do you want others to call you?",
@@ -1282,7 +1287,12 @@
   "ซอย": "Soi",
   "ตำบล": "Tambol",
   "อาคาร": "Building",
-  "ชั้น": "Floor"
-
-
+  "ชั้น": "Floor",
+  "อีเมลนี้ ได้ลงทะเบียนในระบบแล้ว": "This e-mail has already been signed-up in the system.",
+  "รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบแล้วลองใหม่อีกครั้ง": "Invalid email format Please check and try again.",
+  "กรุณาตรวจสอบแล้วลองใหม่อีกครั้ง": "Please check and try again.",
+  "รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบแล้วลองใหม่อีกครั้ง": "Password is incorrect Please check and try again.",
+  "พยายามเข้าสู่ระบบไม่สำเร็จหลายครั้งเกินไป โปรดลองอีกครั้งในภายหลัง": "Too many unsuccessful login attempts Please try again later.",
+  "ไม่พบผู้ใช้งานในระบบ กรุณาลงทะเบียน": "User not found, please sign-up.",
+  "หรือ เข้าสู่ระบบด้วย": "Or Login With"
 }

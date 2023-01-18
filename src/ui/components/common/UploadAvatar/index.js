@@ -123,7 +123,6 @@ const UploadAvatar = forwardRef(
     };
 
     const imageHandler = (data) => {
-      showLog({ data });
       if (data?.file) {
         setProgress(0);
         setLoading(true);

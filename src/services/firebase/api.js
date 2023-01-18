@@ -10,16 +10,22 @@ import { currentUser, setFirestore } from './index';
 import dayjs from 'dayjs';
 import { store } from 'store';
 import { showLog } from 'utils/functions/common';
+import { cleanValuesBeforeSave } from 'utils/functions/common';
 
 class Firebase {
   checkVerified = async () => {
     try {
       const curUser = currentUser();
-      showLog({ curUser });
       if (curUser) {
         await curUser.reload();
         let nUser = currentUser();
         let mUser = this.getFirebaseUserFromObject(nUser);
+        if (
+          mUser?.providerData &&
+          mUser.providerData[0]?.providerId === 'phone'
+        ) {
+          return { verified: true, user: mUser };
+        }
         return { verified: mUser?.emailVerified, user: mUser };
       }
       return null;
@@ -70,7 +76,8 @@ class Firebase {
         if (!!USER?.uid && !!currentUser()) {
           collection = 'errors/auth/handler';
         }
-        const res = await setFirestore(collection, eTime, {
+        showLog('addErrorLogs', error);
+        const errorData = cleanValuesBeforeSave({
           ts: Date.now(),
           ...(!!USER?.uid &&
             !!currentUser() && {
@@ -83,6 +90,7 @@ class Firebase {
           ...(error?.snap && { snap: error.snap }),
           ...(error?.module && { module: error.module }),
         });
+        const res = await setFirestore(collection, eTime, errorData);
         r(res);
       } catch (e) {
         console.warn(e);

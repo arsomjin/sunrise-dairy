@@ -33,7 +33,6 @@ const Verification = ({ email }) => {
   let location = useLocation();
   const navigate = useNavigate();
   const params = location.state?.params;
-  showLog({ params, email });
   const [loading, setLoading] = useLoading();
   const [sended, setSend] = useState(false);
 
@@ -43,7 +42,6 @@ const Verification = ({ email }) => {
     try {
       setLoading(true);
       let verified = await Firebase.checkVerified();
-      showLog({ verified });
       setLoading(false);
       if (verified?.verified === false) {
         showError({
@@ -80,7 +78,6 @@ const Verification = ({ email }) => {
       setLoading(true);
       await sendVerifyEmail();
       let mUser = Firebase.getFirebaseUserFromObject(currentUser());
-      showLog({ mUser });
       setLoading(false);
       setSend(true);
       showSuccess({

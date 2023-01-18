@@ -20,6 +20,7 @@ import { routes } from 'navigation/routes';
 import { notificationController } from 'controllers/notificationController';
 import Load from 'ui/components/common/Load';
 import logo from 'assets/logo/favicon-96x96.png';
+import { sendVerifyEmail } from 'services/firebase';
 
 const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   const dispatch = useDispatch();
@@ -62,7 +63,6 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   }, [navigate, isSignUp, t]);
 
   const onSignUp = (values) => {
-    showLog({ values });
     if (loading) {
       return;
     }
@@ -88,12 +88,16 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
     let pass = password.replace(/(\r\n|\n|\r| )/g, '');
     pass = pass.trim();
     emailRef.current = email;
-    createUser(email, pass, () => {});
+    createUser(email, pass, async (cb) => {
+      if (cb) {
+        await sendVerifyEmail();
+      }
+    });
     // createUser(email, pass, onClickLogin);
   };
 
   const onSignUpFailed = (values) => {
-    showLog({ values });
+    showLog({ onSignUpFailed: values });
   };
   const onEyeClick = () => setVisible((vs) => !vs);
 

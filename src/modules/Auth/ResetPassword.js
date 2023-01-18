@@ -76,7 +76,6 @@ const ResetPassword = () => {
   };
 
   const onResetPassword = (values) => {
-    //  showLog('forget', values);
     if (loading) {
       return;
     }
@@ -85,7 +84,7 @@ const ResetPassword = () => {
   };
 
   const onResetPasswordFailed = (values) => {
-    showLog({ values });
+    showLog({ onResetPasswordFailed: values });
   };
 
   return (

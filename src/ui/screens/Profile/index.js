@@ -23,13 +23,15 @@ import { getResidences } from 'constants/thaiTambol';
 import { cleanValuesBeforeSave, showConfirm } from 'utils/functions/common';
 import { errorHandler } from 'utils/functions/common';
 import { notificationController } from 'controllers/notificationController';
-import { setFirestore } from 'services/firebase';
 import { useLoading } from 'hooks/useLoading';
 import { getFirestoreDoc } from 'services/firebase';
 import { formatValuesBeforeLoad } from 'utils/functions/common';
 import UploadAvatar from 'ui/components/common/UploadAvatar';
 import { updateProfile } from 'store/slices/userSlice';
 import { firebaseUpdateProfile } from 'services/firebase';
+import { updateFirestore } from 'services/firebase';
+import { setFirestore } from 'services/firebase';
+import { updateUserProfile } from 'services/API/app_api';
 
 const { Option } = Select;
 
@@ -50,7 +52,6 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
     };
     const getProfile = async () => {
       let doc = await getFirestoreDoc(`users/${USER?.uid}/info`, 'profile');
-      showLog({ doc });
       if (doc) {
         let val = formatValuesBeforeLoad(doc);
         form.setFieldsValue(val);
@@ -71,14 +72,13 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
   const onFinish = async (values) => {
     try {
       setLoading(true);
-      console.log('Received values of form: ', values);
+      // console.log('Received values of form: ', values);
       const mValues = cleanValuesBeforeSave(values);
-      let profileCol = `users/${USER.uid}/info`;
-      let res = await setFirestore(profileCol, 'profile', mValues);
-      dispatch(updateProfile({ profile: mValues }));
+      await updateUserProfile(mValues, USER.uid, dispatch);
+
       await firebaseUpdateProfile({
         displayName: `${mValues?.firstName || ''} ${mValues?.lastName || ''}`,
-        photoURL: mValues?.url || '',
+        photoURL: mValues?.photoURL || '',
       });
       setLoading(false);
       notificationController.success({
@@ -155,20 +155,23 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
         initialValues={{
           residence: ['นครราชสีมา', 'สูงเนิน', 'สูงเนิน', '30170'],
           prefix: 'นาย',
-          phonePrefix: '86',
+          phonePrefix: '66',
           email: USER?.email,
+          phoneNumber: USER?.phoneNumber
+            ? `0${USER.phoneNumber.slice(-9)}`
+            : undefined,
         }}
         scrollToFirstError
       >
         {(values) => {
-          showLog({ values });
+          // showLog({ values });
           return (
             <div className="py-2">
               <div className="flex flex-col items-center">
                 <p className="text-md text-primary mb-4">
                   {t('ข้อมูลส่วนตัว').toUpperCase()}
                 </p>
-                <Form.Item name="url">
+                <Form.Item name="photoURL">
                   <UploadAvatar
                     storeRef={`images/users/${USER.uid}/profile`}
                     title={t('รูปภาพ')}
@@ -251,7 +254,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                 <Row gutter={ROW_GUTTER}>
                   <Col span={12}>
                     <Form.Item
-                      name="phone"
+                      name="phoneNumber"
                       label={capitalize(t('เบอร์โทรศัพท์'))}
                       rules={getRules(['required', 'mobileNumber'])}
                     >
@@ -395,7 +398,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                     validator: (_, value) =>
                       value
                         ? Promise.resolve()
-                        : Promise.reject(new Error('Should accept agreement')),
+                        : Promise.reject(new Error(t('กรุณายอมรับข้อตกลง'))),
                   },
                 ]}
                 className="text-center"

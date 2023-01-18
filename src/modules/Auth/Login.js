@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PageTitle from 'ui/components/common/PageTitle';
 import { Form, Input } from 'antd';
-import { capitalize, validateEmail } from 'utils/functions/common';
+import { capitalize } from 'utils/functions/common';
 import {
   EyeInvisibleOutlined,
   EyeOutlined,
   LockOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { showLog } from 'utils/functions/common';
 import FirebaseAuth from 'services/firebase/authFirebase';
 import { useNavigate } from 'react-router-dom';
 import { routes } from 'navigation/routes';
@@ -34,7 +33,6 @@ const Login = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
           return;
         }
         let verified = await Firebase.checkVerified();
-        showLog({ verified });
         if (verified?.verified === false) {
           navigate(routes.VERIFICATION, {
             email: verified.user?.email,
@@ -48,7 +46,6 @@ const Login = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   }, [loading, navigate]);
 
   const onLogin = async (values) => {
-    showLog({ values });
     try {
       if (loading) {
         return;

@@ -9,6 +9,8 @@ import {
   updateProfile,
   RecaptchaVerifier,
   signInWithPhoneNumber,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -42,7 +44,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-const auth = getAuth();
+export const auth = getAuth(app);
 export const firestore = getFirestore(app);
 export const database = getDatabase(app);
 export const storage = getStorage(app);
@@ -98,50 +100,37 @@ export const firebaseSignOut = () =>
     }
   });
 
-export const firebaseRecaptchaVerifier = () =>
+export const firebaseSignInWithPhoneNumber = (phoneNumber, appVerifier) =>
   new Promise(async (r, j) => {
     try {
-      auth.languageCode = 'th';
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        'sign-in-button',
-        {
-          size: 'invisible',
-          callback: (res) => {
-            // reCAPTCHA solved, allow signInWithPhoneNumber.
-            // onSignInSubmit();
-            r(res);
-          },
-        },
-        auth
-      );
-    } catch (e) {
-      j(e);
-    }
-  });
-
-export const firebaseSignInWithPhoneNumber = (phoneNumber) =>
-  new Promise(async (r, j) => {
-    try {
-      const appVerifier = window.recaptchaVerifier;
       let confirmationResult = await signInWithPhoneNumber(
         auth,
         phoneNumber,
         appVerifier
       );
-      window.confirmationResult = confirmationResult;
+      // window.confirmationResult = confirmationResult;
       r(confirmationResult);
     } catch (e) {
       j(e);
     }
   });
 
-export const firebaseSignInWithSmsCode = (smsCode, confirmationResult) =>
+export const firebaseSignInWithGoogle = () =>
   new Promise(async (r, j) => {
     try {
-      let res = await confirmationResult.confirm(smsCode);
-      r(res);
-    } catch (e) {
-      j(e);
+      const provider = new GoogleAuthProvider();
+      auth.languageCode = 'th';
+
+      const result = await signInWithPopup(auth, provider);
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      r({ user, credential, token });
+      // ...
+    } catch (error) {
+      j(error);
     }
   });
 

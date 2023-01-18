@@ -203,12 +203,6 @@ export const formatNumber = (value) => {
     // bVal = bVal.replace(/./g, '');
     return `${fVal.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${bVal}`;
   }
-  showLog({
-    value,
-    pResult: parseFloat(value)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ','),
-  });
   return parseFloat(value)
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -418,7 +412,6 @@ export function appendArgumentsByArray(fn) {
 }
 
 export const getErrorMessage = ({ code, message }) => {
-  showLog({ code, message });
   if (!['number', 'string'].includes(typeof message) || !message) {
     return message;
   }
@@ -438,6 +431,5 @@ export const getErrorMessage = ({ code, message }) => {
 export const errorHandler = (error) => {
   let msg = getErrorMessage(error);
   showWarning({ title: msg.title, content: msg.detail });
-  showLog({ error, msg });
   Firebase.addErrorLogs(Object.assign(error, { msg }));
 };

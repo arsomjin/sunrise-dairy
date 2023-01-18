@@ -16,6 +16,7 @@ import Dashboard from 'modules/Dashboard';
 import Screen1 from 'ui/screens/Screen1';
 import Screen2 from 'ui/screens/Screen2';
 import Profile from 'ui/screens/Profile/index';
+import LoginFull from 'modules/Auth/LoginFull';
 
 const AuthLayout = React.lazy(() =>
   import('ui/components/common/Container/AuthContainer')
@@ -28,7 +29,11 @@ export const DASHBOARD_PATH = '/';
 
 export const AppRouter = () => {
   const { USER } = useSelector((state) => state.user);
-  const hasAuth = !!USER && USER?.uid && USER?.emailVerified;
+  const hasAuth =
+    !!USER &&
+    USER?.uid &&
+    (USER?.emailVerified ||
+      (USER?.phoneNumber && USER.providerData[0].providerId === 'phone'));
   // showLog({ hasAuth });
   const protectedLayout = (
     <RequireAuth hasAuth={hasAuth}>
@@ -52,7 +57,7 @@ export const AppRouter = () => {
             <AuthLayoutFallback image={loginBackground} noAuth={!hasAuth} />
           }
         >
-          <Route path="login" element={<Login />} />
+          <Route path="login" element={<LoginFull hasGoogleSignIn />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="verification" element={<Verification />} />

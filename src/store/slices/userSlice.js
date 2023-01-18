@@ -27,7 +27,12 @@ export const userSlicer = createSlice({
       return { ...state, isLogin: true, USER };
     },
     logoutAccount: (state) => {
-      Object.assign(state, { USER: null, isLogin: false });
+      Object.assign(state, {
+        USER: null,
+        profile: null,
+        isLogin: false,
+        userEmail: null,
+      });
     },
     initSignUp: (state) => {
       return { ...state, isSignUp: false };
@@ -51,9 +56,11 @@ export const userSlicer = createSlice({
     },
     updateProfile: (state, action) => {
       const { profile } = action.payload;
+      const prevProfile = state.profile || {};
+      const nProfile = { ...prevProfile, ...profile };
       return {
         ...state,
-        profile,
+        profile: nProfile,
       };
     },
     addFavorites: (state, action) => {
