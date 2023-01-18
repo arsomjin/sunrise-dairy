@@ -28,39 +28,14 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   const navigate = useNavigate();
   const { loading, createUser } = FirebaseAuth();
 
-  const { isSignUp } = useSelector((state) => state.user);
   const [visible, setVisible] = useState(false);
 
-  const signUpRef = useRef(false);
-  const firstRef = useRef(true);
   const emailRef = useRef(null);
 
   useEffect(() => {
     dispatch(initSignUp());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (isSignUp && !signUpRef.current && !firstRef.current) {
-      signUpRef.current = true;
-      showSuccess({
-        title: capitalize(t('สำเร็จ')),
-        content: `${capitalize(
-          t('ระบบได้ส่งลิงค์ยืนยัน ไปยังอีเมลของคุณ')
-        )} ${capitalize(
-          t(
-            'กรุณายืนยันที่อยู่อีเมลในกล่องอีเมลของคุณ \n (อีเมลอาจอยู่ในกล่องจดหมายขยะ)'
-          )
-        )}`,
-        onOk: () =>
-          navigate(routes.LOGIN, {
-            email: emailRef.current,
-          }),
-      });
-    } else {
-      firstRef.current = false;
-    }
-  }, [navigate, isSignUp, t]);
 
   const onSignUp = (values) => {
     if (loading) {
@@ -91,6 +66,20 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
     createUser(email, pass, async (cb) => {
       if (cb) {
         await sendVerifyEmail();
+        showSuccess({
+          title: capitalize(t('สำเร็จ')),
+          content: `${capitalize(
+            t('ระบบได้ส่งลิงค์ยืนยัน ไปยังอีเมลของคุณ')
+          )} ${capitalize(
+            t(
+              'กรุณายืนยันที่อยู่อีเมลในกล่องอีเมลของคุณ \n (อีเมลอาจอยู่ในกล่องจดหมายขยะ)'
+            )
+          )}`,
+          onOk: () =>
+            navigate(routes.LOGIN, {
+              email: emailRef.current,
+            }),
+        });
       }
     });
     // createUser(email, pass, onClickLogin);

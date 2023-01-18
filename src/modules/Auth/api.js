@@ -12,6 +12,8 @@ export const getAuthErrorMessage = (error) => {
       return 'พยายามเข้าสู่ระบบไม่สำเร็จหลายครั้งเกินไป โปรดลองอีกครั้งในภายหลัง';
     case 'auth/user-not-found':
       return 'ไม่พบผู้ใช้งานในระบบ กรุณาลงทะเบียน';
+    case 'auth/popup-closed-by-user':
+      return 'Popup ถูกปิดโดยผู้ใช้';
     case 'auth/network-request-failed':
       return 'การสื่อสารขัดข้อง';
     default:

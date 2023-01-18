@@ -300,6 +300,11 @@ const FirebaseAuth = () => {
             okButtonProps: { className: 'bg-blue-500 hover:bg-blue-600' },
           });
           break;
+        case 'auth/popup-closed-by-user':
+          notificationController.error({
+            message: `${title}. ${capitalize(trMsg)}.`,
+          });
+          break;
 
         default:
           notificationController.error({

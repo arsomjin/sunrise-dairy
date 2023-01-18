@@ -1294,5 +1294,6 @@
   "รหัสผ่านไม่ถูกต้อง กรุณาตรวจสอบแล้วลองใหม่อีกครั้ง": "Password is incorrect Please check and try again.",
   "พยายามเข้าสู่ระบบไม่สำเร็จหลายครั้งเกินไป โปรดลองอีกครั้งในภายหลัง": "Too many unsuccessful login attempts Please try again later.",
   "ไม่พบผู้ใช้งานในระบบ กรุณาลงทะเบียน": "User not found, please sign-up.",
+  "Popup ถูกปิดโดยผู้ใช้": "Popup closed by user.",
   "หรือ เข้าสู่ระบบด้วย": "Or Login With"
 }
