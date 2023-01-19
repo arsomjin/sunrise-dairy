@@ -32,6 +32,7 @@ const MainContainer = () => {
 
   const toggleShow = () => {
     setOpen(true);
+    setCollapsed(false);
   };
 
   const onMenuClick = (e) => {
@@ -40,6 +41,7 @@ const MainContainer = () => {
     // showLog({ e, item: e.item, path: e.keyPath });
     navigate(routes[e.key]);
     dispatch(updateCurrentRoute({ currentRoute: key, keyPath }));
+    toggleHided();
   };
 
   const menu = (
