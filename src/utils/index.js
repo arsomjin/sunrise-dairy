@@ -101,9 +101,12 @@ export const shadeColor = (color, percent) => {
   G = G < 255 ? G : 255;
   B = B < 255 ? B : 255;
 
-  const RR = R.toString(16).length == 1 ? '0' + R.toString(16) : R.toString(16);
-  const GG = G.toString(16).length == 1 ? '0' + G.toString(16) : G.toString(16);
-  const BB = B.toString(16).length == 1 ? '0' + B.toString(16) : B.toString(16);
+  const RR =
+    R.toString(16).length === 1 ? '0' + R.toString(16) : R.toString(16);
+  const GG =
+    G.toString(16).length === 1 ? '0' + G.toString(16) : G.toString(16);
+  const BB =
+    B.toString(16).length === 1 ? '0' + B.toString(16) : B.toString(16);
 
   return '#' + RR + GG + BB;
 };
@@ -121,7 +124,7 @@ export const hexToHSL = (hex) => {
       min = Math.min(r, g, b);
     let h, s;
     const l = (max + min) / 2;
-    if (max == min) {
+    if (max === min) {
       h = s = 0; // achromatic
     } else {
       const d = max - min;

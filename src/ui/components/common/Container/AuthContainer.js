@@ -1,3 +1,4 @@
+import { useResponsive } from 'hooks/useResponsive';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
@@ -9,6 +10,7 @@ const AuthLayout = ({
   noAuth,
 }) => {
   const dispatch = useDispatch();
+  const { mobileOnly } = useResponsive();
 
   useEffect(() => {
     // Switch to light theme because auth page is not supported dark mode by design.
@@ -29,7 +31,12 @@ const AuthLayout = ({
         // className={`absolute bg-gradient-to-b from-${themeColor}-500 to-${themeColor}-400 opacity-75 inset-0 z-0`}
       ></div>
       <ToggleLan
-        style={{ position: 'absolute', top: 50, right: 50, color: 'white' }}
+        style={{
+          position: 'absolute',
+          top: mobileOnly ? 20 : 50,
+          right: mobileOnly ? 20 : 50,
+          color: 'white',
+        }}
         size="large"
       />
       <Outlet />

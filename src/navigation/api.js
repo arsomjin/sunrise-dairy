@@ -21,8 +21,10 @@ export const initTheme = (dispatch) => {
     localTheme === 'dark' ||
     (!localTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
   ) {
+    document.documentElement.classList.add('dark');
     dispatch(switchTheme({ theme: 'dark' }));
   } else {
+    document.documentElement.classList.remove('light');
     dispatch(switchTheme({ theme: 'light' }));
   }
 };

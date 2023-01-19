@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { isMobile } from 'react-device-detect';
 import {
   BellOutlined,
   LogoutOutlined,
@@ -25,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { showConfirm } from 'utils/functions/common';
 import { waitFor } from 'utils/functions/common';
 import { updateCurrentRoute } from 'store/slices/tempSlice';
+import { useResponsive } from 'hooks/useResponsive';
 
 // const avatar_placeholder = 'https://i.pravatar.cc/300'
 
@@ -43,6 +43,7 @@ const Topbar = ({
   const { nightMode } = useSelector((state) => state.global);
   const { profile } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const { mobileOnly } = useResponsive();
   const [isCollapsed, setIsCollapsed] = useState(collapsed);
   const [imgUrl, setImg] = useState(
     profile?.photoURL ||
@@ -109,11 +110,13 @@ const Topbar = ({
       key: 'profile',
       label: t('ข้อมูลส่วนตัว'),
       icon: <UserOutlined className="text-primary" />,
+      style: { width: 200 },
     },
     {
       key: 'signout',
       label: t('ออกจากระบบ'),
       icon: <LogoutOutlined className="text-danger" />,
+      style: { width: 200 },
     },
   ];
 
@@ -127,7 +130,7 @@ const Topbar = ({
       <div className="flex items-center">
         <div
           className="flex items-center justify-between"
-          style={{ width: isMobile ? 90 : 220 }}
+          style={{ width: mobileOnly ? 90 : 220 }}
         >
           <div className="flex items-center">
             <div className="burger mr-2">
@@ -148,7 +151,7 @@ const Topbar = ({
                 {menu}
               </Drawer>
             </div>
-            <CompanyLogo logoOnly={isMobile} />
+            <CompanyLogo logoOnly={mobileOnly} />
           </div>
           <div className="hidden lg:block">
             <Button
@@ -162,13 +165,17 @@ const Topbar = ({
         </div>
 
         {/* SEARCH BAR */}
-        <div className={isMobile ? '' : 'hidden lg:block'}>
+        <div className={mobileOnly ? '' : 'hidden lg:block'}>
           {/* <div  className="hidden lg:block"  > */}
           <Input
             prefix={<SearchOutlined />}
             placeholder="ค้นหา..."
             onChange={onSearch}
-            style={{ width: isMobile ? 120 : 220, marginLeft: 20 }}
+            style={{
+              display: mobileOnly ? 'none' : '',
+              width: 220,
+              marginLeft: 20,
+            }}
           />
         </div>
       </div>
