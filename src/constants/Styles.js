@@ -1,1 +1,1 @@
-export const ROW_GUTTER = { xs: 8, sm: 16, md: 24, lg: 32 };
+export const ROW_GUTTER = { xs: 6, sm: 12, md: 18, lg: 24 };

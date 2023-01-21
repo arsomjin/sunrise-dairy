@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { persistStore } from 'redux-persist';
 import { store } from 'store';
 import { PersistGate } from 'redux-persist/integration/react';

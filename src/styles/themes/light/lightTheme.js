@@ -1,4 +1,4 @@
-import { shadeColor } from 'utils';
+import { shadeColor } from 'utils/colors';
 import { graphic } from 'echarts';
 import { BASE_COLORS } from '../constants';
 

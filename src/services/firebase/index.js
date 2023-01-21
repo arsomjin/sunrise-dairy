@@ -19,6 +19,7 @@ import {
   setDoc,
   updateDoc,
   getDoc,
+  deleteDoc,
   getDocs,
   collection,
   query,
@@ -170,6 +171,16 @@ export const updateFirestore = (col, docId, data) =>
   new Promise(async (r, j) => {
     try {
       let res = await updateDoc(doc(firestore, col, docId), data);
+      r(res);
+    } catch (e) {
+      j(e);
+    }
+  });
+
+export const deleteFirestore = (col, docId) =>
+  new Promise(async (r, j) => {
+    try {
+      let res = await deleteDoc(doc(firestore, col, docId));
       r(res);
     } catch (e) {
       j(e);

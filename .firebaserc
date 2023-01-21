@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "sunrise-dairy-farm"
-  }
+    "default": "rungaroon-dairy",
+    "production": "rungaroon-dairy"
+  },
+  "targets": {},
+  "etags": {}
 }

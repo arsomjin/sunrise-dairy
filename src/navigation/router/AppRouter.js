@@ -17,6 +17,11 @@ import Screen1 from 'ui/screens/Screen1';
 import Screen2 from 'ui/screens/Screen2';
 import Profile from 'ui/screens/Profile/index';
 import LoginFull from 'modules/Auth/LoginFull';
+import Weight from 'modules/Milk/Weight';
+import UploadFromExcel from 'ui/components/common/UploadFromExcel';
+import Welcome from 'ui/screens/Welcome';
+import { showLog } from 'utils/functions/common';
+import About from 'ui/screens/About';
 
 const AuthLayout = React.lazy(() =>
   import('ui/components/common/Container/AuthContainer')
@@ -26,9 +31,11 @@ const AuthLayoutFallback = withLoading(AuthLayout);
 const LogoutFallback = withLoading(Logout);
 
 export const DASHBOARD_PATH = '/';
+export const MILK_PATH = '/milk';
+export const UTILS_PATH = '/utils';
 
 export const AppRouter = () => {
-  const { USER } = useSelector((state) => state.user);
+  const { USER, profile } = useSelector((state) => state.user);
   const hasAuth =
     !!USER &&
     USER?.uid &&
@@ -37,7 +44,7 @@ export const AppRouter = () => {
   // showLog({ hasAuth });
   const protectedLayout = (
     <RequireAuth hasAuth={hasAuth}>
-      <MainContainer />
+      {hasAuth ? <MainContainer /> : <Welcome />}
     </RequireAuth>
   );
 
@@ -50,6 +57,17 @@ export const AppRouter = () => {
           <Route path="screen1" element={<Screen1 />} />
           <Route path="screen2" element={<Screen2 />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="about" element={<About />} />
+          <Route path={MILK_PATH}>
+            <Route index element={<Weight />} />
+            <Route path="weight" element={<Weight />} />
+          </Route>
+          <Route path={UTILS_PATH}>
+            <Route
+              path="upload-data-from-excel-file"
+              element={<UploadFromExcel />}
+            />
+          </Route>
         </Route>
         <Route
           path="/auth"

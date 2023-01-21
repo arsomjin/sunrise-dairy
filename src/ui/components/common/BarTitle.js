@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { APP_NAME } from 'constants';
 
-const PageTitle = ({ children }) => {
+const BarTitle = ({ children }) => {
   return (
     <Helmet>
       <title>
@@ -12,4 +12,4 @@ const PageTitle = ({ children }) => {
   );
 };
 
-export default PageTitle;
+export default BarTitle;

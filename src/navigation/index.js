@@ -15,6 +15,9 @@ import Firebase from 'services/firebase/api';
 import { showLog } from 'utils/functions/common';
 import Delayed from 'ui/components/common/Delayed';
 import { initApp } from './api';
+import { showWarn } from 'utils/functions/common';
+import { getFirestoreDoc } from 'services/firebase';
+import { updateProfile } from 'store/slices/userSlice';
 
 const Navigation = () => {
   const { lan, nightMode } = useSelector((state) => state.global);
@@ -26,6 +29,14 @@ const Navigation = () => {
   const first2 = useRef(true);
 
   useEffect(() => {
+    const getProfileFromUid = async (uid, dpatch) => {
+      try {
+        let profile = await getFirestoreDoc(`users/${uid}/info`, 'profile');
+        !!profile && dpatch(updateProfile({ profile }));
+      } catch (e) {
+        showWarn(e);
+      }
+    };
     // Auth State Listener.
     let currentUser = !!currentFirebaseUser
       ? Firebase.getFirebaseUserFromObject(currentFirebaseUser)
@@ -33,6 +44,7 @@ const Navigation = () => {
     if (!first1.current) {
       // Avoid flickering to auth page.
       dispatch(getCurrentUser({ currentUser }));
+      !!currentUser && getProfileFromUid(currentUser.uid, dispatch);
     }
     first1.current = false;
   }, [currentFirebaseUser, dispatch]);

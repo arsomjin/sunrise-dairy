@@ -11,11 +11,11 @@ const CompanyLogo = ({ logoOnly, size, ...props }) => {
       };
   return (
     <div style={{ ...mStyle, ...props.style }}>
-      <img src={logo} alt="" />
+      <img src={logo} alt="" {...(size && { style: { height: size } })} />
       {!logoOnly && (
-        <h6 className="text-sm text-tw-black mt-3 ml-2 mr-2">
+        <h5 className="text-md text-primary mt-3 ml-2 mr-2">
           {APP_NAME.toUpperCase()}
-        </h6>
+        </h5>
       )}
     </div>
   );

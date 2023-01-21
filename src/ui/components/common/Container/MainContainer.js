@@ -4,6 +4,7 @@ import { routes } from 'navigation/routes';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { updateCollapsed } from 'store/slices/tempSlice';
 import { updateCurrentRoute } from 'store/slices/tempSlice';
 import { showLog } from 'utils/functions/common';
 import { menuItems } from '../layout/api';
@@ -13,8 +14,9 @@ import Topbar from '../layout/Topbar';
 const MainContainer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { currentRoute, keyPath } = useSelector((state) => state.unPersisted);
-  const [collapsed, setCollapsed] = useState(false);
+  const { currentRoute, keyPath, collapsed } = useSelector(
+    (state) => state.unPersisted
+  );
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ const MainContainer = () => {
   }, []);
 
   const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
+    dispatch(updateCollapsed({ collapsed: !collapsed }));
   };
 
   const toggleHided = () => {
@@ -32,7 +34,7 @@ const MainContainer = () => {
 
   const toggleShow = () => {
     setOpen(true);
-    setCollapsed(false);
+    dispatch(updateCollapsed({ collapsed: false }));
   };
 
   const onMenuClick = (e) => {

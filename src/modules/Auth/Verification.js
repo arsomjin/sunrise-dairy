@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PageTitle from 'ui/components/common/PageTitle';
+import BarTitle from 'ui/components/common/BarTitle';
 import { Button } from 'antd';
 import { capitalize } from 'utils/functions/common';
 import {
@@ -33,7 +33,7 @@ const Verification = ({ email }) => {
   let location = useLocation();
   const navigate = useNavigate();
   const params = location.state?.params;
-  const [loading, setLoading] = useLoading();
+  const { setLoading } = useLoading();
   const [sended, setSend] = useState(false);
 
   const { t } = useTranslation();
@@ -120,7 +120,7 @@ const Verification = ({ email }) => {
 
   return (
     <>
-      <PageTitle>{t('กรุณายืนยันที่อยู่อีเมล')}</PageTitle>
+      <BarTitle>{t('กรุณายืนยันที่อยู่อีเมล')}</BarTitle>
       <div className="flex flex-col z-10 bg-slate-100 shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-2xl w-full max-w-md">
         <div className="mb-4 flex items-center justify-between">
           <div>
@@ -182,7 +182,6 @@ const Verification = ({ email }) => {
           </a>
         </div>
       </div>
-      <Load loading={loading} />
     </>
   );
 };

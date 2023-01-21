@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PageTitle from 'ui/components/common/PageTitle';
+import BarTitle from 'ui/components/common/BarTitle';
 import { Form, Input } from 'antd';
 import { capitalize, validateEmail } from 'utils/functions/common';
 import {
@@ -92,7 +92,7 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
 
   return (
     <>
-      <PageTitle>{t('ลงทะเบียน')}</PageTitle>
+      <BarTitle>{t('ลงทะเบียน')}</BarTitle>
       <div className="flex flex-col z-10 bg-slate-100 shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-2xl w-full max-w-md">
         <div className="mb-4 flex items-center justify-between">
           <div>

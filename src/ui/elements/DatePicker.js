@@ -2,14 +2,25 @@ import React, { forwardRef, useRef, useImperativeHandle } from 'react';
 import { DatePicker } from 'antd';
 import 'dayjs/locale/th';
 import locale from 'antd/es/date-picker/locale/th_TH';
-import { showLog } from 'functions';
 import dayjs from 'dayjs';
 import { isMobile } from 'react-device-detect';
 const { RangePicker } = DatePicker;
 
 export default forwardRef(
   (
-    { value, onChange, format, placeholder, picker, isRange, ...props },
+    {
+      value,
+      onChange,
+      format,
+      placeholder,
+      picker,
+      isRange,
+      sm,
+      md,
+      lg,
+      xl,
+      ...props
+    },
     ref
   ) => {
     const dateRef = useRef();
@@ -44,6 +55,8 @@ export default forwardRef(
     const isYear = picker === 'year';
     const isTime = picker === 'time';
 
+    let size = sm ? 26 : md ? 32 : lg ? 36 : xl ? 42 : 32;
+
     const mFormat = isMonth
       ? 'YYYY-MM'
       : isYear
@@ -75,10 +88,11 @@ export default forwardRef(
             ? 'HH:mm'
             : 'DD/MM/YYYY')
         }
-        placeholder={
-          placeholder ||
-          (isMonth ? 'เดือน' : isYear ? 'ปี' : isTime ? 'เวลา' : 'วันที่')
-        }
+        {...(!isRange && {
+          placeholder:
+            placeholder ||
+            (isMonth ? 'เดือน' : isYear ? 'ปี' : isTime ? 'เวลา' : 'วันที่'),
+        })}
         locale={locale}
         onChange={_onChange}
         value={
@@ -93,6 +107,7 @@ export default forwardRef(
         allowClear={false}
         picker={picker}
         onFocus={(e) => isMobile && (e.target.readOnly = true)} // Disable virtual keyboard on mobile devices.
+        style={{ height: size, ...props.style }}
         {...props}
       />
     );

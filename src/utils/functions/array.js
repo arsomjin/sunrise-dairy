@@ -191,3 +191,5 @@ export function makeData(...lens) {
 
   return makeDataLevel();
 }
+
+export const createArrOfLength = (length) => [...Array(length).keys()];

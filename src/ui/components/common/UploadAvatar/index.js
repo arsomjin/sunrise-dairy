@@ -208,6 +208,7 @@ const UploadAvatar = forwardRef(
               <img
                 src={imageUrl}
                 alt="avatar"
+                className="rounded-full"
                 style={{
                   width: '100%',
                 }}

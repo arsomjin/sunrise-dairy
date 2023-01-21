@@ -41,3 +41,24 @@ export class Dates {
     }
   }
 }
+
+export const DateRange = {
+  today: 'วันนี้',
+  thisWeek: 'สัปดาห์นี้',
+  thisMonth: 'เดือนนี้',
+  sevenDays: '7 วันที่ผ่านมา',
+  thirtyDays: '30 วันที่ผ่านมา',
+  threeMonth: '3 เดือนที่ผ่านมา',
+  custom: 'กำหนดเอง',
+};
+
+export const DateRangeWithAll = {
+  today: 'วันนี้',
+  thisWeek: 'สัปดาห์นี้',
+  thisMonth: 'เดือนนี้',
+  sevenDays: '7 วันที่ผ่านมา',
+  thirtyDays: '30 วันที่ผ่านมา',
+  threeMonth: '3 เดือนที่ผ่านมา',
+  all: 'ทั้งหมด',
+  custom: 'กำหนดเอง',
+};

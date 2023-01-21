@@ -30,7 +30,9 @@
 @import "./animation.css";
 @import "./auth.css";
 @import "./components.css";
-
+@import "_excel.scss";
+@import "_overrides.scss";
+@import "_common.scss";
 
 
   body {

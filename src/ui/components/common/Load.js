@@ -14,7 +14,7 @@ const Load = forwardRef((props, ref) => {
   }
 
   return (
-    <div className="absolute flex bg-slate-50 opacity-70 inset-0 z-20  items-center justify-center">
+    <div className="absolute flex bg-slate-50 dark:bg-slate-400 opacity-70 inset-0 z-20  items-center justify-center">
       <Lottie
         loop
         animationData={animationData}

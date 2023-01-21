@@ -25,6 +25,7 @@ import { showConfirm } from 'utils/functions/common';
 import { waitFor } from 'utils/functions/common';
 import { updateCurrentRoute } from 'store/slices/tempSlice';
 import { useResponsive } from 'hooks/useResponsive';
+import { showLog } from 'utils/functions/common';
 
 // const avatar_placeholder = 'https://i.pravatar.cc/300'
 
@@ -35,10 +36,11 @@ const Topbar = ({
   collapsed,
   toggleCollapsed,
   menu,
+  hasNotification,
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [loading, setLoading] = useLoading();
+  const { setLoading } = useLoading();
   const { loading: loader, signOutUser } = FirebaseAuth();
   const { nightMode } = useSelector((state) => state.global);
   const { profile } = useSelector((state) => state.user);
@@ -46,8 +48,8 @@ const Topbar = ({
   const { mobileOnly } = useResponsive();
   const [isCollapsed, setIsCollapsed] = useState(collapsed);
   const [imgUrl, setImg] = useState(
-    profile?.photoURL ||
-      profile?.url ||
+    profile?.url ||
+      profile?.photoURL ||
       require('assets/images/blank-profile.png')
   );
 
@@ -56,12 +58,9 @@ const Topbar = ({
   }, [collapsed]);
 
   useEffect(() => {
-    setImg(
-      profile?.photoURL ||
-        profile?.url ||
-        require('assets/images/blank-profile.png')
-    );
-  }, [profile?.photoURL, profile?.url]);
+    const { photoURL, url } = profile || {};
+    setImg(url || photoURL || require('assets/images/blank-profile.png'));
+  }, [profile]);
 
   const onAvatarClick = (e) => {
     switch (e.key) {
@@ -184,36 +183,42 @@ const Topbar = ({
       <div className="flex">
         <ToggleTheme className="mr-2" style={{ marginTop: '6px' }} noColor />
         <ToggleLan className="mr-2 ml-2" noColor />
-        <Popover
-          content={getNotificationContent(
-            notif_data.concat(notif_data).concat(notif_data)
-          )}
-          trigger="click"
-          open={openNotif}
-          onOpenChange={handleOpenChange}
-          placement="bottomRight"
-        >
-          <div className="mr-2">
-            <Badge
-              style={{ marginTop: 4, marginRight: 15 }}
-              count={9}
-              overflowCount={10}
-            >
-              <Button
-                className="mr-3"
-                icon={<BellOutlined />}
-                type="ghost"
-                shape="circle"
-              />
-            </Badge>
-          </div>
-        </Popover>
+        {hasNotification && (
+          <Popover
+            content={getNotificationContent(
+              notif_data.concat(notif_data).concat(notif_data)
+            )}
+            trigger="click"
+            open={openNotif}
+            onOpenChange={handleOpenChange}
+            placement="bottomRight"
+          >
+            <div className="mr-2">
+              <Badge
+                style={{ marginTop: 4, marginRight: 15 }}
+                count={9}
+                overflowCount={10}
+              >
+                <Button
+                  className="mr-3"
+                  icon={<BellOutlined />}
+                  type="ghost"
+                  shape="circle"
+                />
+              </Badge>
+            </div>
+          </Popover>
+        )}
         {/* <Button className="mr-2" icon={<SettingOutlined />} type='ghost' shape="circle" /> */}
         <Dropdown
           placement="bottomRight"
           menu={{ items: avatar_items, onClick: onAvatarClick }}
         >
-          <Avatar size="large" src={imgUrl} />
+          <Avatar
+            size="large"
+            src={<img src={imgUrl} alt="" referrerPolicy="no-referrer" />}
+            style={{ marginLeft: 10 }}
+          />
         </Dropdown>
         {/* <Button className="mr-2" icon={
             <UserOutlined /> } type='ghost' shape="circle" /> */}

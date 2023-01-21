@@ -2,6 +2,7 @@ import React from 'react';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchTheme } from 'store/slices/appSlice';
+import { showLog } from 'utils/functions/common';
 
 //TODO: Whenever the user explicitly chooses to respect the OS preference.
 //Just remove key from localStorage. localStorage.removeItem('theme')

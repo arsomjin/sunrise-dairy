@@ -27,6 +27,7 @@ import { getFirestoreDoc } from 'services/firebase';
 import { formatValuesBeforeLoad } from 'utils/functions/common';
 import UploadAvatar from 'ui/components/common/UploadAvatar';
 import { updateUserProfile } from 'services/API/app_api';
+import { useResponsive } from 'hooks/useResponsive';
 
 const { Option } = Select;
 
@@ -34,11 +35,13 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
   const { USER, currentUser } = useSelector((state) => state.user);
   const [form] = Form.useForm();
   const { t } = useTranslation();
-  const [loading, setLoading] = useLoading();
+  const { setLoading } = useLoading();
 
   const [residences2, setRes] = useState(null);
 
   const dispatch = useDispatch();
+
+  const { mobileOnly } = useResponsive();
 
   useEffect(() => {
     const getAddresses = async () => {
@@ -176,7 +179,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
               </div>
               <div className="pt-6 rounded-lg shadow-md bg-background2 px-2">
                 <Row gutter={ROW_GUTTER}>
-                  <Col span={12}>
+                  <Col span={mobileOnly ? 24 : 12}>
                     <Form.Item
                       name="firstName"
                       label={t('ชื่อ')}
@@ -190,7 +193,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       <Input addonBefore={prefixSelector} />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col span={mobileOnly ? 24 : 12}>
                     <Form.Item
                       name="lastName"
                       label={t('นามสกุล')}
@@ -206,7 +209,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                   </Col>
                 </Row>
                 <Row gutter={ROW_GUTTER}>
-                  <Col span={12}>
+                  <Col span={mobileOnly ? 24 : 12}>
                     <Form.Item
                       name="nickName"
                       label={t('ชื่อเล่น')}
@@ -222,7 +225,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       <Input />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col span={mobileOnly ? 24 : 12}>
                     <Form.Item
                       name="email"
                       label={t('อีเมล')}
@@ -248,7 +251,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                   </Col>
                 </Row>
                 <Row gutter={ROW_GUTTER}>
-                  <Col span={12}>
+                  <Col span={mobileOnly ? 24 : 12}>
                     <Form.Item
                       name="phoneNumber"
                       label={capitalize(t('เบอร์โทรศัพท์'))}
@@ -262,7 +265,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span={12}>
+                  <Col span={mobileOnly ? 24 : 12}>
                     <Form.Item
                       name="gender"
                       label={t('เพศ')}
@@ -287,7 +290,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
               <div className="py-3 rounded-lg shadow-md bg-background2 px-3 mt-4">
                 <label className="text-tw-muted m-2">{t('ที่อยู่')}</label>
                 <Row gutter={ROW_GUTTER}>
-                  <Col span="6">
+                  <Col span={mobileOnly ? '12' : '6'}>
                     <Form.Item
                       name={getParent('h_number')}
                       label={t('บ้านเลขที่')}
@@ -303,7 +306,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span="6">
+                  <Col span={mobileOnly ? '12' : '6'}>
                     <Form.Item name={getParent('moo')} label={t('หมู่ที่')}>
                       <Input
                         placeholder={t('หมู่ที่')}
@@ -313,7 +316,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span="12">
+                  <Col span={mobileOnly ? '24' : '12'}>
                     <Form.Item
                       name={getParent('village')}
                       label={t('หมู่บ้าน')}
@@ -328,7 +331,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                   </Col>
                 </Row>
                 <Row gutter={ROW_GUTTER}>
-                  <Col span="7">
+                  <Col span={mobileOnly ? 12 : '7'}>
                     <Form.Item name={getParent('soi')} label={t('ซอย')}>
                       <Input
                         placeholder={t('ซอย')}
@@ -338,7 +341,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span="7">
+                  <Col span={mobileOnly ? 12 : '7'}>
                     <Form.Item name={getParent('road')} label={t('ถนน')}>
                       <Input
                         placeholder={t('ถนน')}
@@ -348,7 +351,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span="7">
+                  <Col span={mobileOnly ? 12 : '7'}>
                     <Form.Item name={getParent('building')} label={t('อาคาร')}>
                       <Input
                         placeholder={t('อาคาร')}
@@ -358,7 +361,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                       />
                     </Form.Item>
                   </Col>
-                  <Col span="3">
+                  <Col span={mobileOnly ? 12 : '3'}>
                     <Form.Item name={getParent('floor')} label={t('ชั้น')}>
                       <Input
                         placeholder={t('ชั้น')}
@@ -408,6 +411,7 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
                   {t('บันทึก').toUpperCase()}
                 </Button>
               </Form.Item>
+              <div className="h-36" />
             </div>
           );
         }}

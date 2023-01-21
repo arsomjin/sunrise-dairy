@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PageTitle from 'ui/components/common/PageTitle';
+import BarTitle from 'ui/components/common/BarTitle';
 import { Button, Form, Input, Typography } from 'antd';
 import { capitalize, validateEmail } from 'utils/functions/common';
 import {
@@ -89,7 +89,7 @@ const ResetPassword = () => {
 
   return (
     <>
-      <PageTitle>{t('รีเซ็ตรหัสผ่าน')}</PageTitle>
+      <BarTitle>{t('รีเซ็ตรหัสผ่าน')}</BarTitle>
       <div className="flex flex-col z-10 bg-slate-100 shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-2xl w-full max-w-md">
         <div className="mb-4">
           <h3 className="font-semibold text-2xl text-gray-800">

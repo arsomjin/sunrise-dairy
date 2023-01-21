@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PageTitle from 'ui/components/common/PageTitle';
+import BarTitle from 'ui/components/common/BarTitle';
 import { Form, Input } from 'antd';
 import { capitalize } from 'utils/functions/common';
 import {
@@ -67,7 +67,7 @@ const Login = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   const onEyeClick = () => setVisible((vs) => !vs);
   return (
     <>
-      <PageTitle>{t('เข้าสู่ระบบ')}</PageTitle>
+      <BarTitle>{t('เข้าสู่ระบบ')}</BarTitle>
       <div className="flex flex-col z-10 bg-slate-100 shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-2xl w-full max-w-md">
         <div className="mb-4 flex items-center justify-between">
           <div>

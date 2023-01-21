@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Progress } from 'antd';
+import { Progress as AProgress } from 'antd';
 
-export default ({
+const Progress = ({
   percent = 0,
   type = 'circle',
   strokeColor = {
@@ -14,5 +14,7 @@ export default ({
     setPercent(percent);
   }, [percent]);
 
-  return <Progress {...{ percent: progress, type, strokeColor }} />;
+  return <AProgress {...{ percent: progress, type, strokeColor }} />;
 };
+
+export default Progress;
