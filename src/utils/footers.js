@@ -6,8 +6,8 @@ export const Socials = ({ medium, large }) => {
   return (
     <OpenApp
       href="https://www.facebook.com/korat555"
-      // android="fb://page/390277407694392"
-      // ios="fb://page/?id=390277407694392"
+      android="fb://page/1214358132051972"
+      ios="fb://page/?id=1214358132051972"
     >
       <FacebookFilled
         className="text-secondary mt-4 "

@@ -107,13 +107,13 @@ const Sessions = ({ chartData, chartOptions, title }) => {
 
     // Render the chart.
     AnalyticsOverviewChart.render();
-  }, [chartData, chartOptions, theme]);
+  }, [Chart, chartData, chartOptions, theme]);
 
   return (
     <div className="rounded-xl bg-background2 shadow-lg mb-4 p-4 min">
       {/* Card Header */}
       <div className="border-bottom">
-        <h6 className="mb-2 text-black">{title}</h6>
+        <h6 className="mb-2 text-black text-lg">{title}</h6>
         <div className="block-handle" />
       </div>
 

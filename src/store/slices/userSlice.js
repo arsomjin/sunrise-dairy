@@ -22,8 +22,7 @@ export const userSlicer = createSlice({
   initialState: initialStates,
   reducers: {
     loginAccount: (state, action) => {
-      const { res } = action.payload;
-      const USER = Firebase.getFirebaseUserFromObject(res);
+      const { USER } = action.payload;
       return { ...state, isLogin: true, USER };
     },
     logoutAccount: (state) => {

@@ -1,6 +1,7 @@
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 import dayjs from 'dayjs';
+import { isMobile } from 'react-device-detect';
 import Firebase from 'services/firebase/api';
 import { __DEV__ } from 'utils';
 
@@ -171,11 +172,28 @@ export const showDelete = ({
   return Modal.confirm(config);
 };
 
+export const showToBeContinue = () =>
+  message['info']({
+    content: 'To be continue..',
+    style: {
+      marginTop: isMobile ? 32 : 64,
+    },
+    duration: 2.5,
+  }).then(() =>
+    message['info']({
+      content: 'อยู่ระหว่างดำเนินการ..',
+      style: {
+        marginTop: isMobile ? 32 : 64,
+      },
+      duration: 2.5,
+    })
+  );
+
 export const Numb = (val) => {
   if (!val) {
     return 0;
   }
-  let mNum = val.toString().replace(/(\r\n|\n|\r|,| |-)/g, '');
+  let mNum = val.toString().replace(/(\r\n|\n|\r|,| |)/g, '');
   return isNaN(mNum) ? val : Number(mNum);
 };
 

@@ -1,0 +1,71 @@
+
+.editable-cell {
+  position: relative;
+}
+
+.editable-cell-value-wrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.editable-row .ant-form-item-explain {
+  position: absolute;
+  top: 100%;
+  font-size: 12px;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+  padding: 4px 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.deleted-row :before {
+  content: ' ';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  border-bottom: 1px solid #ff9999;
+  width: 100%;
+}
+
+.deleted-row {
+  background-color: var(--colors-background-deleted-row);
+}
+
+.rejected-row {
+  background-color: var(--colors-background-rejected-row);
+}
+
+.completed-row {
+  background-color: var(--colors-background-completed-row);
+}
+
+.recorded-row {
+  background-color: var(--colors-background-recorded-row);
+}
+
+.selected-row {
+  background-color: var(--colors-background-selected-row);
+}
+
+.incompleted-row {
+  background-color: var(--colors-background-incompleted-row);
+}
+
+.header-row {
+  background-color: var(--colors-background-header-row);
+}
+
+[data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
+  border: 1px solid #434343;
+}
+
+.print-row :before {
+  content: ' ';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  border-bottom: 1px solid #d3d3d3;
+  width: 100%;
+}

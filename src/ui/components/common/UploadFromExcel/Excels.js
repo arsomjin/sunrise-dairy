@@ -176,7 +176,7 @@ const Excels = ({ firstRowIsHeader, onDataLoaded, style, title }) => {
             <img
               src={imgSrc}
               alt="excel-format"
-              className="restrict-excel-img"
+              className="restrict-excel-img w-fit sm:min-w-full"
               // style={{ maxWidth: '100%', maxHeight: '100%' }}
             />
             <div style={{ height: 20 }} />

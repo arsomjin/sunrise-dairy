@@ -15,16 +15,16 @@ const About = () => {
         src={require('assets/logo/logo192.png')}
         alt="Rungaroon Dairy"
       />
-      <h3 className="text-3xl font-extrabold text-black">
+      <h3 className="text-3xl font-extrabold text-black text-center">
         บริษัท รุ่งอรุณ แดรี่ จำกัด
       </h3>
-      <p className="text-tw-black">
+      <p className="text-tw-black text-center">
         ซื้อขายน้ำนมดิบ​ ผลิตภัณฑ์​อาหารสัตว์​ ผลิตภัณฑ์​นม
       </p>
-      <p className="text-tw-black">
+      <p className="text-tw-black text-center">
         888 หมู่ 15 ต.มะเกลือเก่า อ.สูงเนิน จ.นครราชสีมา 30170
       </p>
-      <h2 className="text-2xl font-extrabold text-black mt-4">
+      <h2 className="text-2xl font-extrabold text-black mt-4 text-center">
         RUNGAROON DAIRY COMPANY LIMITED
       </h2>
       <Socials medium />

@@ -28,6 +28,7 @@ import { formatValuesBeforeLoad } from 'utils/functions/common';
 import UploadAvatar from 'ui/components/common/UploadAvatar';
 import { updateUserProfile } from 'services/API/app_api';
 import { useResponsive } from 'hooks/useResponsive';
+import { addSearchFields } from 'utils/functions/Searching';
 
 const { Option } = Select;
 
@@ -71,8 +72,15 @@ const Profile = ({ parent, notRequired, disabled, readOnly }) => {
     try {
       setLoading(true);
       // console.log('Received values of form: ', values);
-      const mValues = cleanValuesBeforeSave(values);
-      await updateUserProfile(mValues, USER.uid, dispatch);
+      // Add Search Fields
+      const val = addSearchFields(values, [
+        'firstName',
+        'lastName',
+        'phoneNumber',
+      ]);
+
+      const mValues = cleanValuesBeforeSave(val);
+      await updateUserProfile(mValues, USER.uid);
 
       // await firebaseUpdateProfile({
       //   displayName: `${mValues?.firstName || ''} ${mValues?.lastName || ''}`,

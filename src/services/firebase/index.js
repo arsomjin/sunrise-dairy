@@ -32,6 +32,8 @@ import { getStorage } from 'firebase/storage';
 import { getMessaging } from 'firebase/messaging';
 import { showLog } from 'utils/functions/common';
 import { appendArgumentsByArray } from 'utils/functions/common';
+import dayjs from 'dayjs';
+import { store } from 'store';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -51,193 +53,207 @@ export const database = getDatabase(app);
 export const storage = getStorage(app);
 export const messaging = getMessaging(app); // (messaging/unsupported-browser) Supports only localhost and https
 
-export const firebaseSignIn = (email, password) =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await signInWithEmailAndPassword(auth, email, password);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const firebaseSignIn = async (email, password) => {
+  try {
+    let res = await signInWithEmailAndPassword(auth, email, password);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const firebaseSignUp = (email, password) =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await createUserWithEmailAndPassword(auth, email, password);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const firebaseSignUp = async (email, password) => {
+  try {
+    let res = await createUserWithEmailAndPassword(auth, email, password);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const firebaseResetPassword = (email) =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await sendPasswordResetEmail(auth, email);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const firebaseResetPassword = async (email) => {
+  try {
+    let res = await sendPasswordResetEmail(auth, email);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const sendVerifyEmail = () =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await sendEmailVerification(auth.currentUser);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const sendVerifyEmail = async () => {
+  try {
+    let res = await sendEmailVerification(auth.currentUser);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const firebaseSignOut = () =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await signOut(auth);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const firebaseSignOut = async () => {
+  try {
+    let res = await signOut(auth);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const firebaseSignInWithPhoneNumber = (phoneNumber, appVerifier) =>
-  new Promise(async (r, j) => {
-    try {
-      let confirmationResult = await signInWithPhoneNumber(
-        auth,
-        phoneNumber,
-        appVerifier
-      );
-      // window.confirmationResult = confirmationResult;
-      r(confirmationResult);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const firebaseSignInWithPhoneNumber = async (
+  phoneNumber,
+  appVerifier
+) => {
+  try {
+    let confirmationResult = await signInWithPhoneNumber(
+      auth,
+      phoneNumber,
+      appVerifier
+    );
+    // window.confirmationResult = confirmationResult;
+    return confirmationResult;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const firebaseSignInWithGoogle = () =>
-  new Promise(async (r, j) => {
-    try {
-      const provider = new GoogleAuthProvider();
-      auth.languageCode = 'th';
+export const firebaseSignInWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    auth.languageCode = 'th';
 
-      const result = await signInWithPopup(auth, provider);
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      r({ user, credential, token });
-      // ...
-    } catch (error) {
-      j(error);
-    }
-  });
+    const result = await signInWithPopup(auth, provider);
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    return { user, credential, token };
+    // ...
+  } catch (error) {
+    throw error;
+  }
+};
 
-export const firebaseUpdateProfile = (
-  profile // profile: { displayName, photoURL }
-) =>
-  new Promise(async (r, j) => {
-    try {
-      await updateProfile(auth.currentUser, profile);
-      r(true);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const firebaseUpdateProfile = async (profile) => {
+  // profile: { displayName, photoURL }
+  try {
+    await updateProfile(auth.currentUser, profile);
+    return true;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const setFirestore = (col, docId, data) =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await setDoc(doc(firestore, col, docId), data);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const setFirestore = async (col, docId, data) => {
+  try {
+    let res = await setDoc(doc(firestore, col, docId), data);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const addFirestore = (col, data) =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await addDoc(collection(firestore, col), data);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const addFirestore = async (col, data) => {
+  try {
+    let res = await addDoc(collection(firestore, col), data);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const updateFirestore = (col, docId, data) =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await updateDoc(doc(firestore, col, docId), data);
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const updateFirestore = async (col, docId, data) => {
+  try {
+    let res = await updateDoc(doc(firestore, col, docId), data);
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const deleteFirestore = (col, docId) =>
-  new Promise(async (r, j) => {
-    try {
-      let res = await deleteDoc(doc(firestore, col, docId));
-      r(res);
-    } catch (e) {
-      j(e);
-    }
-  });
+export const addLogs = async (log) => {
+  try {
+    // log = { action, module, command, ts, date, by, docId, snap }
+    const states = store.getState();
+    const USER = states.user.USER;
+    let res = await addFirestore('logs', {
+      ...log,
+      ts: Date.now(),
+      date: dayjs().format('YYYY-MM-DD'),
+      by: USER.uid,
+    });
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const getFirestoreDoc = (col, docId) =>
-  new Promise(async (r, j) => {
-    try {
-      const docRef = doc(firestore, col, docId);
-      const docSnap = await getDoc(docRef);
+export const deleteFirestore = async (col, docId) => {
+  try {
+    let res = await deleteDoc(doc(firestore, col, docId));
+    return res;
+  } catch (e) {
+    throw e;
+  }
+};
 
-      if (docSnap.exists()) {
-        r(docSnap.data());
-      } else {
-        // doc.data() will be undefined in this case
-        console.log('No such document!');
-        r(null);
-      }
-    } catch (e) {
-      j(e);
-    }
-  });
+export const getFirestoreDoc = async (col, docId) => {
+  try {
+    const docRef = doc(firestore, col, docId);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : null;
+  } catch (e) {
+    throw e;
+  }
+};
 
-export const getFirestoreCollection = (col, wheresArr, order, limited, isDec) =>
-  new Promise(async (r, j) => {
-    try {
-      let colRef = collection(firestore, col);
-      let args_arr = [colRef];
-      if (!!wheresArr) {
-        wheresArr.map((wh) => {
-          args_arr = [...args_arr, where(wh[0], wh[1], wh[2])];
-          return wh;
-        });
-      }
-      if (!!order) {
-        args_arr = [...args_arr, orderBy(order, isDec ? 'desc' : 'asc')];
-      }
-      if (!!limited) {
-        args_arr = [...args_arr, limit(limited)];
-      }
-      let lFnc = appendArgumentsByArray(query, args_arr);
-
-      let q = lFnc();
-      let result = {};
-      const querySnapshot = await getDocs(q);
-      // showLog('empty', querySnapshot.empty);
-      if (querySnapshot.empty) return r(null);
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, ' => ', doc.data());
-        result[doc.id] = doc.data();
+export const getFirestoreCollection = async (
+  col,
+  wheresArr,
+  order,
+  limited,
+  isDec
+) => {
+  try {
+    let colRef = collection(firestore, col);
+    let args_arr = [colRef];
+    if (!!wheresArr) {
+      wheresArr.map((wh) => {
+        args_arr = [...args_arr, where(wh[0], wh[1], wh[2])];
+        return wh;
       });
-      r(result);
-    } catch (e) {
-      j(e);
     }
-  });
+    if (!!order) {
+      args_arr = [...args_arr, orderBy(order, isDec ? 'desc' : 'asc')];
+    }
+    if (!!limited) {
+      args_arr = [...args_arr, limit(limited)];
+    }
+    let lFnc = appendArgumentsByArray(query, args_arr);
+
+    let q = lFnc();
+    let result = {};
+    const querySnapshot = await getDocs(q);
+    // showLog('empty', querySnapshot.empty);
+    if (querySnapshot.empty) return null;
+    querySnapshot.forEach((doc) => {
+      // console.log(doc.id, ' => ', doc.data());
+      result[doc.id] = doc.data();
+    });
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const checkDuplicatedDoc = async (col, docSnap) => {
+  try {
+    const wheres = Object.keys(docSnap).map((k) => [k, '==', docSnap[k]]);
+    const dupSnap = await getFirestoreCollection(col, wheres);
+    return dupSnap;
+  } catch (e) {
+    throw e;
+  }
+};
 
 export const currentUser = () => {
   // Need to implement the onAuthStateChange, otherwise it will return null.

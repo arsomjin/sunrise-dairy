@@ -11,7 +11,7 @@ import Logout from './Logout';
 import { useSelector } from 'react-redux';
 import { NotFound } from 'ui/components/common/NotFound';
 import RequireAuth from './RequireAuth';
-import MainContainer from 'ui/components/common/Container/MainContainer';
+import MainContainer from '../Container/MainContainer';
 import Dashboard from 'modules/Dashboard';
 import Screen1 from 'ui/screens/Screen1';
 import Screen2 from 'ui/screens/Screen2';
@@ -22,10 +22,14 @@ import UploadFromExcel from 'ui/components/common/UploadFromExcel';
 import Welcome from 'ui/screens/Welcome';
 import { showLog } from 'utils/functions/common';
 import About from 'ui/screens/About';
+import QCResult from 'modules/Reports/Milk/QCResult';
+import DailyQCReport from 'modules/Reports/Milk/DailyQCReport';
+import DailyQC from 'modules/Milk/QC/DailyQC';
+import MilkQC from 'modules/Milk/QC/MilkQC';
+import Pricing from 'modules/Milk/Pricing';
+import Users from 'modules/Persons/Users';
 
-const AuthLayout = React.lazy(() =>
-  import('ui/components/common/Container/AuthContainer')
-);
+const AuthLayout = React.lazy(() => import('../Container/AuthContainer'));
 
 const AuthLayoutFallback = withLoading(AuthLayout);
 const LogoutFallback = withLoading(Logout);
@@ -33,6 +37,7 @@ const LogoutFallback = withLoading(Logout);
 export const DASHBOARD_PATH = '/';
 export const MILK_PATH = '/milk';
 export const UTILS_PATH = '/utils';
+export const PERSON_PATH = '/persons';
 
 export const AppRouter = () => {
   const { USER, profile } = useSelector((state) => state.user);
@@ -44,7 +49,11 @@ export const AppRouter = () => {
   // showLog({ hasAuth });
   const protectedLayout = (
     <RequireAuth hasAuth={hasAuth}>
-      {hasAuth ? <MainContainer /> : <Welcome />}
+      {profile?.permissions && profile.permissions?.granted ? (
+        <MainContainer />
+      ) : (
+        <Welcome />
+      )}
     </RequireAuth>
   );
 
@@ -61,6 +70,14 @@ export const AppRouter = () => {
           <Route path={MILK_PATH}>
             <Route index element={<Weight />} />
             <Route path="weight" element={<Weight />} />
+            <Route path="milk-qc-report" element={<QCResult />} />
+            <Route path="milk-daily-report" element={<DailyQCReport />} />
+            <Route path="pricing" element={<Pricing />} />
+            <Route path="milk-daily-test" element={<DailyQC />} />
+            <Route path="milk-qc" element={<MilkQC />} />
+          </Route>
+          <Route path={PERSON_PATH}>
+            <Route path="users" element={<Users />} />
           </Route>
           <Route path={UTILS_PATH}>
             <Route

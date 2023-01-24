@@ -62,41 +62,40 @@ class Firebase {
       : userObject;
   };
 
-  addErrorLogs = (error) =>
-    new Promise(async (r, j) => {
-      try {
-        if (!error) {
-          r(false);
-        }
-        const { USER } = store.getState().user;
-        let eYear = dayjs().format('YYYY');
-        let eMonth = dayjs().format('YYYY-MM');
-        let eTime = dayjs().format('YYYYMMDDHHmm');
-        let collection = 'errors/no_auth/handler';
-        if (!!USER?.uid && !!currentUser()) {
-          collection = 'errors/auth/handler';
-        }
-        showLog('addErrorLogs', error);
-        const errorData = cleanValuesBeforeSave({
-          ts: Date.now(),
-          ...(!!USER?.uid &&
-            !!currentUser() && {
-              by: `${USER.firstName || ''} ${USER.lastName || ''}`,
-              uid: USER.uid,
-              email: USER.email,
-            }),
-          error: error || null,
-          device: { isMobile, browserName, browserVersion, osName, osVersion },
-          ...(error?.snap && { snap: error.snap }),
-          ...(error?.module && { module: error.module }),
-        });
-        const res = await setFirestore(collection, eTime, errorData);
-        r(res);
-      } catch (e) {
-        console.warn(e);
-        j(e);
+  addErrorLogs = async (error) => {
+    try {
+      if (!error) {
+        return false;
       }
-    });
+      const { USER } = store.getState().user;
+      let eYear = dayjs().format('YYYY');
+      let eMonth = dayjs().format('YYYY-MM');
+      let eTime = dayjs().format('YYYYMMDDHHmm');
+      let collection = 'errors/no_auth/handler';
+      if (!!USER?.uid && !!currentUser()) {
+        collection = 'errors/auth/handler';
+      }
+      showLog('addErrorLogs', error);
+      const errorData = cleanValuesBeforeSave({
+        ts: Date.now(),
+        ...(!!USER?.uid &&
+          !!currentUser() && {
+            by: `${USER.firstName || ''} ${USER.lastName || ''}`,
+            uid: USER.uid,
+            email: USER.email,
+          }),
+        error: error || null,
+        device: { isMobile, browserName, browserVersion, osName, osVersion },
+        ...(error?.snap && { snap: error.snap }),
+        ...(error?.module && { module: error.module }),
+      });
+      const res = await setFirestore(collection, eTime, errorData);
+      return res;
+    } catch (e) {
+      console.warn(e);
+      throw e;
+    }
+  };
 }
 
 export default new Firebase();

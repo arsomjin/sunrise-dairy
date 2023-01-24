@@ -27,6 +27,7 @@ import { GoogleAuthProvider } from 'firebase/auth';
 import { cleanValuesBeforeSave } from 'utils/functions/common';
 import { showLog } from 'utils/functions/common';
 import { updateUserProfile } from 'services/API/app_api';
+import { PERMISSIONS } from 'constants/Permissions';
 
 const FirebaseAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -38,7 +39,10 @@ const FirebaseAuth = () => {
     try {
       setLoading(true);
       let res = await firebaseSignIn(email, password);
-      dispatch(loginAccount({ res }));
+      const USER = Firebase.getFirebaseUserFromObject(res);
+      dispatch(loginAccount({ USER }));
+      let profile = { email };
+      await updateUserProfile(profile, USER.uid);
       setLoading(false);
       notificationController.success({
         message: capitalize(I18n.t('เข้าสู่ระบบสำเร็จ')),
@@ -91,7 +95,10 @@ const FirebaseAuth = () => {
       if (otp === null || final === null) return;
       setLoading(true);
       const res = await final.confirm(otp);
-      dispatch(loginAccount({ res }));
+      const USER = Firebase.getFirebaseUserFromObject(res);
+      dispatch(loginAccount({ USER }));
+      let profile = { phoneNumber: USER.phoneNumber };
+      await updateUserProfile(profile, USER.uid);
       setLoading(false);
       notificationController.success({
         message: capitalize(I18n.t('เข้าสู่ระบบสำเร็จ')),
@@ -216,9 +223,11 @@ const FirebaseAuth = () => {
           auth: { providerId, signInMethod, accessToken },
         };
         const mValues = cleanValuesBeforeSave(profile);
-        await updateUserProfile(mValues, uid, dispatch);
+        await updateUserProfile(mValues, uid);
       }
-      dispatch(loginAccount({ res }));
+      const USER = Firebase.getFirebaseUserFromObject(res);
+      dispatch(loginAccount({ USER }));
+
       setLoading(false);
       notificationController.success({
         message: capitalize(I18n.t('เข้าสู่ระบบสำเร็จ')),

@@ -77,7 +77,7 @@ const EditableCellTable = ({
   let totalWidth = mColumns.reduce((sum, elem) => sum + Numb(elem.width), 0);
   let viewWidth = screenWidth - sideBarWidth;
   let tableWidth = totalWidth > viewWidth ? viewWidth : totalWidth;
-  showLog({ screenWidth, totalWidth, viewWidth, tableWidth });
+  // showLog({ screenWidth, totalWidth, viewWidth, tableWidth });
 
   return (
     <Table

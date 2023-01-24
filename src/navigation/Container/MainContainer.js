@@ -1,23 +1,37 @@
 import { Menu } from 'antd';
+import { useProfile } from 'hooks/useProfile';
 import { initTheme } from 'navigation/api';
 import { routes } from 'navigation/routes';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { updateCollapsed } from 'store/slices/tempSlice';
 import { updateCurrentRoute } from 'store/slices/tempSlice';
-import { showLog } from 'utils/functions/common';
-import { menuItems } from '../layout/api';
-import MainSideBar from '../layout/SideBar';
-import Topbar from '../layout/Topbar';
+import { updateProfile } from 'store/slices/userSlice';
+import { menuItems } from '../../ui/layout/api';
+import MainSideBar from '../../ui/layout/SideBar';
+import Topbar from '../../ui/layout/Topbar';
 
 const MainContainer = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const { USER } = useSelector((state) => state.user);
   const { currentRoute, keyPath, collapsed } = useSelector(
     (state) => state.unPersisted
   );
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const currentProfile = useProfile(USER?.uid);
+
+  const first1 = useRef(true);
+
+  useEffect(() => {
+    if (!first1.current) {
+      // Avoid flickering to auth page.
+      dispatch(updateProfile({ profile: currentProfile }));
+    }
+    first1.current = false;
+  }, [currentProfile, dispatch]);
 
   useEffect(() => {
     initTheme(dispatch);

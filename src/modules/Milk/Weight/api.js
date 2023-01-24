@@ -42,7 +42,7 @@ export const getMilkColumns = (data) => [
   {
     title: 'ชื่อ - สกุล',
     dataIndex: 'nameSurname',
-    width: 160,
+    width: 180,
     filters: distinctArr(data, ['nameSurname']).map((it) => ({
       value: it.nameSurname,
       text: it.nameSurname,

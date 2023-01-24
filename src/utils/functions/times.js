@@ -50,6 +50,12 @@ export const isDateTypeField = (val) => {
   );
 };
 
+export const isTimeTypeField = (val) => {
+  return (
+    val.search('Time') > -1 || val.search('เวลา') > -1 || val === 'created'
+  );
+};
+
 export const getThaiDate = (val, full) => {
   return full
     ? dayjs(val, 'YYYY-MM-DD HH:mm:ss')

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getFirestoreCollection } from 'services/firebase';
 import PageTitle from 'ui/components/common/Pages/PageTitle';
 import EditableCellTable from 'ui/components/common/Table/EditableCellTable';
@@ -20,41 +20,43 @@ const Weight = () => {
     dayjs().format('YYYY-MM-DD'),
   ]);
 
-  const getWeights = async (dateRange) => {
-    try {
-      setLoading(true);
-      const weights = await getFirestoreCollection(
-        'sections/milk/weight',
-        dateRange
-          ? [
-              ['recordDate', '>=', dateRange[0]],
-              ['recordDate', '<=', dateRange[1]],
-            ]
-          : null
-      );
-      const arr = weights
-        ? Object.keys(weights).map((k, id) => ({
-            ...weights[k],
-            id,
-            key: id,
-            _id: k,
-          }))
-        : [];
-      showLog({ arr, weights });
-      setLoading(false);
-      setData(arr);
-    } catch (e) {
-      showWarn(e);
-      setLoading(false);
-    }
-  };
+  const getWeights = useCallback(
+    async (dateRange) => {
+      try {
+        setLoading(true);
+        const weights = await getFirestoreCollection(
+          'sections/milk/weight',
+          dateRange
+            ? [
+                ['recordDate', '>=', dateRange[0]],
+                ['recordDate', '<=', dateRange[1]],
+              ]
+            : null
+        );
+        const arr = weights
+          ? Object.keys(weights).map((k, id) => ({
+              ...weights[k],
+              id,
+              key: id,
+              _id: k,
+            }))
+          : [];
+        showLog({ arr, weights });
+        setLoading(false);
+        setData(arr);
+      } catch (e) {
+        showWarn(e);
+        setLoading(false);
+      }
+    },
+    [setLoading]
+  );
 
   const handleSelect = (e) => {};
 
   useEffect(() => {
     getWeights(date);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [date, getWeights]);
 
   const onDateChange = (range) => {
     showLog({ range });
@@ -63,7 +65,6 @@ const Weight = () => {
       dayjs(range[1], 'DD/MM/YYYY').format('YYYY-MM-DD'),
     ];
     setDate(nRange);
-    getWeights(nRange);
   };
   return (
     <div className="h-full p-2">

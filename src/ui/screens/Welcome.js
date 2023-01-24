@@ -1,12 +1,30 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import CompanyLogo from 'ui/components/common/CompanyLogo';
 import { notificationController } from 'controllers/notificationController';
+import { useDispatch, useSelector } from 'react-redux';
+import { showWarn } from 'utils/functions/common';
+import { errorHandler } from 'utils/functions/common';
+import { getFirestoreDoc } from 'services/firebase';
+import { useProfile } from 'hooks/useProfile';
+import { updateProfile } from 'store/slices/userSlice';
 
 const Welcome = () => {
+  const { USER } = useSelector((state) => state.user);
   const welcome = useRef(null);
   const shark = useRef(null);
   const paragraph = useRef(null);
+  const currentProfile = useProfile(USER?.uid);
+  const dispatch = useDispatch();
+
+  const first1 = useRef(true);
+
+  useEffect(() => {
+    if (!first1.current) {
+      // Avoid flickering to auth page.
+      dispatch(updateProfile({ profile: currentProfile }));
+    }
+    first1.current = false;
+  }, [currentProfile, dispatch]);
 
   useEffect(() => {
     gsap.to(welcome.current, {
@@ -30,6 +48,30 @@ const Welcome = () => {
       duration: 1,
     });
   }, []);
+
+  const explore = async () => {
+    try {
+      const profile = await getFirestoreDoc(
+        `users/${USER.uid}/info`,
+        'profile'
+      );
+      profile?.permissions && profile.permissions?.granted
+        ? window.location.reload()
+        : notificationController.info({
+            message: 'กรุณารอเราตรวจสอบและยืนยันตัวตนของท่าน ก่อนเข้าใช้งาน',
+          });
+    } catch (e) {
+      showWarn(e);
+      errorHandler({
+        code: e?.code || '',
+        message: e?.message || '',
+        user: USER,
+        snap: {
+          module: 'explore',
+        },
+      });
+    }
+  };
 
   const image = require('assets/images/welcome.png');
   return (
@@ -70,12 +112,7 @@ const Welcome = () => {
             และเราจะก้าวไปด้วยกันอย่างมั่งคั่ง มั่นคง
           </p>
           <button
-            onClick={() =>
-              notificationController.info({
-                message:
-                  'กรุณารอเราตรวจสอบและยืนยันตัวตนของท่าน ก่อนเข้าใช้งาน',
-              })
-            }
+            onClick={explore}
             // href="/#/sharksinfo"
             className="z-10 bg-[#1F78A1]/20 text-tw-white font-normal tracking-wide px-24 py-2 rounded-md border-[1px] border-[#165370] mt-8 hover:bg-[#165370] duration-300 shake-on-hover"
           >

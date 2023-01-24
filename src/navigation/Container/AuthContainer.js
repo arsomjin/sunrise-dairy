@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, Outlet } from 'react-router-dom';
 import { switchTheme } from 'store/slices/appSlice';
-import ToggleLan from '../ToggleLan';
+import ToggleLan from '../../ui/components/common/ToggleLan';
 
 const AuthLayout = ({
   image = 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1951&amp;q=80',

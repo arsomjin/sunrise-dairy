@@ -86,101 +86,96 @@ export const hasFields = (arr, fields, hasException) => {
   return fArr.length >= checkFields.length;
 };
 
-export const formatExcelToJson = (dat, user) =>
-  new Promise(async (r, j) => {
-    try {
-      const result = [];
-      const anomalies = [];
-      for (var i = 0; i < dat.rows.length; i++) {
-        if (dat.rows[i].length === 0) {
-          return dat;
-        }
-        let it = {};
-        for (var n = 0; n < dat.rows[i].length; n++) {
-          let val = dat.rows[i][n] || '';
-          if (!!dat.cols[n + 1]) {
-            let excelFieldName = dat.cols[n + 1].name.toString().trim();
-            // Map excel header to field name.
-            let fieldName = FieldMapping[excelFieldName];
-            if (fieldName) {
-              // showLog('last4', fieldName.substr(-4));
-              let isDate = isDateTypeField(fieldName);
-              // let isDate = fieldName.substr(-4) === 'Date';
-              if (isDate && val.length > 9) {
-                switch (fieldName) {
-                  case 'effectiveDate':
-                    it[fieldName] = dayjs(val, 'DD.MM.YYYY').format(
-                      'YYYY-MM-DD'
-                    );
-                    break;
-                  case 'systemDate':
-                    it[fieldName] = dayjs(val, 'DD/MM/YYYY HH:mm:ss').format(
-                      'YYYY-MM-DD HH:mm:ss'
-                    );
-                    break;
+export const formatExcelToJson = async (dat, user) => {
+  try {
+    const result = [];
+    const anomalies = [];
+    for (var i = 0; i < dat.rows.length; i++) {
+      if (dat.rows[i].length === 0) {
+        return dat;
+      }
+      let it = {};
+      for (var n = 0; n < dat.rows[i].length; n++) {
+        let val = dat.rows[i][n] || '';
+        if (!!dat.cols[n + 1]) {
+          let excelFieldName = dat.cols[n + 1].name.toString().trim();
+          // Map excel header to field name.
+          let fieldName = FieldMapping[excelFieldName];
+          if (fieldName) {
+            // showLog('last4', fieldName.substr(-4));
+            let isDate = isDateTypeField(fieldName);
+            // let isDate = fieldName.substr(-4) === 'Date';
+            if (isDate && val.length > 9) {
+              switch (fieldName) {
+                case 'effectiveDate':
+                  it[fieldName] = dayjs(val, 'DD.MM.YYYY').format('YYYY-MM-DD');
+                  break;
+                case 'systemDate':
+                  it[fieldName] = dayjs(val, 'DD/MM/YYYY HH:mm:ss').format(
+                    'YYYY-MM-DD HH:mm:ss'
+                  );
+                  break;
 
-                  default:
-                    it[fieldName] = dayjs(val, 'DD/MM/YYYY').format(
-                      'YYYY-MM-DD'
-                    );
-                    break;
-                }
-              } else {
-                it[fieldName] = val;
+                default:
+                  it[fieldName] = dayjs(val, 'DD/MM/YYYY').format('YYYY-MM-DD');
+                  break;
               }
             } else {
-              it[excelFieldName] = val;
-              // Add anomaly
-              anomalies.push({
-                excelFieldName,
-                value: val,
-              });
+              it[fieldName] = val;
             }
           } else {
-            showLog({ error: { n, col: dat.cols[n + 1], row: dat.rows[i] } });
+            it[excelFieldName] = val;
+            // Add anomaly
+            anomalies.push({
+              excelFieldName,
+              value: val,
+            });
           }
+        } else {
+          showLog({ error: { n, col: dat.cols[n + 1], row: dat.rows[i] } });
         }
-        if (
-          hasKey('productCode', it) &&
-          hasKey('fullName', it) &&
-          hasKey('department', it)
-        ) {
-          // Field name mapping correction.
-          it.employeeCode = it.productCode;
-          delete it.productCode;
-        }
-        if (
-          hasKey('employeeCode', it) &&
-          hasKey('fullName', it) &&
-          hasKey('department', it)
-        ) {
-          // Field name mapping correction.
-          it.branch = it.department;
-          delete it.department;
-        }
-        result.push(it);
       }
-      if (anomalies.length > 0) {
-        const dAnomalies = distinctArr(anomalies, ['excelFieldName']);
-        await arrayForEach(dAnomalies, async (item) => {
-          await addFirestore(
-            'anomaly/imports/fieldName',
-            cleanValuesBeforeSave({
-              item,
-              anomaly: {
-                type: 'FIELDNAME_MAPPING',
-                by: user.uid,
-                time: Date.now(),
-              },
-            })
-          );
-        });
+      if (
+        hasKey('productCode', it) &&
+        hasKey('fullName', it) &&
+        hasKey('department', it)
+      ) {
+        // Field name mapping correction.
+        it.employeeCode = it.productCode;
+        delete it.productCode;
       }
-      r(result);
-    } catch (e) {
-      j(e);
+      if (
+        hasKey('employeeCode', it) &&
+        hasKey('fullName', it) &&
+        hasKey('department', it)
+      ) {
+        // Field name mapping correction.
+        it.branch = it.department;
+        delete it.department;
+      }
+      result.push(it);
     }
-  });
+    if (anomalies.length > 0) {
+      const dAnomalies = distinctArr(anomalies, ['excelFieldName']);
+      await arrayForEach(dAnomalies, async (item) => {
+        await addFirestore(
+          'anomaly/imports/fieldName',
+          cleanValuesBeforeSave({
+            item,
+            anomaly: {
+              type: 'FIELDNAME_MAPPING',
+              by: user.uid,
+              time: Date.now(),
+            },
+          })
+        );
+      });
+    }
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
 
 export const formatExcelImportArr = (excelData) => {
   showLog({ excelData });
@@ -257,103 +252,101 @@ export const getColNameFromTitle = (title) => {
   }
 };
 
-export const _checkIsNotDuplicated = (data, dataType) =>
-  new Promise(async (r, j) => {
-    try {
-      let col;
-      let wheres = [];
-      switch (dataType) {
-        case 'weight':
-          col = 'sections/milk/weight';
-          wheres = [
-            ['docNo', '==', data.docNo],
-            ['recordDate', '==', data.recordDate],
-            ['systemDate', '==', data.systemDate],
-            ['memberId', '==', data.memberId],
-          ];
-          break;
+export const _checkIsNotDuplicated = async (data, dataType) => {
+  try {
+    let col;
+    let wheres = [];
+    switch (dataType) {
+      case 'weight':
+        col = 'sections/milk/weight';
+        wheres = [
+          ['docNo', '==', data.docNo],
+          ['recordDate', '==', data.recordDate],
+          ['systemDate', '==', data.systemDate],
+          ['memberId', '==', data.memberId],
+        ];
+        break;
 
-        default:
-          break;
-      }
-
-      const existing = await getFirestoreCollection(col, wheres);
-      if (existing) {
-        r({ result: false, duplicateData: existing });
-      } else {
-        r({ result: true });
-      }
-    } catch (e) {
-      showWarn(e);
-      r({ result: true });
+      default:
+        break;
     }
-  });
 
-export const _checkImportData = (
+    const existing = await getFirestoreCollection(col, wheres);
+    if (existing) {
+      return { result: false, duplicateData: existing };
+    } else {
+      return { result: true };
+    }
+  } catch (e) {
+    showWarn(e);
+    return { result: true };
+  }
+};
+
+export const _checkImportData = async (
   excelArr,
   jsonArr,
   dataType,
   // users,
   byPassDuplicateCheck
-) =>
-  new Promise(async (r, j) => {
-    try {
-      // Check data type and length.
-      let isCorrected = !!excelArr && excelArr?.rows && excelArr.cols;
-      if (!isCorrected) {
-        r({ result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' });
-      }
-      isCorrected =
-        !!jsonArr &&
-        Array.isArray(jsonArr) &&
-        Array.isArray(excelArr.rows) &&
-        Array.isArray(excelArr.cols);
-      if (!isCorrected) {
-        r({ result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' });
-      }
-      isCorrected =
-        jsonArr.length > 0 &&
-        excelArr.rows.length > 0 &&
-        excelArr.cols.length > 0;
-      if (!isCorrected) {
-        r({ result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' });
-      }
-      // Check duplication
-      //  - Random check fields [docNo, docDate, billNoSKC, branchCode, userName] in json file.
-      let rd1 = Math.floor(Math.random() * jsonArr.length);
-      if (!byPassDuplicateCheck) {
-        const isNotDuplicated = await _checkIsNotDuplicated(
-          jsonArr[rd1],
-          dataType
-        );
-        if (!isNotDuplicated.result) {
-          r({
-            result: false,
-            info: `ไฟล์นี้ได้อัปโหลดแล้ว เมื่อวันที่ ${dayjs(
-              isNotDuplicated.duplicateData.importTime
-            ).format('DD/MM/YY')} เวลา ${dayjs(
-              isNotDuplicated.duplicateData.importTime
-            ).format('HH:mm')}`,
-          });
-          // r({
-          //   result: false,
-          //   info: `ไฟล์นี้ได้อัปโหลดแล้ว เมื่อวันที่ ${dayjs(
-          //     isNotDuplicated.duplicateData.importTime
-          //   ).format('DD/MM/YY')} เวลา ${dayjs(
-          //     isNotDuplicated.duplicateData.importTime
-          //   ).format('HH:mm')} โดย ${
-          //     users[isNotDuplicated.duplicateData.importBy]?.displayName
-          //   }`,
-          // });
-          return;
-        }
-      }
-      r({ result: true });
-    } catch (e) {
-      showWarn(e);
-      r({ result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' });
+) => {
+  try {
+    // Check data type and length.
+    let isCorrected = !!excelArr && excelArr?.rows && excelArr.cols;
+    if (!isCorrected) {
+      return { result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' };
     }
-  });
+    isCorrected =
+      !!jsonArr &&
+      Array.isArray(jsonArr) &&
+      Array.isArray(excelArr.rows) &&
+      Array.isArray(excelArr.cols);
+    if (!isCorrected) {
+      return { result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' };
+    }
+    isCorrected =
+      jsonArr.length > 0 &&
+      excelArr.rows.length > 0 &&
+      excelArr.cols.length > 0;
+    if (!isCorrected) {
+      return { result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' };
+    }
+    // Check duplication
+    //  - Random check fields [docNo, docDate, billNoSKC, branchCode, userName] in json file.
+    let rd1 = Math.floor(Math.random() * jsonArr.length);
+    if (!byPassDuplicateCheck) {
+      const isNotDuplicated = await _checkIsNotDuplicated(
+        jsonArr[rd1],
+        dataType
+      );
+      if (!isNotDuplicated.result) {
+        return {
+          result: false,
+          info: `ไฟล์นี้ได้อัปโหลดแล้ว เมื่อวันที่ ${dayjs(
+            isNotDuplicated.duplicateData.importTime
+          ).format('DD/MM/YY')} เวลา ${dayjs(
+            isNotDuplicated.duplicateData.importTime
+          ).format('HH:mm')}`,
+        };
+        // r({
+        //   result: false,
+        //   info: `ไฟล์นี้ได้อัปโหลดแล้ว เมื่อวันที่ ${dayjs(
+        //     isNotDuplicated.duplicateData.importTime
+        //   ).format('DD/MM/YY')} เวลา ${dayjs(
+        //     isNotDuplicated.duplicateData.importTime
+        //   ).format('HH:mm')} โดย ${
+        //     users[isNotDuplicated.duplicateData.importBy]?.displayName
+        //   }`,
+        // });
+        return;
+      }
+    }
+    return { result: true };
+  } catch (e) {
+    showWarn(e);
+    return { result: false, info: 'ไม่มีข้อมูล หรือ ข้อมูลไม่ถูกต้อง' };
+  }
+};
 
 export const onCancelImportData = async (
   collectionArr,
@@ -409,85 +402,84 @@ export const onCancelImportData = async (
   }
 };
 
-export const onConfirm = ({
+export const onConfirm = async ({
   currentData,
   dataType,
   USER,
   setProgress,
   setUpdate,
   handleCancel,
-}) =>
-  new Promise(async (r, j) => {
-    try {
-      const batchNo = Date.now();
-      switch (dataType) {
-        case 'weight':
-          const milkOrders = currentData;
-          const records = milkOrders.length;
-          let mBreak1 = false;
-          await arrayForEach(milkOrders, async (item, i) => {
-            if (mBreak1) {
-              return;
-            }
-            const percent = Numb(((i + 1) * 100) / records);
-            setProgress({
-              show: true,
-              percent,
-              text: `กำลังอัปโหลด ${i + 1} จาก ${numeral(records).format(
-                '0,0'
-              )} รายการ`,
-              subtext:
-                'ห้ามออกจากหน้านี้ การอัปโหลดจะถูกขัดจังหวะ และข้อมูลจะเกิดการผิดพลาด',
-              onCancel: () => {
-                mBreak1 = true;
-                onCancelImportData(
-                  ['sections/milk/weight'],
-                  batchNo,
-                  handleCancel,
-                  setUpdate
-                );
-              },
-            });
-            const saveItem = cleanValuesBeforeSave(
-              {
-                ...item,
-                importBy: USER.uid,
-                importTime: Date.now(),
-                batchNo,
-              },
-              true
-            );
-            await setFirestore('sections/milk/weight', item.docNo, saveItem);
-          });
+}) => {
+  try {
+    const batchNo = Date.now();
+    switch (dataType) {
+      case 'weight':
+        const milkOrders = currentData;
+        const records = milkOrders.length;
+        let mBreak1 = false;
+        await arrayForEach(milkOrders, async (item, i) => {
           if (mBreak1) {
-            setProgress({ show: false, percent: 0, text: null, subtext: null });
             return;
           }
-          break;
-        default:
-          break;
-      }
-
-      // Add import logs.
-      await setFirestore(
-        `sections/import/${dataType}`,
-        batchNo.toString(),
-        cleanValuesBeforeSave({
-          batchNo,
-          dataType,
-          by: USER.uid,
-          time: Date.now(),
-        })
-      );
-
-      setProgress({ show: false, percent: 0, text: null, subtext: null });
-      r(batchNo);
-    } catch (e) {
-      showWarn(e);
-      setProgress({ show: false, percent: 0, text: '' });
-      j(e);
+          const percent = Numb(((i + 1) * 100) / records);
+          setProgress({
+            show: true,
+            percent,
+            text: `กำลังอัปโหลด ${i + 1} จาก ${numeral(records).format(
+              '0,0'
+            )} รายการ`,
+            subtext:
+              'ห้ามออกจากหน้านี้ การอัปโหลดจะถูกขัดจังหวะ และข้อมูลจะเกิดการผิดพลาด',
+            onCancel: () => {
+              mBreak1 = true;
+              onCancelImportData(
+                ['sections/milk/weight'],
+                batchNo,
+                handleCancel,
+                setUpdate
+              );
+            },
+          });
+          const saveItem = cleanValuesBeforeSave(
+            {
+              ...item,
+              importBy: USER.uid,
+              importTime: Date.now(),
+              batchNo,
+            },
+            true
+          );
+          await setFirestore('sections/milk/weight', item.docNo, saveItem);
+        });
+        if (mBreak1) {
+          setProgress({ show: false, percent: 0, text: null, subtext: null });
+          return;
+        }
+        break;
+      default:
+        break;
     }
-  });
+
+    // Add import logs.
+    await setFirestore(
+      `sections/import/${dataType}`,
+      batchNo.toString(),
+      cleanValuesBeforeSave({
+        batchNo,
+        dataType,
+        by: USER.uid,
+        time: Date.now(),
+      })
+    );
+
+    setProgress({ show: false, percent: 0, text: null, subtext: null });
+    return batchNo;
+  } catch (e) {
+    showWarn(e);
+    setProgress({ show: false, percent: 0, text: '' });
+    throw e;
+  }
+};
 
 export const FieldMapping = {
   เลขที่เอกสาร: 'docNo',

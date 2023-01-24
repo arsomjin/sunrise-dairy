@@ -9,11 +9,11 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Badge, Button, Drawer, Dropdown, Input, Popover } from 'antd';
-import ToggleTheme from '../ToggleTheme';
-import ToggleLan from '../ToggleLan';
+import ToggleTheme from '../components/common/ToggleTheme';
+import ToggleLan from '../components/common/ToggleLan';
 import { useEffect, useState } from 'react';
 import './layout.css';
-import CompanyLogo from '../CompanyLogo';
+import CompanyLogo from '../components/common/CompanyLogo';
 import { routes } from 'navigation/routes';
 import { useTranslation } from 'react-i18next';
 import { useLoading } from 'hooks/useLoading';

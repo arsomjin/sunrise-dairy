@@ -44964,7 +44964,7 @@ export const thaiTambols = [
 
 export const Tambols = JSON.parse(JSON.stringify(thaiTambols));
 
-export const Provinces = () => Promise.resolve(distinctArr(Tambols, ['p']));
+export const Provinces = () => distinctArr(Tambols, ['p']);
 
 export const getAmphoesFromProvince = (pv) => {
   let mAmphoes = Tambols.filter((l) => l.p === pv);
@@ -44975,7 +44975,7 @@ export const getAmphoesFromProvince = (pv) => {
 export const getPostcodeFromProvince = (pv) => {
   let mPostcodes = Tambols.filter((l) => l.p === pv);
   mPostcodes = distinctArr(mPostcodes, ['z']);
-  return Promise.resolve(mPostcodes);
+  return mPostcodes;
 };
 
 export const getPostcodeFromProvinceAndAmphoe = (pv, ap) => {
@@ -44984,14 +44984,14 @@ export const getPostcodeFromProvinceAndAmphoe = (pv, ap) => {
     ...it,
     z: it.z.toString(),
   }));
-  return Promise.resolve(mPostcodes);
+  return mPostcodes;
 };
 
 export const getTambols = (ap) => {
   let mTambols = Tambols.filter((l) => l.a === ap);
   // console.log('mTambols', mTambols)
   mTambols = distinctArr(mTambols, ['d']);
-  return Promise.resolve(mTambols);
+  return mTambols;
 };
 
 export const getTambolsFromAmphoe = async (ap) => {
@@ -45000,34 +45000,33 @@ export const getTambolsFromAmphoe = async (ap) => {
     value: tb.d,
     label: tb.d,
   }));
-  return Promise.resolve(mTambols);
+  return mTambols;
 };
 
-export const getResidences = () =>
-  new Promise(async (r, j) => {
-    try {
-      let result = [];
-      let mProvinces = await Provinces();
-      const provinces = mProvinces.map((it) => ({ value: it.p, label: it.p }));
-      await arrayForEach(provinces, async (pv) => {
-        let child1 = [];
-        let amphoes = await getAmphoesFromProvince(pv.value);
-        amphoes = amphoes.map((ap) => ap.a);
-        await arrayForEach(amphoes, async (ap) => {
-          let tb = await getTambolsFromAmphoe(ap);
-          const arr_pc = await getPostcodeFromProvinceAndAmphoe(pv.value, ap);
-          let pc = arr_pc.map((itp) => ({ value: itp.z, label: itp.z }));
-          tb = tb.map((itm) => ({
-            ...itm,
-            children: pc,
-          }));
-          child1.push({ value: ap, label: ap, children: tb });
-        });
-        result.push({ ...pv, children: child1 });
-        return pv;
+export const getResidences = async () => {
+  try {
+    let result = [];
+    let mProvinces = await Provinces();
+    const provinces = mProvinces.map((it) => ({ value: it.p, label: it.p }));
+    await arrayForEach(provinces, async (pv) => {
+      let child1 = [];
+      let amphoes = await getAmphoesFromProvince(pv.value);
+      amphoes = amphoes.map((ap) => ap.a);
+      await arrayForEach(amphoes, async (ap) => {
+        let tb = await getTambolsFromAmphoe(ap);
+        const arr_pc = await getPostcodeFromProvinceAndAmphoe(pv.value, ap);
+        let pc = arr_pc.map((itp) => ({ value: itp.z, label: itp.z }));
+        tb = tb.map((itm) => ({
+          ...itm,
+          children: pc,
+        }));
+        child1.push({ value: ap, label: ap, children: tb });
       });
-      r(result);
-    } catch (e) {
-      j(e);
-    }
-  });
+      result.push({ ...pv, children: child1 });
+      return pv;
+    });
+    return result;
+  } catch (e) {
+    throw e;
+  }
+};
