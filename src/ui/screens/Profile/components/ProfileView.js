@@ -1,8 +1,4 @@
-import {
-  EditOutlined,
-  SafetyCertificateOutlined,
-  VerifiedOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getFirestoreDoc } from 'services/firebase';
@@ -10,7 +6,6 @@ import BarTitle from 'ui/components/common/BarTitle';
 import Button from 'ui/elements/Button';
 import { getAddressText } from 'utils/functions/common';
 import { getFullName } from 'utils/functions/common';
-import { showLog } from 'utils/functions/common';
 import { formatValuesBeforeLoad } from 'utils/functions/common';
 
 const ProfileView = ({ setEdit }) => {
@@ -27,8 +22,6 @@ const ProfileView = ({ setEdit }) => {
     getProfile();
   }, [USER?.uid]);
 
-  showLog({ data });
-
   const name = getFullName(data);
   const address =
     data?.address && data?.residence ? getAddressText(data) : null;
@@ -36,8 +29,11 @@ const ProfileView = ({ setEdit }) => {
   return (
     <>
       <BarTitle>ข้อมูลส่วนตัว</BarTitle>
-      <div className="bg-background1 font-sans h-screen w-full flex flex-row justify-center items-center">
-        <div className="card w-96 mx-auto bg-white  shadow-xl hover:shadow">
+      <div
+        className="bg-background1 font-sans w-full flex flex-row justify-center items-center"
+        style={{ height: '90vh' }}
+      >
+        <div className="card w-96 mx-auto bg-white rounded-lg shadow-xl hover:shadow">
           <div
             style={{
               display: 'flex',
@@ -77,8 +73,9 @@ const ProfileView = ({ setEdit }) => {
           <div className="px-6 text-center text-black mt-2 font-light text-sm">
             <p>{address}</p>
           </div>
-          <hr className="mt-8" />
-          {/* <div className="flex p-4">
+          <div className="h-8" />
+          {/*  <hr className="mt-8" />
+          <div className="flex p-4">
             <div className="w-1/2 text-center text-tw-black">
               <span className="font-bold">1.8 k</span> Followers
             </div>
