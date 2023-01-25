@@ -49,7 +49,7 @@ const ProfileView = ({ setEdit }) => {
           </div>
           <img
             className="w-32 mx-auto rounded-full -mt-28 border-8 border-white"
-            src={USER?.photoURL || undefined}
+            src={USER?.photoURL || require('assets/images/blank-profile.png')}
             //   src="https://avatars.githubusercontent.com/u/67946056?v=4"
             alt=""
             referrerPolicy="no-referrer"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
 import { withLoading } from 'hocs/withLoading.hoc';
 import Login from 'modules/Auth/Login';
@@ -11,6 +11,7 @@ import Logout from './Logout';
 import { useSelector } from 'react-redux';
 import { NotFound } from 'ui/components/common/NotFound';
 import RequireAuth from './RequireAuth';
+import Private from './Private';
 import MainContainer from '../Container/MainContainer';
 import Dashboard from 'modules/Dashboard';
 import Screen1 from 'ui/screens/Screen1';
@@ -50,7 +51,12 @@ export const AppRouter = () => {
       (USER?.phoneNumber && USER.providerData[0].providerId === 'phone'));
 
   const isCustomer =
-    profile?.permissions && profile.permissions.role === 'member';
+    profile?.permissions &&
+    ['member', 'undefined'].includes(profile.permissions?.role);
+
+  const isPrivated =
+    profile?.permissions &&
+    !['member', 'undefined'].includes(profile.permissions?.role);
 
   // showLog({ hasAuth });
   const protectedLayout = (
@@ -61,6 +67,12 @@ export const AppRouter = () => {
         <Welcome />
       )}
     </RequireAuth>
+  );
+
+  const privatedLayout = (
+    <Private isPrivated={isPrivated}>
+      <Outlet />
+    </Private>
   );
 
   return (
@@ -74,15 +86,17 @@ export const AppRouter = () => {
           <Route path="profile" element={<Profile />} />
           <Route path="about" element={<About />} />
           <Route path={MILK_PATH}>
-            <Route index element={<Weight />} />
-            <Route path="weight" element={<Weight />} />
+            <Route element={privatedLayout}>
+              <Route index element={<Weight />} />
+              <Route path="weight" element={<Weight />} />
+              <Route path="milk-daily-test" element={<DailyQC />} />
+              <Route path="milk-qc" element={<MilkQC />} />
+            </Route>
             <Route path="milk-qc-report" element={<QCResult />} />
             <Route path="milk-daily-report" element={<DailyQCReport />} />
             <Route path="pricing" element={<Pricing />} />
-            <Route path="milk-daily-test" element={<DailyQC />} />
-            <Route path="milk-qc" element={<MilkQC />} />
           </Route>
-          <Route path={PERSON_PATH}>
+          <Route path={PERSON_PATH} element={privatedLayout}>
             <Route path="users" element={<Users />} />
             <Route path="users_pending" element={<Users isPending />} />
             <Route path="employees" element={<Employees />} />

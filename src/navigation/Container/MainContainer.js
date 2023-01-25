@@ -13,7 +13,7 @@ import MainSideBar from '../../ui/layout/SideBar';
 import Topbar from '../../ui/layout/Topbar';
 
 const MainContainer = () => {
-  const { USER } = useSelector((state) => state.user);
+  const { USER, profile } = useSelector((state) => state.user);
   const { currentRoute, keyPath, collapsed } = useSelector(
     (state) => state.unPersisted
   );
@@ -60,13 +60,17 @@ const MainContainer = () => {
     toggleHided();
   };
 
+  const isPrivated =
+    profile?.permissions &&
+    !['member', 'undefined'].includes(profile.permissions?.role);
+
   const menu = (
     <Menu
       defaultSelectedKeys={[currentRoute]}
       defaultOpenKeys={keyPath.slice(1)}
       mode="inline"
       inlineCollapsed={collapsed}
-      items={menuItems}
+      items={menuItems(isPrivated)}
       onClick={onMenuClick}
     />
   );

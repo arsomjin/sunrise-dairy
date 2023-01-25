@@ -30,6 +30,7 @@ import { updateUserProfile } from 'services/API/app_api';
 import { useResponsive } from 'hooks/useResponsive';
 import { addSearchFields } from 'utils/functions/Searching';
 import BarTitle from 'ui/components/common/BarTitle';
+import { showLog } from 'utils/functions/common';
 
 const { Option } = Select;
 
@@ -52,7 +53,12 @@ const ProfileEdit = ({ parent, notRequired, disabled, readOnly, setEdit }) => {
       let doc = await getFirestoreDoc(`users/${USER?.uid}/info`, 'profile');
       if (doc) {
         let val = formatValuesBeforeLoad(doc);
-        form.setFieldsValue(val);
+        form.setFieldsValue({
+          ...val,
+          phoneNumber: USER?.phoneNumber
+            ? `0${USER.phoneNumber.slice(-9)}`
+            : undefined,
+        });
       }
     };
     getAddresses();
@@ -91,6 +97,7 @@ const ProfileEdit = ({ parent, notRequired, disabled, readOnly, setEdit }) => {
           'สำเร็จ'
         ).toLowerCase()}.`,
       });
+      setEdit(false);
       // form.resetFields();
     } catch (e) {
       showWarn(e);
@@ -164,6 +171,7 @@ const ProfileEdit = ({ parent, notRequired, disabled, readOnly, setEdit }) => {
             prefix: 'นาย',
             phonePrefix: '66',
             email: USER?.email,
+            // phoneNumber: USER?.phoneNumber || undefined,
             phoneNumber: USER?.phoneNumber
               ? `0${USER.phoneNumber.slice(-9)}`
               : undefined,
@@ -172,7 +180,7 @@ const ProfileEdit = ({ parent, notRequired, disabled, readOnly, setEdit }) => {
           scrollToFirstError
         >
           {(values) => {
-            // showLog({ values });
+            showLog({ values, userPhone: USER.phoneNumber });
             return (
               <div className="py-2">
                 <div className="flex flex-col items-center">
