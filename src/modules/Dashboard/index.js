@@ -6,33 +6,37 @@ import { ROW_GUTTER } from 'constants/Styles';
 import PageTitle from 'ui/components/common/Pages/PageTitle';
 import Sessions from 'ui/components/common/Charts/Sessions';
 import { APP_NAME } from 'constants';
+import BarTitle from 'ui/components/common/BarTitle';
 const Dashboard = ({ smallStats }) => {
   return (
-    <div className="h-full p-4 flex flex-col">
-      <PageTitle title="ภาพรวม" subtitle={APP_NAME} />
-      <Row gutter={ROW_GUTTER}>
-        {smallStats.map((stats, idx) => (
-          <Col key={`small-stats-${idx}`} span={24} sm={12} md={6}>
-            <SmallStats
-              id={`small-stats-${idx}`}
-              chartData={stats.datasets}
-              chartLabels={stats.chartLabels}
-              label={stats.label}
-              value={stats.value}
-              percentage={stats.percentage}
-              increase={stats.increase}
-              decrease={stats.decrease}
-              unit={stats.unit}
-            />
+    <>
+      <BarTitle>หน้าแรก</BarTitle>
+      <div className="h-full p-4 flex flex-col">
+        <PageTitle title="ภาพรวม" subtitle={APP_NAME} />
+        <Row gutter={ROW_GUTTER}>
+          {smallStats.map((stats, idx) => (
+            <Col key={`small-stats-${idx}`} span={24} sm={12} md={6}>
+              <SmallStats
+                id={`small-stats-${idx}`}
+                chartData={stats.datasets}
+                chartLabels={stats.chartLabels}
+                label={stats.label}
+                value={stats.value}
+                percentage={stats.percentage}
+                increase={stats.increase}
+                decrease={stats.decrease}
+                unit={stats.unit}
+              />
+            </Col>
+          ))}
+        </Row>
+        <Row gutter={ROW_GUTTER}>
+          <Col span={24}>
+            <Sessions title={'ปริมาณน้ำนม (ตัน)'} />
           </Col>
-        ))}
-      </Row>
-      <Row gutter={ROW_GUTTER}>
-        <Col span={24}>
-          <Sessions title={'ปริมาณน้ำนม (ตัน)'} />
-        </Col>
-      </Row>
-    </div>
+        </Row>
+      </div>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Row, Select } from 'antd';
 import { notificationController } from 'controllers/notificationController';
 import { useResponsive } from 'hooks/useResponsive';
@@ -13,20 +13,55 @@ import { showLog } from 'utils/functions/common';
 import { renderEmployeesBody } from './components';
 import { useSelector } from 'react-redux';
 import { addLogs } from 'services/firebase';
+import { getResidences } from 'constants/thaiTambol';
+import { showWarning } from 'utils/functions/common';
+import { checkDuplicatedDoc } from 'services/firebase';
+import { setFirestore } from 'services/firebase';
 
-const EmployeesModal = ({ doc, setLoading, onFinish }) => {
+const EmployeesModal = ({ doc, setLoading, onFinish, parent, notRequired }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const { mobileOnly } = useResponsive();
   const { USER } = useSelector((state) => state.user);
 
-  const preFinish = (val) => {
-    showLog({ val });
-    showConfirm({
-      title: t('ยืนยัน').toUpperCase(),
-      content: 'บันทึกข้อมูล ?',
-      onOk: () => onConfirm(val),
-    });
+  const [residences2, setRes] = useState(null);
+
+  useEffect(() => {
+    const getAddresses = async () => {
+      let res = await getResidences();
+      setRes(res);
+    };
+    getAddresses();
+  }, []);
+
+  const preFinish = async (val) => {
+    try {
+      showLog({ val });
+      if (!doc?.firstName) {
+        setLoading(true);
+        const hasDup = await checkDuplicatedDoc('sections/personal/employees', {
+          firstName: val.firstName,
+          lastName: val.lastName,
+          deleted: false,
+        });
+        showLog({ hasDup });
+        if (hasDup) {
+          return showWarning({
+            title: 'มีรายการซ้ำ',
+            content: `คุณ ${val.firstName} ${val.lastName} บันทึกข้อมูลเรียบร้อยแล้ว`,
+          });
+        }
+        setLoading(false);
+      }
+      showConfirm({
+        title: t('ยืนยัน').toUpperCase(),
+        content: 'บันทึกข้อมูล ?',
+        onOk: () => onConfirm({ ...doc, ...val }),
+      });
+    } catch (e) {
+      setLoading(false);
+      showWarn(e);
+    }
   };
 
   const onConfirm = async (val) => {
@@ -38,13 +73,25 @@ const EmployeesModal = ({ doc, setLoading, onFinish }) => {
         deleted: false,
         editBy: USER.uid,
       });
-      await updateFirestore('sections/milk/employees', doc._id, saveItem);
+      if (!!doc?.firstName) {
+        await updateFirestore(
+          'sections/personal/employees',
+          doc.employeeId,
+          saveItem
+        );
+      } else {
+        await setFirestore(
+          'sections/personal/employees',
+          doc.employeeId,
+          saveItem
+        );
+      }
       // Add log.
       const log = {
-        action: 'EDIT',
-        module: 'TEMPLATE',
-        command: 'TEMPLATE_EDIT',
-        docId: doc._id,
+        action: doc?.firstName ? 'EDIT' : 'ADD',
+        module: 'EMPLOYEE',
+        command: doc?.firstName ? 'EMPLOYEE_EDIT' : 'EMPLOYEE_ADD',
+        docId: doc.employeeId,
         snap: saveItem,
       };
       await addLogs(log);
@@ -71,16 +118,16 @@ const EmployeesModal = ({ doc, setLoading, onFinish }) => {
   const confirmDelete = async () => {
     try {
       setLoading(true);
-      await updateFirestore('sections/milk/employees', doc._id, {
+      await updateFirestore('sections/personal/employees', doc.employeeId, {
         deleted: true,
         deleteBy: USER.uid,
       });
       // Add log.
       const log = {
         action: 'DELETE',
-        module: 'TEMPLATE',
-        command: 'TEMPLATE_DELETE',
-        docId: doc._id,
+        module: 'EMPLOYEE',
+        command: 'EMPLOYEE_DELETE',
+        docId: doc.employeeId,
       };
       await addLogs(log);
       setLoading(false);
@@ -107,6 +154,35 @@ const EmployeesModal = ({ doc, setLoading, onFinish }) => {
       okButtonProps: { danger: true },
     });
 
+  const onClear = () =>
+    showConfirm({
+      title: t('ยืนยัน').toUpperCase(),
+      content: 'ล้างข้อมูล ?',
+      onOk: () => form.resetFields(),
+    });
+
+  const [emailAutoCompleteResult, setEmailAutoCompleteResult] = useState([]);
+
+  const onEmailChange = (value) => {
+    if (!value) {
+      setEmailAutoCompleteResult([]);
+    } else {
+      setEmailAutoCompleteResult(
+        ['@gmail.com', '@hotmail.com', '.co.th'].map(
+          (domain) => `${value}${domain}`
+        )
+      );
+    }
+  };
+
+  const emailOptions = emailAutoCompleteResult.map((email) => ({
+    label: email,
+    value: email,
+  }));
+
+  const getParent = (field) =>
+    parent ? [...parent, field] : ['address', field];
+
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select
@@ -125,7 +201,6 @@ const EmployeesModal = ({ doc, setLoading, onFinish }) => {
             label: t('นางสาว'),
           },
         ]}
-        disabled
       />
     </Form.Item>
   );
@@ -133,7 +208,17 @@ const EmployeesModal = ({ doc, setLoading, onFinish }) => {
   return (
     <Form
       form={form}
-      initialValues={doc}
+      initialValues={{
+        ...doc,
+        residence: doc.residence || [
+          'นครราชสีมา',
+          'สูงเนิน',
+          'สูงเนิน',
+          '30170',
+        ],
+        prefix: doc.prefix || 'นาย',
+        phonePrefix: doc.phonePrefix || '66',
+      }}
       onFinish={preFinish}
       scrollToFirstError
     >
@@ -145,6 +230,15 @@ const EmployeesModal = ({ doc, setLoading, onFinish }) => {
           t,
           onDelete,
           isModal: true,
+          employeeId: doc.employeeId,
+          disabled: false,
+          readOnly: false,
+          emailOptions,
+          getParent,
+          onEmailChange,
+          notRequired,
+          residences2,
+          onClear,
         });
       }}
     </Form>

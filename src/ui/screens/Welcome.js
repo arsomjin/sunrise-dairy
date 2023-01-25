@@ -114,7 +114,7 @@ const Welcome = () => {
           <button
             onClick={explore}
             // href="/#/sharksinfo"
-            className="z-10 bg-[#1F78A1]/20 text-tw-white font-normal tracking-wide px-24 py-2 rounded-md border-[1px] border-[#165370] mt-8 hover:bg-[#165370] duration-300 shake-on-hover"
+            className="z-10 bg-[#1F78A1]/20 text-tw-white dark:text-slate-300 font-normal tracking-wide px-24 py-2 rounded-md border-[1px] border-[#165370] mt-8 hover:bg-[#165370] duration-300 shake-on-hover"
           >
             สำรวจ
           </button>

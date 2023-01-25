@@ -1,75 +1,42 @@
-import { AuditOutlined } from '@ant-design/icons';
-import classNames from 'classnames';
 import { distinctArr } from 'utils/functions/array';
-import Button from 'ui/elements/Button';
 import { showWarn } from 'utils/functions/common';
 
-export const getUsersColumns = (editable, handleSelect) => [
+export const getMembersColumns = (data) => [
   {
     title: '#',
     dataIndex: 'id',
     align: 'center',
   },
   {
-    title: 'สิทธิ์',
-    width: 50,
+    title: 'เบอร์ถัง',
+    dataIndex: 'bucketNo',
     align: 'center',
-    render: (text, record) => {
-      return (
-        <div className="flex justify-end">
-          <Button
-            type="link"
-            disabled={!editable}
-            onClick={() => handleSelect(record)}
-            icon={<AuditOutlined />}
-          />
-        </div>
-      );
-    },
+    width: 60,
   },
   {
-    title: 'ชื่อ',
-    dataIndex: 'displayName',
-    width: 100,
+    title: 'ชื่อ - สกุล',
+    dataIndex: 'nameSurname',
+    width: 140,
+    filters: distinctArr(data, ['nameSurname']).map((it) => ({
+      value: it.nameSurname,
+      text: it.nameSurname,
+    })),
+    onFilter: (value, record) => record.nameSurname === value,
     ellipsis: true,
   },
   {
     title: 'เบอร์โทร',
     dataIndex: 'phoneNumber',
-    width: 80,
+    width: 100,
     align: 'center',
+    onFilter: (value, record) => record.phoneNumber === value,
   },
   {
     title: 'อีเมล',
-    dataIndex: 'email',
-    width: 120,
-    align: 'center',
-  },
-  {
-    title: 'UID',
-    dataIndex: 'uid',
+    dataIndex: 'phoneNumber',
     width: 100,
     align: 'center',
-    render: (text, record) => {
-      return <div>{`${text.slice(0, 6)}...${text.slice(-6)}`}</div>;
-    },
-  },
-  {
-    title: 'อนุมัติเข้าใช้งาน',
-    dataIndex: 'granted',
-    width: 80,
-    render: (text, record) => {
-      return (
-        <div
-          className={classNames(
-            'text-center',
-            text ? 'text-success' : 'text-warning'
-          )}
-        >
-          {text ? 'อนุมัติแล้ว' : 'รออนุมัติ'}
-        </div>
-      );
-    },
+    onFilter: (value, record) => record.email === value,
   },
 ];
 
@@ -88,7 +55,7 @@ export const _search = async (txt, allData, setData, setSearching) => {
       })
     );
     const arr2 = allData.filter((item) =>
-      ['displayName'].some((key) => {
+      ['firstName'].some((key) => {
         let sTxt = !!item[key]
           ? item[key].toString().replace(/(\r\n|\n|\r|,|-)/g, '')
           : '';

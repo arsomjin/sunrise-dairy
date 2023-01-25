@@ -7,7 +7,6 @@ import {
   sendEmailVerification,
   signOut,
   updateProfile,
-  RecaptchaVerifier,
   signInWithPhoneNumber,
   GoogleAuthProvider,
   signInWithPopup,

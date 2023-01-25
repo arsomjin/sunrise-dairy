@@ -57,6 +57,7 @@ export const LoadingProvider = ({ children }) => {
           setModal({ open: false });
         }}
         width={modal.width || (mobileOnly ? '95%' : '70%')}
+        bodyStyle={{ maxHeight: '90vh' }}
         footer={modal.footer}
         destroyOnClose
       >

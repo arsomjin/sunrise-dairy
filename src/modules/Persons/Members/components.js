@@ -9,14 +9,14 @@ import { getRules } from 'utils/functions/validator';
 
 const { Option } = Select;
 
-export const renderEmployeesBody = ({
+export const renderMembersBody = ({
   mobileOnly,
   prefixSelector,
   t,
   onClear,
   onDelete,
   isModal,
-  employeeId,
+  memberId,
   disabled,
   readOnly,
   emailOptions,
@@ -34,7 +34,7 @@ export const renderEmployeesBody = ({
         <p className="text-md text-primary mb-4">{t('รูปภาพ').toUpperCase()}</p>
         <Form.Item name="url">
           <UploadAvatar
-            storeRef={`images/employees/${employeeId}/profile`}
+            storeRef={`images/members/${memberId}/profile`}
             title={t('รูปภาพ')}
           />
         </Form.Item>
@@ -42,9 +42,14 @@ export const renderEmployeesBody = ({
       <div className="pt-6 rounded-lg shadow-md bg-background2 px-2">
         <Row gutter={ROW_GUTTER}>
           <Col span={mobileOnly ? 24 : 12}>
+            <Form.Item name="memberNo" label={t('รหัสสมาชิก')}>
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={mobileOnly ? 24 : 12}>
             <Form.Item
-              name="employeeNo"
-              label={t('รหัสพนักงาน')}
+              name="bucketNo"
+              label={t('เบอร์ถัง')}
               rules={[
                 {
                   required: true,
@@ -92,13 +97,6 @@ export const renderEmployeesBody = ({
               name="nickName"
               label={t('ชื่อเล่น')}
               tooltip={t('อยากให้คนเรียกชื่อคุณว่าอะไร?')}
-              rules={[
-                {
-                  required: true,
-                  message: t('กรุณาป้อนข้อมูล'),
-                  whitespace: true,
-                },
-              ]}
             >
               <Input />
             </Form.Item>
@@ -111,10 +109,6 @@ export const renderEmployeesBody = ({
                 {
                   type: 'email',
                   message: t('รูปแบบอีเมลไม่ถูกต้อง'),
-                },
-                {
-                  required: true,
-                  message: t('กรุณาป้อนข้อมูล'),
                 },
               ]}
             >
@@ -144,16 +138,7 @@ export const renderEmployeesBody = ({
             </Form.Item>
           </Col>
           <Col span={mobileOnly ? 24 : 12}>
-            <Form.Item
-              name="gender"
-              label={t('เพศ')}
-              rules={[
-                {
-                  required: true,
-                  message: `${t('กรุณาเลือก')}${t('เพศ')}`,
-                },
-              ]}
-            >
+            <Form.Item name="gender" label={t('เพศ')}>
               <Select placeholder={`${t('ชาย')}, ${t('หญิง')}, ${t('อื่นๆ')}`}>
                 <Option value="male">{t('ชาย')}</Option>
                 <Option value="female">{t('หญิง')}</Option>

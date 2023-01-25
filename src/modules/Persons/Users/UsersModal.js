@@ -13,8 +13,9 @@ import { showLog } from 'utils/functions/common';
 import { renderUsersBody } from './components';
 import { useSelector } from 'react-redux';
 import { addLogs } from 'services/firebase';
+import dayjs from 'dayjs';
 
-const UsersModal = ({ doc, setLoading, onFinish }) => {
+const UsersModal = ({ doc, setLoading, onFinish, onCancel }) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
   const { mobileOnly } = useResponsive();
@@ -33,19 +34,20 @@ const UsersModal = ({ doc, setLoading, onFinish }) => {
     try {
       showLog({ val });
       setLoading(true);
-      let saveItem = cleanValuesBeforeSave({
+      let permissions = cleanValuesBeforeSave({
         ...val,
-        deleted: false,
-        editBy: USER.uid,
+        editBy: { uid: USER.uid, ts: dayjs().tz('Asia/Bangkok').valueOf() },
       });
-      await updateFirestore('sections/milk/users', doc._id, saveItem);
+      await updateFirestore(`users/${doc._id}/info/`, 'profile', {
+        permissions,
+      });
       // Add log.
       const log = {
         action: 'EDIT',
-        module: 'TEMPLATE',
-        command: 'TEMPLATE_EDIT',
+        module: 'PERMISSIONS',
+        command: 'PERMISSIONS_EDIT',
         docId: doc._id,
-        snap: saveItem,
+        snap: permissions,
       };
       await addLogs(log);
       setLoading(false);
@@ -67,45 +69,6 @@ const UsersModal = ({ doc, setLoading, onFinish }) => {
       });
     }
   };
-
-  const confirmDelete = async () => {
-    try {
-      setLoading(true);
-      await updateFirestore('sections/milk/users', doc._id, {
-        deleted: true,
-        deleteBy: USER.uid,
-      });
-      // Add log.
-      const log = {
-        action: 'DELETE',
-        module: 'TEMPLATE',
-        command: 'TEMPLATE_DELETE',
-        docId: doc._id,
-      };
-      await addLogs(log);
-      setLoading(false);
-      notificationController.success({
-        message: `${capitalize(t('ลบข้อมูล'))} ${t('สำเร็จ').toLowerCase()}.`,
-      });
-      onFinish();
-    } catch (e) {
-      setLoading(false);
-      showWarn(e);
-      errorHandler({
-        code: e?.code || '',
-        message: e?.message || '',
-        module: 'UsersModal',
-      });
-    }
-  };
-
-  const onDelete = () =>
-    showConfirm({
-      title: t('ยืนยัน').toUpperCase(),
-      content: `${t('ลบข้อมูล').toUpperCase()} ?`,
-      onOk: () => confirmDelete(),
-      okButtonProps: { danger: true },
-    });
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -133,18 +96,20 @@ const UsersModal = ({ doc, setLoading, onFinish }) => {
   return (
     <Form
       form={form}
-      initialValues={doc}
+      initialValues={doc.permissions}
       onFinish={preFinish}
       scrollToFirstError
     >
       {(values) => {
-        //   showLog({ values });
+        showLog({ modal_val: values });
         return renderUsersBody({
           mobileOnly,
           prefixSelector,
           t,
-          onDelete,
+          onCancel,
           isModal: true,
+          form,
+          values,
         });
       }}
     </Form>

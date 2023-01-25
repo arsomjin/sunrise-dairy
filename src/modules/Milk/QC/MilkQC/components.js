@@ -73,7 +73,7 @@ export const renderMilkQCBody = ({
         </Col>
       </Row>
       <Row gutter={ROW_GUTTER}>
-        <Col span={mobileOnly ? 12 : 6}>
+        <Col span={mobileOnly ? 16 : 8}>
           <Form.Item
             name="fat"
             label="ปริมาณไขมัน"
@@ -84,10 +84,33 @@ export const renderMilkQCBody = ({
               },
             ]}
           >
-            <Input placeholder="3.4" />
+            <Slider min={0} max={10} step={0.01} />
           </Form.Item>
         </Col>
-        <Col span={mobileOnly ? 12 : 6}>
+        <Col span={mobileOnly ? 8 : 4}>
+          <Form.Item
+            name="fat"
+            label="%"
+            rules={[
+              {
+                required: true,
+                message: t('กรุณาป้อนข้อมูล'),
+              },
+            ]}
+          >
+            <InputNumber
+              min={0}
+              max={10}
+              style={{
+                margin: '0 16px',
+                fontWeight: 'bold',
+              }}
+              step={0.01}
+              placeholder="3.4"
+            />
+          </Form.Item>
+        </Col>
+        <Col span={mobileOnly ? 16 : 8}>
           <Form.Item
             name="snf"
             label="ปริมาณเนื้อนมไม่รวมไขมันเนย"
@@ -98,10 +121,35 @@ export const renderMilkQCBody = ({
               },
             ]}
           >
-            <Input placeholder="8.35" />
+            <Slider min={5} max={10} step={0.01} />
           </Form.Item>
         </Col>
-        <Col span={mobileOnly ? 12 : 6}>
+        <Col span={mobileOnly ? 8 : 4}>
+          <Form.Item
+            name="snf"
+            label="%"
+            rules={[
+              {
+                required: true,
+                message: t('กรุณาป้อนข้อมูล'),
+              },
+            ]}
+          >
+            <InputNumber
+              min={5}
+              max={10}
+              style={{
+                margin: '0 16px',
+                fontWeight: 'bold',
+              }}
+              step={0.01}
+              placeholder="8.35"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={ROW_GUTTER}>
+        <Col span={mobileOnly ? 16 : 8}>
           <Form.Item
             name="scc"
             label="เต้านมอักเสบ"
@@ -112,13 +160,13 @@ export const renderMilkQCBody = ({
               },
             ]}
           >
-            <Input placeholder="400,001" />
+            <Slider min={0} max={1200000} step={1} />
           </Form.Item>
         </Col>
-        <Col span={mobileOnly ? 12 : 6}>
+        <Col span={mobileOnly ? 8 : 4}>
           <Form.Item
-            name="fp"
-            label="จุดเยือกแข็ง"
+            name="scc"
+            label="เซลล์ / มิลลิลิตร"
             rules={[
               {
                 required: true,
@@ -126,11 +174,57 @@ export const renderMilkQCBody = ({
               },
             ]}
           >
-            <Input placeholder="-0.51" />
+            <InputNumber
+              min={0}
+              max={1200000}
+              step={1}
+              style={{
+                margin: '0 16px',
+                fontWeight: 'bold',
+              }}
+              placeholder="400,001"
+            />
+          </Form.Item>
+        </Col>
+        <Col span={mobileOnly ? 16 : 8}>
+          <Form.Item
+            name="fp"
+            label="จุดเยือกแข็ง ℃"
+            rules={[
+              {
+                required: true,
+                message: t('กรุณาป้อนข้อมูล'),
+              },
+            ]}
+          >
+            <Slider min={-1} max={0} step={0.01} />
+          </Form.Item>
+        </Col>
+        <Col span={mobileOnly ? 8 : 4}>
+          <Form.Item
+            name="fp"
+            label="℃"
+            rules={[
+              {
+                required: true,
+                message: t('กรุณาป้อนข้อมูล'),
+              },
+            ]}
+          >
+            <InputNumber
+              min={-1}
+              max={0}
+              step={0.01}
+              style={{
+                margin: '0 16px',
+                fontWeight: 'bold',
+              }}
+              placeholder="-0.51"
+            />
           </Form.Item>
         </Col>
       </Row>
-      <div className="flex justify-center py-4 border-t">
+      <div className="flex justify-center py-6 border-t">
         {!isModal ? (
           <Button style={{ marginRight: 20 }} onClick={onClear}>
             {t('ล้างข้อมูล').toUpperCase()}

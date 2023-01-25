@@ -1,161 +1,257 @@
-import { CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, InputNumber, Slider } from 'antd';
+import { CheckOutlined, PlusOutlined } from '@ant-design/icons';
+import { Row, Col, Form, Select } from 'antd';
+import classNames from 'classnames';
 import { ROW_GUTTER } from 'constants/Styles';
+import EmployeeSelector from 'ui/components/EmployeeSelector';
+import MemberSelector from 'ui/components/MemberSelector';
 import Button from 'ui/elements/Button';
-import DatePicker from 'ui/elements/DatePicker';
-import Input from 'ui/elements/Input';
-import { getRules } from 'utils/functions/validator';
+import Switch from 'ui/elements/Switch';
+import { showConfirm } from 'utils/functions/common';
 
-export const renderUsersBody = ({
-  mobileOnly,
-  prefixSelector,
-  t,
-  onClear,
-  onDelete,
-  isModal,
-}) => (
-  <div className="py-2">
-    <div className="pt-6 rounded-lg bg-background2 px-2">
-      <Row gutter={ROW_GUTTER}>
-        <Col span={mobileOnly ? 24 : 6}>
-          <Form.Item
-            name="bucketNo"
-            label="เบอร์ถัง"
-            rules={getRules(['required', 'number'])}
-          >
-            <Input readOnly={isModal} />
-          </Form.Item>
-        </Col>
-        <Col span={mobileOnly ? 24 : 8}>
-          <Form.Item
-            name="firstName"
-            label={t('ชื่อ')}
-            rules={[
-              {
-                required: true,
-                message: t('กรุณาป้อนข้อมูล'),
-              },
-            ]}
-          >
-            <Input addonBefore={prefixSelector} readOnly={isModal} />
-          </Form.Item>
-        </Col>
-        <Col span={mobileOnly ? 24 : 10}>
-          <Form.Item
-            name="lastName"
-            label={t('นามสกุล')}
-            rules={[
-              {
-                required: true,
-                message: t('กรุณาป้อนข้อมูล'),
-              },
-            ]}
-          >
-            <Input readOnly={isModal} />
-          </Form.Item>
-        </Col>
-      </Row>
-      <Row gutter={ROW_GUTTER}>
-        <Col span={mobileOnly ? 12 : 6}>
-          <Form.Item
-            name="recordDate"
-            label="วันที่"
-            rules={[
-              {
-                required: true,
-                message: t('กรุณาป้อนข้อมูล'),
-              },
-            ]}
-          >
-            <DatePicker
-              style={{
-                fontWeight: 'bold',
-              }}
-              disabled={isModal}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={mobileOnly ? 12 : 6}>
-          <Form.Item
-            name="startTime"
-            label="เริ่มเวลา"
-            rules={[
-              {
-                required: true,
-                message: t('กรุณาป้อนข้อมูล'),
-              },
-            ]}
-          >
-            <DatePicker picker="time" />
-            {/* <TimePicker
-              // defaultValue={dayjs().format('HH:mm')}
-              format="HH:mm"
-              style={{
-                fontWeight: 'bold',
-              }}
-            /> */}
-          </Form.Item>
-        </Col>
-        <Col span={mobileOnly ? 16 : 8}>
-          <Form.Item
-            name="theHour"
-            label="ชั่วโมงที่"
-            rules={[
-              {
-                required: true,
-                message: t('กรุณาป้อนข้อมูล'),
-              },
-            ]}
-          >
-            <Slider min={0} max={10} step={0.1} />
-          </Form.Item>
-        </Col>
-        <Col span={mobileOnly ? 8 : 4}>
-          <Form.Item
-            name="theHour"
-            rules={[
-              {
-                required: true,
-                message: t('กรุณาป้อนข้อมูล'),
-              },
-            ]}
-          >
-            <InputNumber
-              min={0}
-              max={10}
-              style={{
-                margin: '0 16px',
-                fontWeight: 'bold',
-              }}
-              step={0.1}
-            />
-          </Form.Item>
-        </Col>
-      </Row>
-      <div className="flex justify-center py-4 border-t">
-        {!isModal ? (
-          <Button style={{ marginRight: 20 }} onClick={onClear}>
-            {t('ล้างข้อมูล').toUpperCase()}
-          </Button>
-        ) : (
-          <Button
-            danger
-            type="primary"
-            onClick={onDelete}
-            icon={<CloseOutlined />}
-            style={{ marginRight: 20 }}
-          >
-            ลบข้อมูล
-          </Button>
-        )}
-        <Button
-          type="primary"
-          htmlType="submit"
-          icon={isModal ? <CheckOutlined /> : <PlusOutlined />}
-        >
-          {t('บันทึก').toUpperCase()}
-        </Button>
+export const renderUsersBody = ({ t, onCancel, isModal, values, form }) => (
+  <div className="py-2" style={{ maxHeight: '80vh' }}>
+    <div
+      className="rounded-lg bg-background2 overflow-y-scroll"
+      style={{ maxHeight: '70vh' }}
+    >
+      <div className="bg-white shadow-lg rounded-lg">
+        <div className="p-3 border-b mb-3">
+          <div className="flex flex-col items-center">
+            <span
+              className={classNames(
+                'text-lg font-bold mb-2',
+                values?.granted ? 'text-secondary' : 'text-danger'
+              )}
+            >
+              ** สิทธิ์การเข้าใช้งานระบบ **
+            </span>
+            <Form.Item name="granted">
+              <Switch
+                style={{
+                  backgroundColor: values?.granted ? '#17c671' : '#c4183c',
+                }}
+              />
+            </Form.Item>
+          </div>
+          <Row gutter={ROW_GUTTER}>
+            <Col
+              span={24}
+              sm={['member', 'employee'].includes(values.role) ? 12 : 24}
+            >
+              <div className="flex flex-col items-center">
+                <span
+                  className={classNames(
+                    'text-lg font-bold mb-2',
+                    values?.granted ? 'text-secondary' : 'text-danger'
+                  )}
+                >
+                  ** สมาชิก / พนักงาน **
+                </span>
+                <Form.Item name="role">
+                  <Select
+                    style={{
+                      width: 160,
+                      textAlign: 'center',
+                    }}
+                    options={[
+                      {
+                        value: 'employee',
+                        label: 'พนักงาน',
+                      },
+                      {
+                        value: 'member',
+                        label: 'สมาชิก',
+                      },
+                      {
+                        value: 'undefined',
+                        label: 'ไม่ระบุ',
+                      },
+                    ]}
+                  />
+                </Form.Item>
+              </div>
+            </Col>
+            {['member', 'employee'].includes(values.role) && (
+              <Col span={24} sm={12}>
+                <div className="flex flex-col items-center">
+                  <span
+                    className={classNames(
+                      'text-lg font-bold mb-2',
+                      values?.granted ? 'text-secondary' : 'text-danger'
+                    )}
+                  >
+                    {values.role === 'member'
+                      ? 'ระบุชื่อสมาชิก'
+                      : 'ระบุชื่อพนักงาน'}
+                  </span>
+                  <Form.Item
+                    rules={[
+                      {
+                        required: ['member', 'employee'].includes(values.role),
+                        message: t('กรุณาป้อนข้อมูล'),
+                      },
+                    ]}
+                    name={values.role === 'member' ? 'memberId' : 'employeeId'}
+                  >
+                    {values.role === 'member' ? (
+                      <MemberSelector
+                        style={{
+                          width: 240,
+                        }}
+                      />
+                    ) : (
+                      <EmployeeSelector
+                        style={{
+                          width: 240,
+                        }}
+                      />
+                    )}
+                  </Form.Item>
+                </div>
+              </Col>
+            )}
+          </Row>
+          <span className="text-primary">ราคาน้ำนมดิบ</span>
+          <Row gutter={ROW_GUTTER}>
+            <Col span={8}>
+              <Form.Item name={['milk', 'price', 'view']} label="สิทธิ์การอ่าน">
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name={['milk', 'price', 'edit']}
+                label="สิทธิ์การแก้ไข"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+        <div className="p-3 border-b mb-3">
+          <span className="text-primary">การตรวจสอบคุณภาพน้ำนมดิบ</span>
+          <Row gutter={ROW_GUTTER}>
+            <Col span={8}>
+              <Form.Item name={['milk', 'QC', 'view']} label="สิทธิ์การอ่าน">
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name={['milk', 'QC', 'edit']} label="สิทธิ์การแก้ไข">
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name={['milk', 'QC', 'add']} label="บันทึกข้อมูล">
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+        <div className="p-3 border-b mb-3">
+          <span className="text-primary">รายงานคุณภาพน้ำนมดิบ</span>
+          <Row gutter={ROW_GUTTER}>
+            <Col span={8}>
+              <Form.Item name={['milk', 'QC', 'view']} label="สิทธิ์การอ่าน">
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
       </div>
+      <div className="bg-white shadow-lg rounded-lg">
+        <div className="p-3 border-b mb-3">
+          <span className="text-primary">รายชื่อผู้ใช้งาน</span>
+          <Row gutter={ROW_GUTTER}>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'user', 'view']}
+                label="สิทธิ์การอ่าน"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'user', 'edit']}
+                label="สิทธิ์การแก้ไข"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+        <div className="p-3 border-b mb-3">
+          <span className="text-primary">รายชื่อสมาชิก</span>
+          <Row gutter={ROW_GUTTER}>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'member', 'view']}
+                label="สิทธิ์การอ่าน"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'member', 'edit']}
+                label="สิทธิ์การแก้ไข"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'member', 'add']}
+                label="บันทึกข้อมูล"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+        <div className="p-3 border-b mb-3">
+          <span className="text-primary">รายชื่อพนักงาน</span>
+          <Row gutter={ROW_GUTTER}>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'employee', 'view']}
+                label="สิทธิ์การอ่าน"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'employee', 'edit']}
+                label="สิทธิ์การแก้ไข"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name={['personal', 'employee', 'add']}
+                label="บันทึกข้อมูล"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
+      </div>
+    </div>
+    <div className="flex justify-center py-4 border-t shadow-lg">
+      <Button style={{ marginRight: 20 }} onClick={onCancel}>
+        {t('ยกเลิก').toUpperCase()}
+      </Button>
+      <Button
+        type="primary"
+        htmlType="submit"
+        icon={isModal ? <CheckOutlined /> : <PlusOutlined />}
+      >
+        {t('บันทึก').toUpperCase()}
+      </Button>
     </div>
     <div className="h-36" />
   </div>

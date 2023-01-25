@@ -107,12 +107,13 @@ export const renderDailyQCBody = ({
               },
             ]}
           >
-            <Slider min={0} max={10} step={0.1} />
+            <Slider min={0} max={10} step={0.01} />
           </Form.Item>
         </Col>
         <Col span={mobileOnly ? 8 : 4}>
           <Form.Item
             name="theHour"
+            label="ชั่วโมง"
             rules={[
               {
                 required: true,
@@ -127,7 +128,7 @@ export const renderDailyQCBody = ({
                 margin: '0 16px',
                 fontWeight: 'bold',
               }}
-              step={0.1}
+              step={0.01}
             />
           </Form.Item>
         </Col>

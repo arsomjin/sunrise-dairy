@@ -1,12 +1,17 @@
 export const PERMISSIONS = {
   granted: false,
+  role: 'undefined',
+  firstName: null,
+  lastName: null,
+  bucketNo: null,
+  employeeNo: null,
   milk: {
     price: {
       view: true,
       edit: false,
     },
     QC: {
-      add: true,
+      add: false,
       view: true,
       edit: false,
     },
@@ -17,17 +22,16 @@ export const PERMISSIONS = {
   personal: {
     user: {
       edit: false,
-      add: true,
       view: true,
     },
     employee: {
       edit: false,
-      add: true,
+      add: false,
       view: true,
     },
     member: {
       edit: false,
-      add: true,
+      add: false,
       view: true,
     },
   },

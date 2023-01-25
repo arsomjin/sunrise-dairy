@@ -241,7 +241,7 @@ const MilkQC = () => {
           scrollToFirstError
         >
           {(values) => {
-            //   showLog({ values });
+            showLog({ values });
             return renderMilkQCBody({
               mobileOnly,
               prefixSelector,

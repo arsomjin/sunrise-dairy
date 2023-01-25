@@ -2,37 +2,37 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Input } from 'antd';
 import Page from 'ui/components/common/Pages/Page';
 import EditableCellTable from 'ui/components/common/Table/EditableCellTable';
-import { getEmployeesColumns, _search } from './api';
+import { getMembersColumns, _search } from './api';
 import { showLog, showWarn } from 'utils/functions/common';
 import { useLoading } from 'hooks/useLoading';
 import { getFirestoreCollection } from 'services/firebase';
-import EmployeesModal from './EmployeesModal';
+import MembersModal from './MembersModal';
 import { useSelector } from 'react-redux';
 import { debounce } from 'lodash';
 import Button from 'ui/elements/Button';
 import { PlusOutlined } from '@ant-design/icons';
 import shortid from 'shortid';
 
-const Employees = () => {
+const Members = () => {
   const { profile } = useSelector((state) => state.user);
   const editable =
     profile?.permissions &&
     profile.permissions?.personal &&
-    profile.permissions.personal.employee.edit;
+    profile.permissions.personal.member.edit;
   const addable =
     profile?.permissions &&
     profile.permissions?.personal &&
-    profile.permissions.personal.employee.add;
+    profile.permissions.personal.member.add;
   const { loading, setLoading, setModal } = useLoading();
   const [searching, setSearching] = useState(false);
   const [data, setData] = useState([]);
   const [allData, setAllData] = useState([]);
 
-  const getEmployees = useCallback(
+  const getMembers = useCallback(
     async (sDate) => {
       try {
         setLoading(true);
-        const res = await getFirestoreCollection('sections/personal/employees');
+        const res = await getFirestoreCollection('sections/personal/members');
         const arr = res
           ? Object.keys(res).map((k, id) => ({
               ...res[k],
@@ -56,19 +56,19 @@ const Employees = () => {
   );
 
   useEffect(() => {
-    getEmployees();
-  }, [getEmployees]);
+    getMembers();
+  }, [getMembers]);
 
   const handleSelect = (rec) => {
     showLog({ rec });
     setModal({
       content: (
-        <EmployeesModal
+        <MembersModal
           {...{
             doc: rec,
             setLoading,
             onFinish: () => {
-              getEmployees();
+              getMembers();
               setModal({
                 open: false,
                 content: null,
@@ -95,12 +95,12 @@ const Employees = () => {
   const handleAdd = () => {
     setModal({
       content: (
-        <EmployeesModal
+        <MembersModal
           {...{
-            doc: { employeeId: shortid() },
+            doc: { memberId: shortid() },
             setLoading,
             onFinish: () => {
-              getEmployees();
+              getMembers();
               setModal({
                 open: false,
                 content: null,
@@ -112,7 +112,7 @@ const Employees = () => {
         />
       ),
       open: true,
-      title: <span className="text-muted ml-2">เพิ่มรายชื่อพนักงาน</span>,
+      title: <span className="text-muted ml-2">เพิ่มรายชื่อสมาชิก</span>,
       footer: false,
     });
   };
@@ -122,7 +122,7 @@ const Employees = () => {
   }, 200);
 
   return (
-    <Page title="รายชื่อพนักงาน" subtitle="รุ่งอรุณ แดรี่">
+    <Page title="รายชื่อสมาชิก" subtitle="รุ่งอรุณ แดรี่">
       <div className="w-96 my-3 flex items-center">
         <Button
           icon={<PlusOutlined />}
@@ -141,7 +141,7 @@ const Employees = () => {
       <div className="mt-3">
         <EditableCellTable
           dataSource={data}
-          columns={getEmployeesColumns(data)}
+          columns={getMembersColumns(data)}
           loading={loading}
           handleEdit={handleSelect}
           hasEdit={editable}
@@ -152,4 +152,4 @@ const Employees = () => {
   );
 };
 
-export default Employees;
+export default Members;

@@ -35,6 +35,7 @@
     "react-dom": "^18.2.0",
     "react-excel-renderer": "^1.1.0",
     "react-helmet-async": "^1.3.0",
+    "react-highlight-words": "^0.20.0",
     "react-i18next": "^12.1.4",
     "react-lottie-player": "^1.5.4",
     "react-open-app": "^1.0.3",

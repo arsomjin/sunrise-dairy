@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { getMilkColumns, milk_columns } from './api';
 import { showWarn } from 'utils/functions/common';
 import { useLoading } from 'hooks/useLoading';
+import BarTitle from 'ui/components/common/BarTitle';
 
 const Weight = () => {
   const { loading, setLoading } = useLoading();
@@ -67,54 +68,57 @@ const Weight = () => {
     setDate(nRange);
   };
   return (
-    <div className="h-full p-2">
-      <PageTitle title="น้ำหนักน้ำนมดิบ" subtitle="รุ่งอรุณ แดรี่" />
-      <div>
-        <Row gutter={ROW_GUTTER}>
-          <Col span={24} sm={12}>
-            <ExcelUploadButton
-              className="my-3 mb-4"
-              dataType="weight"
-              title={
-                <span>
-                  นำเข้าไฟล์ข้อมูลน้ำหนักน้ำนมดิบ{' '}
-                  <span className="text-success">(xls, xlsx)</span>
-                </span>
-              }
-            />
-          </Col>
-          <Col
-            span={24}
-            sm={12}
-            className="flex flex-col"
-            style={{ display: 'flex' }}
-          >
-            <label className="mb-1">ช่วงเวลา (ที่แสดงข้อมูลในตาราง)</label>
-            <DatePicker
-              label="ช่วงเวลา"
-              isRange
-              value={date}
-              onChange={onDateChange}
-            />
-          </Col>
-        </Row>
+    <>
+      <BarTitle>น้ำหนักน้ำนมดิบ</BarTitle>
+      <div className="h-full p-2">
+        <PageTitle title="น้ำหนักน้ำนมดิบ" subtitle="รุ่งอรุณ แดรี่" />
+        <div>
+          <Row gutter={ROW_GUTTER}>
+            <Col span={24} sm={12}>
+              <ExcelUploadButton
+                className="my-3 mb-4"
+                dataType="weight"
+                title={
+                  <span>
+                    นำเข้าไฟล์ข้อมูลน้ำหนักน้ำนมดิบ{' '}
+                    <span className="text-success">(xls, xlsx)</span>
+                  </span>
+                }
+              />
+            </Col>
+            <Col
+              span={24}
+              sm={12}
+              className="flex flex-col"
+              style={{ display: 'flex' }}
+            >
+              <label className="mb-1">ช่วงเวลา (ที่แสดงข้อมูลในตาราง)</label>
+              <DatePicker
+                label="ช่วงเวลา"
+                isRange
+                value={date}
+                onChange={onDateChange}
+              />
+            </Col>
+          </Row>
 
-        <EditableCellTable
-          dataSource={data}
-          columns={getMilkColumns(data)}
-          loading={loading}
-          // reset={reset}
-          handleEdit={handleSelect}
-          // onRow={(record, rowIndex) => {
-          //   return {
-          //     onClick: () => handleSelect(record),
-          //   };
-          // }}
-          // hasEdit
-          pagination={{ pageSize: 50, hideOnSinglePage: true }}
-        />
+          <EditableCellTable
+            dataSource={data}
+            columns={getMilkColumns(data)}
+            loading={loading}
+            // reset={reset}
+            handleEdit={handleSelect}
+            // onRow={(record, rowIndex) => {
+            //   return {
+            //     onClick: () => handleSelect(record),
+            //   };
+            // }}
+            // hasEdit
+            pagination={{ pageSize: 50, hideOnSinglePage: true }}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
