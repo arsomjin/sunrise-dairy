@@ -1,6 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
-import { currentUser } from 'services/firebase';
-import Firebase from 'services/firebase/api';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const initialStates = {
   isLogin: false,

@@ -48,6 +48,10 @@ export const AppRouter = () => {
     USER?.uid &&
     (USER?.emailVerified ||
       (USER?.phoneNumber && USER.providerData[0].providerId === 'phone'));
+
+  const isCustomer =
+    profile?.permissions && profile.permissions.role === 'member';
+
   // showLog({ hasAuth });
   const protectedLayout = (
     <RequireAuth hasAuth={hasAuth}>
@@ -64,7 +68,7 @@ export const AppRouter = () => {
       <Routes>
         <Route path="*" element={<NotFound />} />
         <Route path={DASHBOARD_PATH} element={protectedLayout}>
-          <Route index element={<Dashboard />} />
+          <Route index element={isCustomer ? <Profile /> : <Dashboard />} />
           <Route path="screen1" element={<Screen1 />} />
           <Route path="screen2" element={<Screen2 />} />
           <Route path="profile" element={<Profile />} />

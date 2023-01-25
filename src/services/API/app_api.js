@@ -14,8 +14,8 @@ export const updateUserProfile = async (mValues, uid) => {
     } else {
       await updateFirestore(profileCol, 'profile', mValues);
     }
-    Promise.resolve(true);
+    return true;
   } catch (e) {
-    Promise.reject(e);
+    throw e;
   }
 };

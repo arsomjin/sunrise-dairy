@@ -451,3 +451,19 @@ export const errorHandler = (error) => {
   showWarning({ title: msg.title, content: msg.detail });
   Firebase.addErrorLogs(Object.assign(error, { msg }));
 };
+
+export const getFullName = (data) =>
+  data?.firstName
+    ? `${data?.prefix || ''}${data?.firstName || ''} ${data?.lastName}`
+    : data?.displayName || null;
+
+export const getAddressText = (data) => {
+  const { address, residence } = data;
+  return `${address?.h_number}${address?.moo ? ` หมู่ ${address.moo} ` : ''}${
+    address?.village ? ` หมู่บ้าน ${address.village} ` : ''
+  }${address?.soi ? ` ซอย ${address.soi} ` : ''}${
+    address?.road ? ` ถนน ${address.road} ` : ''
+  }${address?.building ? ` อาคาร ${address.building} ` : ''}${
+    address?.floor ? ` ชั้น ${address.floor} ` : ''
+  } ต.${residence[2]} อ.${residence[1]} จ.${residence[0]} ${residence[3]}`;
+};
