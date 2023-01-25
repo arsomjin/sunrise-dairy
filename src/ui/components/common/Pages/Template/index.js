@@ -25,8 +25,8 @@ import { renderTemplateBody } from './components';
 import TemplateModal from './TemplateModal';
 import { useSelector } from 'react-redux';
 import { checkDuplicatedDoc } from 'services/firebase';
-import { getThaiDate } from 'utils/functions/times';
 import { addLogs } from 'services/firebase';
+import { Dates } from 'constants/Dates';
 
 const Template = () => {
   const { profile, USER } = useSelector((state) => state.user);
@@ -94,7 +94,9 @@ const Template = () => {
       if (hasDup) {
         return showWarning({
           title: 'มีรายการซ้ำ',
-          content: `เบอร์ ${val.bucketNo} ${val.firstName} วันที่ ${getThaiDate(
+          content: `เบอร์ ${val.bucketNo} ${
+            val.firstName
+          } วันที่ ${Dates.getThaiDate(
             val.recordDate
           )} บันทึกข้อมูลเรียบร้อยแล้ว`,
         });

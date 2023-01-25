@@ -7,24 +7,19 @@ import {
   Badge,
   Table,
   Typography,
-  Tag,
   Button,
 } from 'antd';
 import numeral from 'numeral';
-import dayjs from 'dayjs';
 import {
   ArrowRightOutlined,
-  CheckOutlined,
   DeleteOutlined,
   EditOutlined,
-  InfoCircleOutlined,
 } from '@ant-design/icons';
 import Input from 'ui/elements/Input';
-import { isDateTypeField } from 'utils/functions/times';
 import { showWarning } from 'utils/functions/common';
 import { Numb } from 'utils/functions/common';
 import { isMobileNumber } from 'utils/functions/validator';
-import { getThaiDate } from 'utils/functions/times';
+import { Dates } from 'constants/Dates';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -106,7 +101,8 @@ export const getRenderColumns = (
           break;
       }
     }
-    const isDate = isDateTypeField(col.dataIndex) || col.dataIndex === 'date';
+    const isDate =
+      Dates.isDateTypeField(col.dataIndex) || col.dataIndex === 'date';
 
     if (isDate) {
       mCol = {
@@ -118,8 +114,8 @@ export const getRenderColumns = (
               ? text
               : !!text
               ? col.dataIndex === 'systemDate'
-                ? getThaiDate(text, true)
-                : getThaiDate(text)
+                ? Dates.getThaiDate(text, true)
+                : Dates.getThaiDate(text)
               : ''}
           </div>
         ),

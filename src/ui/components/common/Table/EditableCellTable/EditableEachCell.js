@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { showLog } from 'utils/functions/common';
 import { createValidator, EditableContext, getInputNode } from '../';
 import { useLocation } from 'react-router-dom';
-import { isDateTypeField } from 'utils/functions/times';
+import { Dates } from 'constants/Dates';
 
 export const EditableEachCell = ({
   title,
@@ -37,7 +37,7 @@ export const EditableEachCell = ({
     }
     setEditing(!editing);
     //  showLog('editing', record[dataIndex]);
-    const isDate = isDateTypeField(dataIndex);
+    const isDate = Dates.isDateTypeField(dataIndex);
     form.setFieldsValue({
       [dataIndex]: isDate
         ? dayjs(record[dataIndex], 'YYYY-MM-DD')

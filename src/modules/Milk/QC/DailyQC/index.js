@@ -25,7 +25,7 @@ import { renderDailyQCBody } from './components';
 import DailyQCModal from './DailyQCModal';
 import { useSelector } from 'react-redux';
 import { checkDuplicatedDoc, addLogs } from 'services/firebase';
-import { getThaiDate } from 'utils/functions/times';
+import { Dates } from 'constants/Dates';
 
 const DailyQC = () => {
   const { profile, USER } = useSelector((state) => state.user);
@@ -93,7 +93,9 @@ const DailyQC = () => {
       if (hasDup) {
         return showWarning({
           title: 'มีรายการซ้ำ',
-          content: `เบอร์ ${val.bucketNo} ${val.firstName} วันที่ ${getThaiDate(
+          content: `เบอร์ ${val.bucketNo} ${
+            val.firstName
+          } วันที่ ${Dates.getThaiDate(
             val.recordDate
           )} บันทึกข้อมูลเรียบร้อยแล้ว`,
         });

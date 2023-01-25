@@ -1,5 +1,4 @@
 import { hasKey } from 'utils/functions/common';
-import { isDateTypeField } from 'utils/functions/times';
 import { distinctArr } from 'utils/functions/array';
 import { arrayForEach } from 'utils/functions/array';
 import { addFirestore } from 'services/firebase';
@@ -17,6 +16,7 @@ import numeral from 'numeral';
 import { Numb } from 'utils/functions/common';
 import { setFirestore } from 'services/firebase';
 import { deleteFirestore } from 'services/firebase';
+import { Dates } from 'constants/Dates';
 var utc = require('dayjs/plugin/utc');
 var timezone = require('dayjs/plugin/timezone');
 
@@ -103,7 +103,7 @@ export const formatExcelToJson = async (dat, user) => {
           let fieldName = FieldMapping[excelFieldName];
           if (fieldName) {
             // showLog('last4', fieldName.substr(-4));
-            let isDate = isDateTypeField(fieldName);
+            let isDate = Dates.isDateTypeField(fieldName);
             // let isDate = fieldName.substr(-4) === 'Date';
             if (isDate && val.length > 9) {
               switch (fieldName) {

@@ -25,7 +25,7 @@ import { renderMilkQCBody } from './components';
 import MilkQCModal from './MilkQCModal';
 import { useSelector } from 'react-redux';
 import { checkDuplicatedDoc, addLogs } from 'services/firebase';
-import { getThaiDate } from 'utils/functions/times';
+import { Dates } from 'constants/Dates';
 
 const MilkQC = () => {
   const { profile, USER } = useSelector((state) => state.user);
@@ -93,7 +93,9 @@ const MilkQC = () => {
       if (hasDup) {
         return showWarning({
           title: 'มีรายการซ้ำ',
-          content: `เบอร์ ${val.bucketNo} ${val.firstName} วันที่ ${getThaiDate(
+          content: `เบอร์ ${val.bucketNo} ${
+            val.firstName
+          } วันที่ ${Dates.getThaiDate(
             val.recordDate
           )} บันทึกข้อมูลเรียบร้อยแล้ว`,
         });

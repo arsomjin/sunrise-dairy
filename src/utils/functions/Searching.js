@@ -2,9 +2,9 @@ import React from 'react';
 import { Tag } from 'antd';
 import dayjs from 'dayjs';
 import { arrayForEach, distinctArr, sortArr } from './array';
-import { isTimeTypeField } from './times';
 import { parser, showToBeContinue } from './common';
 import { uniq } from 'lodash';
+import { Dates } from 'constants/Dates';
 
 const _ = require('lodash');
 
@@ -43,7 +43,7 @@ export const getEditArr = (editData, users) => {
           let dCh = { ...ch };
           Object.keys(ch).forEach((k) => {
             // showLog({ k });
-            if (isTimeTypeField(k)) {
+            if (Dates.isTimeTypeField(k)) {
               // showLog('timeField', k);
               dCh[k] = dayjs(dCh[k]).format('HH:mm');
             }
