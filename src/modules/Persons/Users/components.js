@@ -85,12 +85,12 @@ export const renderUsersBody = ({ t, onCancel, isModal, values, form }) => (
                       : 'ระบุชื่อพนักงาน'}
                   </span>
                   <Form.Item
-                    rules={[
-                      {
-                        required: ['member', 'employee'].includes(values.role),
-                        message: t('กรุณาป้อนข้อมูล'),
-                      },
-                    ]}
+                    // rules={[
+                    //   {
+                    //     required: ['member', 'employee'].includes(values.role),
+                    //     message: t('กรุณาป้อนข้อมูล'),
+                    //   },
+                    // ]}
                     name={values.role === 'member' ? 'memberId' : 'employeeId'}
                   >
                     {values.role === 'member' ? (
