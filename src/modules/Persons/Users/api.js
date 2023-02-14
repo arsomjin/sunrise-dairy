@@ -16,7 +16,7 @@ export const getUsersColumns = (editable, handleSelect) => [
     align: 'center',
     render: (text, record) => {
       return (
-        <div className="flex justify-end">
+        <div className="flex justify-center">
           <Button
             type="link"
             disabled={!editable}

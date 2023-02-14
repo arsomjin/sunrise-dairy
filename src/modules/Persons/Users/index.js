@@ -48,13 +48,13 @@ const Users = ({ isPending }) => {
             });
         });
         showLog({ arr, res, users });
+        const pendingUsers = users
+          .filter((l) => !l.permissions.granted)
+          .map((l, id) => ({ ...l, id, key: id }));
+        const allUsers = users.map((l, id) => ({ ...l, id, key: id }));
         setLoading(false);
-        setData(
-          isPending ? users.filter((l) => !l.permissions.granted) : users
-        );
-        setAllData(
-          isPending ? users.filter((l) => !l.permissions.granted) : users
-        );
+        setData(isPending ? pendingUsers : allUsers);
+        setAllData(isPending ? pendingUsers : allUsers);
       } catch (e) {
         showWarn(e);
         setLoading(false);
