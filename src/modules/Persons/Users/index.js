@@ -43,13 +43,16 @@ const Users = ({ isPending }) => {
             !usr?.isDev &&
             users.push({
               ...usr,
-              granted: pf.permissions.granted,
-              permissions: pf.permissions,
+              ...(!!pf &&
+                !!pf?.permissions && {
+                  granted: pf.permissions.granted,
+                  permissions: pf.permissions,
+                }),
             });
         });
         showLog({ arr, res, users });
         const pendingUsers = users
-          .filter((l) => !l.permissions.granted)
+          .filter((l) => !l.permissions?.granted)
           .map((l, id) => ({ ...l, id, key: id }));
         const allUsers = users.map((l, id) => ({ ...l, id, key: id }));
         setLoading(false);

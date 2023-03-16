@@ -19,6 +19,7 @@ export const routes = {
   MEMBERS: '/persons/members',
   DELIVERY: 'DeliveyStackScreen',
   EXCEL_UPLOAD: '/utils/upload-data-from-excel-file',
+  CHECK_DATA: '/developer/check_data',
   SCREEN1: 'screen1',
   SCREEN2: 'screen2',
 };

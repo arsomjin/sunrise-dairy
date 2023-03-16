@@ -129,7 +129,7 @@ export const renderUsersBody = ({ t, onCancel, isModal, values, form }) => (
           </Row>
         </div>
         <div className="p-3 border-b mb-3">
-          <span className="text-primary">การตรวจสอบคุณภาพน้ำนมดิบ</span>
+          <span className="text-primary">ข้อมูลคุณภาพน้ำนมดิบ</span>
           <Row gutter={ROW_GUTTER}>
             <Col span={8}>
               <Form.Item name={['milk', 'QC', 'view']} label="สิทธิ์การอ่าน">
@@ -148,7 +148,7 @@ export const renderUsersBody = ({ t, onCancel, isModal, values, form }) => (
             </Col>
           </Row>
         </div>
-        <div className="p-3 border-b mb-3">
+        {/* <div className="p-3 border-b mb-3">
           <span className="text-primary">รายงานคุณภาพน้ำนมดิบ</span>
           <Row gutter={ROW_GUTTER}>
             <Col span={8}>
@@ -157,7 +157,7 @@ export const renderUsersBody = ({ t, onCancel, isModal, values, form }) => (
               </Form.Item>
             </Col>
           </Row>
-        </div>
+        </div> */}
       </div>
       <div className="bg-white shadow-lg rounded-lg">
         <div className="p-3 border-b mb-3">

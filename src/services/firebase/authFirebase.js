@@ -114,7 +114,10 @@ const FirebaseAuth = () => {
     try {
       setLoading(true);
       const res = await firebaseSignUp(email, password);
+      const USER = Firebase.getFirebaseUserFromObject(res);
       dispatch(signUpAccount(res));
+      let profile = { email: USER.email };
+      await updateUserProfile(profile, USER.uid);
       setLoading(false);
       notificationController.success({
         message: capitalize(I18n.t('ลงทะเบียนสำเร็จ')),

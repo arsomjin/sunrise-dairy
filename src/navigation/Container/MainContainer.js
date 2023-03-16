@@ -70,7 +70,12 @@ const MainContainer = () => {
       defaultOpenKeys={keyPath.slice(1)}
       mode="inline"
       inlineCollapsed={collapsed}
-      items={menuItems(isPrivated)}
+      items={menuItems(
+        isPrivated,
+        ['arsomjin@gmail.com', 'arsom@happyinnovation.net'].includes(
+          USER?.email
+        )
+      )}
       onClick={onMenuClick}
     />
   );

@@ -31,6 +31,7 @@ import Pricing from 'modules/Milk/Pricing';
 import Users from 'modules/Persons/Users';
 import Employees from 'modules/Persons/Employees';
 import Members from 'modules/Persons/Members';
+import CheckData from 'modules/Developer/CheckData';
 
 const AuthLayout = React.lazy(() => import('../Container/AuthContainer'));
 
@@ -41,6 +42,7 @@ export const DASHBOARD_PATH = '/';
 export const MILK_PATH = '/milk';
 export const UTILS_PATH = '/utils';
 export const PERSON_PATH = '/persons';
+export const DEV_PATH = '/developer';
 
 export const AppRouter = () => {
   const { USER, profile } = useSelector((state) => state.user);
@@ -107,6 +109,9 @@ export const AppRouter = () => {
               path="upload-data-from-excel-file"
               element={<UploadFromExcel />}
             />
+          </Route>
+          <Route path={DEV_PATH}>
+            <Route path="check_data" element={<CheckData />} />
           </Route>
         </Route>
         <Route

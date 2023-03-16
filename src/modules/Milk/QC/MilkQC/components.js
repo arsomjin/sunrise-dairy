@@ -160,7 +160,7 @@ export const renderMilkQCBody = ({
               },
             ]}
           >
-            <Slider min={0} max={1200000} step={1} />
+            <Slider min={0} max={2000000} step={1} />
           </Form.Item>
         </Col>
         <Col span={mobileOnly ? 8 : 4}>
@@ -176,7 +176,7 @@ export const renderMilkQCBody = ({
           >
             <InputNumber
               min={0}
-              max={1200000}
+              max={2000000}
               step={1}
               style={{
                 margin: '0 16px',
@@ -197,7 +197,7 @@ export const renderMilkQCBody = ({
               },
             ]}
           >
-            <Slider min={-1} max={0} step={0.01} />
+            <Slider min={-1} max={0} step={0.001} />
           </Form.Item>
         </Col>
         <Col span={mobileOnly ? 8 : 4}>
@@ -214,7 +214,7 @@ export const renderMilkQCBody = ({
             <InputNumber
               min={-1}
               max={0}
-              step={0.01}
+              step={0.001}
               style={{
                 margin: '0 16px',
                 fontWeight: 'bold',

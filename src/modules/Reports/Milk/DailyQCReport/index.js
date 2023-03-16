@@ -5,6 +5,7 @@ import { getFirestoreCollection } from 'services/firebase';
 import Page from 'ui/components/common/Pages/Page';
 import EditableCellTable from 'ui/components/common/Table/EditableCellTable';
 import DatePicker from 'ui/elements/DatePicker';
+import { sortArr } from 'utils/functions/array';
 import { showLog } from 'utils/functions/common';
 import { showWarn } from 'utils/functions/common';
 import { getDailyQCReportColumns } from './api';
@@ -21,17 +22,21 @@ const DailyQCReport = ({ children, title, subtitle, ...props }) => {
         const res = await getFirestoreCollection('sections/milk/dailyQC', [
           ['recordDate', '==', sDate],
         ]);
-        const arr = res
-          ? Object.keys(res).map((k, id) => ({
+        let arr = res
+          ? Object.keys(res).map((k) => ({
               ...res[k],
-              id,
-              key: id,
               _id: k,
               nameSurname: `${res[k].prefix}${res[k].firstName} ${
                 res[k].lastName || ''
               }`,
             }))
           : [];
+        arr = sortArr(arr, ['bucketNo']).map((it, id) => ({
+          ...it,
+          id,
+          key: id,
+        }));
+
         showLog({ arr, res });
         setLoading(false);
         setData(arr);
