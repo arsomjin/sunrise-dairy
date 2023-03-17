@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import numeral from 'numeral';
 import { distinctArr } from 'utils/functions/array';
+import { showLog } from 'utils/functions/common';
 import { Numb } from 'utils/functions/common';
 
 export const getQCResultColumns = (data) => [
@@ -55,7 +56,7 @@ export const getQCResultColumns = (data) => [
                   : ''
               )}
             >
-              {text ? numeral(text).format('0,0.00') : 'n/a'}
+              {numeral(text).format('0,0.00')}
             </div>
           );
         },
@@ -87,7 +88,7 @@ export const getQCResultColumns = (data) => [
                   : ''
               )}
             >
-              {text ? numeral(text).format('0,0.00') : 'n/a'}
+              {numeral(text).format('0,0.00')}
             </div>
           );
         },
@@ -103,9 +104,7 @@ export const getQCResultColumns = (data) => [
         width: 100,
         render: (text, record) => {
           return (
-            <div className="text-center">
-              {text ? numeral(text).format('0,0') : '0'}
-            </div>
+            <div className="text-center">{numeral(text).format('0,0')}</div>
           );
         },
       },
@@ -125,7 +124,7 @@ export const getQCResultColumns = (data) => [
                   : ''
               )}
             >
-              {text ? numeral(text).format('0,0.00') : 'n/a'}
+              {numeral(text).format('0,0.00')}
             </div>
           );
         },
@@ -157,7 +156,7 @@ export const getQCResultColumns = (data) => [
                   : ''
               )}
             >
-              {text ? numeral(text).format('0,0.00') : 'n/a'}
+              {numeral(text).format('0,0.00')}
             </div>
           );
         },
@@ -172,6 +171,7 @@ export const getQCResultColumns = (data) => [
       const { fat_price, snf_price, scc_price, fp_price } = record;
       let total =
         Numb(fat_price) + Numb(snf_price) + Numb(scc_price) + Numb(fp_price);
+      // showLog({ fat_price, snf_price, scc_price, fp_price, total });
       return (
         <div
           className={classNames(
@@ -179,7 +179,7 @@ export const getQCResultColumns = (data) => [
             total > 0 ? 'text-primary' : total < 0 ? 'text-warning' : ''
           )}
         >
-          {total ? numeral(total).format('0,0.00') : 'n/a'}
+          {numeral(total).format('0,0.00')}
         </div>
       );
     },

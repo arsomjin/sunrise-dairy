@@ -57,7 +57,7 @@ export const getDailyQCReportColumns = (data) => [
             Numb(text) > 1 ? 'text-warning' : 'text-success'
           )}
         >
-          {text ? numeral(text).format('0,0.00') : 'n/a'}
+          {numeral(text).format('0,0.00')}
         </div>
       );
     },
@@ -75,7 +75,7 @@ export const getDailyQCReportColumns = (data) => [
             Numb(grade) > 1 ? 'text-warning' : 'text-success'
           )}
         >
-          {text ? numeral(text).format('0,0.00') : 'n/a'}
+          {numeral(text).format('0,0.00')}
         </div>
       );
     },
