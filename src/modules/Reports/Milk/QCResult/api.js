@@ -50,9 +50,9 @@ export const getQCResultColumns = (data) => [
               className={classNames(
                 'text-center',
                 Numb(text) > 0
-                  ? 'text-success'
+                  ? 'text-blue-500'
                   : Numb(text) < 0
-                  ? 'text-warning'
+                  ? 'text-danger'
                   : ''
               )}
             >
@@ -82,9 +82,9 @@ export const getQCResultColumns = (data) => [
               className={classNames(
                 'text-center',
                 Numb(text) > 0
-                  ? 'text-success'
+                  ? 'text-blue-500'
                   : Numb(text) < 0
-                  ? 'text-warning'
+                  ? 'text-danger'
                   : ''
               )}
             >
@@ -118,9 +118,9 @@ export const getQCResultColumns = (data) => [
               className={classNames(
                 'text-center',
                 Numb(text) > 0
-                  ? 'text-success'
+                  ? 'text-blue-500'
                   : Numb(text) < 0
-                  ? 'text-warning'
+                  ? 'text-danger'
                   : ''
               )}
             >
@@ -150,9 +150,9 @@ export const getQCResultColumns = (data) => [
               className={classNames(
                 'text-center',
                 Numb(text) > 0
-                  ? 'text-success'
+                  ? 'text-blue-500'
                   : Numb(text) < 0
-                  ? 'text-warning'
+                  ? 'text-danger'
                   : ''
               )}
             >
@@ -176,7 +176,7 @@ export const getQCResultColumns = (data) => [
         <div
           className={classNames(
             'text-right',
-            total > 0 ? 'text-primary' : total < 0 ? 'text-warning' : ''
+            total > 0 ? 'text-blue-500' : total < 0 ? 'text-danger' : ''
           )}
         >
           {numeral(total).format('0,0.00')}
