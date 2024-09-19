@@ -32,6 +32,7 @@ import Users from 'modules/Persons/Users';
 import Employees from 'modules/Persons/Employees';
 import Members from 'modules/Persons/Members';
 import CheckData from 'modules/Developer/CheckData';
+import DailySummaryReport from 'modules/Reports/Milk/DailySummaryReport';
 
 const AuthLayout = React.lazy(() => import('../Container/AuthContainer'));
 
@@ -96,6 +97,10 @@ export const AppRouter = () => {
             </Route>
             <Route path="milk-qc-report" element={<QCResult />} />
             <Route path="milk-daily-report" element={<DailyQCReport />} />
+            <Route
+              path="daily-summary-report"
+              element={<DailySummaryReport />}
+            />
             <Route path="pricing" element={<Pricing />} />
           </Route>
           <Route path={PERSON_PATH} element={privatedLayout}>

@@ -30,9 +30,10 @@ export const menuItems = (isPrivated, isDev) => {
         getItem('ตรวจคุณภาพน้ำนมดิบ', 'MILK_QC'),
         getItem('ตรวจน้ำนมดิบประจำวัน', 'MILK_DAILY_TEST'),
       ]),
-      getItem('รายงานผลการตรวจ', 'QC_RESULT', <SnippetsOutlined />, [
-        getItem('รายงานประจำวัน', 'MILK_DAILY_REPORT'),
-        getItem('รายงานคุณภาพน้ำนมดิบ', 'MILK_QC_REPORT'),
+      getItem('รายงาน', 'QC_RESULT', <SnippetsOutlined />, [
+        getItem('ผลการตรวจน้ำนมดิบประจำวัน', 'MILK_DAILY_REPORT'),
+        getItem('ผลการตรวจคุณภาพน้ำนมดิบ', 'MILK_QC_REPORT'),
+        getItem('สรุปประจำวัน', 'DAILY_SUMMARY_REPORT'),
       ]),
       getItem('ราคาน้ำนมดิบ', 'PRICING', <TagOutlined />),
       getItem('บุคคล', 'PERSONAL', <UserOutlined />, [

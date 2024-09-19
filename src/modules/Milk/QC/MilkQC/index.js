@@ -26,6 +26,7 @@ import MilkQCModal from './MilkQCModal';
 import { useSelector } from 'react-redux';
 import { checkDuplicatedDoc, addLogs } from 'services/firebase';
 import { Dates } from 'constants/Dates';
+import { firstKey } from 'utils/functions/common';
 
 const MilkQC = () => {
   const { profile, USER } = useSelector((state) => state.user);
@@ -77,7 +78,29 @@ const MilkQC = () => {
     getMilkQC(date);
   }, [date, getMilkQC]);
 
-  const onDateChange = (val) => setDate(val);
+  const onDateChange = (val) => {
+    setDate(val);
+    // let affectingPeriod =
+    //   val < dayjs().startOf('month').add(15, 'day').format('YYYY-MM-DD')
+    //     ? 'firstHalf'
+    //     : 'secondHalf';
+    // showLog({ affectingPeriod, val });
+    // form.setFieldValue('affectingPeriod', affectingPeriod);
+    form.setFieldValue('recordDate', val);
+  };
+
+  const onValuesChange = (val) => {
+    const changeKey = firstKey(val);
+    // if (changeKey === 'recordDate') {
+    //   let affectingPeriod =
+    //     val[changeKey] <
+    //     dayjs().startOf('month').add(15, 'day').format('YYYY-MM-DD')
+    //       ? 'firstHalf'
+    //       : 'secondHalf';
+    //   showLog({ affectingPeriod, val });
+    //   form.setFieldValue('affectingPeriod', affectingPeriod);
+    // }
+  };
 
   const preFinish = async (val) => {
     try {
@@ -115,6 +138,7 @@ const MilkQC = () => {
       setLoading(true);
       let saveItem = cleanValuesBeforeSave({
         ...val,
+        recordMonth: dayjs(val.recordDate, 'YYYY-MM-DD').format('YYYY-MM'),
         deleted: false,
         by: USER.uid,
       });
@@ -237,7 +261,15 @@ const MilkQC = () => {
       {addable && (
         <Form
           form={form}
-          initialValues={{ recordDate: date }}
+          initialValues={{
+            recordDate: date,
+            affectingPeriod:
+              dayjs().format('YYYY-MM-DD') <
+              dayjs().startOf('month').add(15, 'day').format('YYYY-MM-DD')
+                ? 'firstHalf'
+                : 'secondHalf',
+          }}
+          onValuesChange={onValuesChange}
           onFinish={preFinish}
           layout="vertical"
           scrollToFirstError

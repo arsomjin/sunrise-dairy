@@ -12,6 +12,7 @@ export const routes = {
   MILK_DAILY_TEST: '/milk/milk-daily-test',
   MILK_QC_REPORT: '/milk/milk-qc-report',
   MILK_DAILY_REPORT: '/milk/milk-daily-report',
+  DAILY_SUMMARY_REPORT: '/milk/daily-summary-report',
   PRICING: '/milk/pricing',
   ALL_USERS: '/persons/users',
   PENDING_USERS: '/persons/users_pending',

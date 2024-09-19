@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
-import { Row, Col, Form, InputNumber, Slider } from 'antd';
+import { Row, Col, Form, InputNumber, Slider, Select } from 'antd';
 import { ROW_GUTTER } from 'constants/Styles';
 import Button from 'ui/elements/Button';
 import DatePicker from 'ui/elements/DatePicker';
@@ -16,23 +16,48 @@ export const renderMilkQCBody = ({
 }) => (
   <div className="py-2">
     <div className="pt-6 rounded-lg bg-background2 px-2">
-      <Form.Item
-        name="recordDate"
-        label="วันที่"
-        rules={[
-          {
-            required: true,
-            message: t('กรุณาป้อนข้อมูล'),
-          },
-        ]}
-      >
-        <DatePicker
-          style={{
-            fontWeight: 'bold',
-          }}
-          disabled={isModal}
-        />
-      </Form.Item>
+      <Row gutter={ROW_GUTTER}>
+        <Col span={mobileOnly ? 24 : 6}>
+          <Form.Item
+            name="recordDate"
+            label="วันที่บันทึก"
+            rules={[
+              {
+                required: true,
+                message: t('กรุณาป้อนข้อมูล'),
+              },
+            ]}
+          >
+            <DatePicker
+              style={{
+                fontWeight: 'bold',
+              }}
+              disabled={isModal}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={mobileOnly ? 24 : 6}>
+          <Form.Item
+            name="affectingPeriod"
+            label="ระยะเวลาที่มีผลต่อราคาน้ำนม"
+            rules={getRules(['required'])}
+          >
+            <Select
+              style={{ width: 180 }}
+              options={[
+                {
+                  value: 'firstHalf',
+                  label: 'ครึ่งแรกของเดือน',
+                },
+                {
+                  value: 'secondHalf',
+                  label: 'ครึ่งหลังของเดือน',
+                },
+              ]}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
       <Row gutter={ROW_GUTTER}>
         <Col span={mobileOnly ? 24 : 6}>
           <Form.Item

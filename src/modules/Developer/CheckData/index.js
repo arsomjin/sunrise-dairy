@@ -9,6 +9,9 @@ import { distinctArr } from 'utils/functions/array';
 import { showLog } from 'utils/functions/common';
 import { showWarn } from 'utils/functions/common';
 import { setFirestore } from 'services/firebase';
+import { deleteToken } from 'firebase/messaging';
+import { updateFirestore } from 'services/firebase';
+import dayjs from 'dayjs';
 
 const lists = [
   {
@@ -31,13 +34,18 @@ const CheckData = () => {
   const _checkData = async () => {
     try {
       setLoading(true);
-      const res = await getFirestoreCollection('sections/milk/milkQC');
+      const res = await getFirestoreCollection('sections/milk/milkQC', [
+        // ['deleted', '==', false],
+        // ['recordDate', '>=', '2024-06-01'],
+        // ['recordDate', '<=', '2024-06-30'],
+        // ['bucketNo', '==', '889'],
+      ]);
       let dataArr = [];
       if (res) {
         dataArr = Object.keys(res).map((k, id) => ({
           ...res[k],
           id,
-          key: id,
+          key: k,
           _id: k,
         }));
       }
@@ -46,8 +54,20 @@ const CheckData = () => {
         (it) => it.recordDate
       );
 
-      await arrayForEach(avaiDates, async (dt) => {
-        await setFirestore('sections/milk/milkQC_dates', dt, {});
+      await arrayForEach(dataArr, async (dt) => {
+        let mt = { ...dt };
+        let key = mt.key;
+        delete mt.id;
+        delete mt.key;
+        delete mt._id;
+        let recordMonth = dayjs(mt.recordDate, 'YYYY-MM-DD').format('YYYY-MM');
+        // showLog({ recordMonth, recordDate: mt.recordDate });
+        await updateFirestore('sections/milk/milkQC', key, {
+          recordMonth,
+          // affectingPeriod:
+          //   mt.recordDate === avaiDates[0] ? 'firstHalf' : 'secondHalf',
+        });
+        // await setFirestore('sections/milk/milkQC_bak', key, mt);
       });
       setLoading(false);
       showLog({
