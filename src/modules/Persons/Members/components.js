@@ -252,7 +252,7 @@ export const renderMembersBody = ({
     <Divider />
     <div className="flex justify-center items-center">
       <Button style={{ marginRight: 20 }} onClick={onClear}>
-        {t('ล้างข้อมูล').toUpperCase()}
+        {t('ล้างหน้าจอ').toUpperCase()}
       </Button>
       <Button type="primary" htmlType="submit" icon={<CheckOutlined />}>
         {t('บันทึก').toUpperCase()}

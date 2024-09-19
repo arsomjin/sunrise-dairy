@@ -154,7 +154,7 @@ const Template = () => {
   const onClear = () =>
     showConfirm({
       title: t('ยืนยัน').toUpperCase(),
-      content: 'ล้างข้อมูล ?',
+      content: 'ล้างหน้าจอ ?',
       onOk: () => form.resetFields(),
     });
 

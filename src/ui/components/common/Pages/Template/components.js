@@ -135,7 +135,7 @@ export const renderTemplateBody = ({
       <div className="flex justify-center py-4 border-t">
         {!isModal ? (
           <Button style={{ marginRight: 20 }} onClick={onClear}>
-            {t('ล้างข้อมูล').toUpperCase()}
+            {t('ล้างหน้าจอ').toUpperCase()}
           </Button>
         ) : (
           <Button
