@@ -19,7 +19,7 @@ export const getItem = (label, key, icon, children, type) => {
   };
 };
 
-export const menuItems = (isPrivated, isDev) => {
+export const menuItems = (isPrivated, isDev, isMember) => {
   let result = [];
   if (isPrivated) {
     result = [
@@ -34,6 +34,7 @@ export const menuItems = (isPrivated, isDev) => {
         getItem('ผลการตรวจน้ำนมดิบประจำวัน', 'MILK_DAILY_REPORT'),
         getItem('ผลการตรวจคุณภาพน้ำนมดิบ', 'MILK_QC_REPORT'),
         getItem('สรุปประจำวัน', 'DAILY_SUMMARY_REPORT'),
+        getItem('สรุปแยกรายสมาชิก', 'DAILY_MEMBER_REPORT'),
       ]),
       getItem('ราคาน้ำนมดิบ', 'PRICING', <TagOutlined />),
       getItem('บุคคล', 'PERSONAL', <UserOutlined />, [
@@ -46,11 +47,22 @@ export const menuItems = (isPrivated, isDev) => {
       ]),
       getItem('เกี่ยวกับเรา', 'ABOUT', <BookOutlined />),
     ];
+  } else if (isMember) {
+    result = [
+      getItem('หน้าแรก', 'DASHBOARD', <PieChartOutlined />),
+      getItem('รายงาน', 'QC_RESULT', <SnippetsOutlined />, [
+        getItem('ผลการตรวจน้ำนมดิบประจำวัน', 'MILK_DAILY_REPORT'),
+        getItem('รายงานคุณภาพน้ำนมดิบ', 'MILK_QC_REPORT'),
+        getItem('สรุปรายวัน', 'DAILY_MEMBER_REPORT'),
+      ]),
+      getItem('ราคาน้ำนมดิบ', 'PRICING', <TagOutlined />),
+      getItem('เกี่ยวกับเรา', 'ABOUT', <BookOutlined />),
+    ];
   } else {
     result = [
       getItem('หน้าแรก', 'DASHBOARD', <PieChartOutlined />),
-      getItem('รายงานผลการตรวจ', 'QC_RESULT', <SnippetsOutlined />, [
-        getItem('รายงานประจำวัน', 'MILK_DAILY_REPORT'),
+      getItem('รายงาน', 'QC_RESULT', <SnippetsOutlined />, [
+        getItem('ผลการตรวจน้ำนมดิบประจำวัน', 'MILK_DAILY_REPORT'),
         getItem('รายงานคุณภาพน้ำนมดิบ', 'MILK_QC_REPORT'),
       ]),
       getItem('ราคาน้ำนมดิบ', 'PRICING', <TagOutlined />),

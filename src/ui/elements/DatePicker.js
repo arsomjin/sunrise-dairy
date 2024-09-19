@@ -4,6 +4,7 @@ import 'dayjs/locale/th';
 import locale from 'antd/es/date-picker/locale/th_TH';
 import dayjs from 'dayjs';
 import { isMobile } from 'react-device-detect';
+import { showLog } from 'utils/functions/common';
 const { RangePicker } = DatePicker;
 
 export default forwardRef(
@@ -68,8 +69,14 @@ export default forwardRef(
     const MComponent = isRange ? RangePicker : DatePicker;
 
     const _onChange = (date, dateString) => {
+      showLog({ date, dateString });
       if (isRange) {
         onChange && onChange(dateString);
+        onChange &&
+          onChange([
+            dayjs(dateString[0], 'DD/MM/YYYY').format('YYYY-MM-DD'),
+            dayjs(dateString[1], 'DD/MM/YYYY').format('YYYY-MM-DD'),
+          ]);
       } else {
         onChange && onChange(dayjs(date).format(mFormat), dateString);
       }

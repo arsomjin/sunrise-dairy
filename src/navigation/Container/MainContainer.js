@@ -63,6 +63,10 @@ const MainContainer = () => {
   const isPrivated =
     profile?.permissions &&
     !['member', 'undefined'].includes(profile.permissions?.role);
+  const isMember =
+    profile?.permissions &&
+    ['member'].includes(profile.permissions?.role) &&
+    !!profile.permissions?.memberId;
 
   const menu = (
     <Menu
@@ -74,7 +78,8 @@ const MainContainer = () => {
         isPrivated,
         ['arsomjin@gmail.com', 'arsom@happyinnovation.net'].includes(
           USER?.email
-        )
+        ),
+        isMember
       )}
       onClick={onMenuClick}
     />

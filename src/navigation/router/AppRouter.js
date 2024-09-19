@@ -33,6 +33,7 @@ import Employees from 'modules/Persons/Employees';
 import Members from 'modules/Persons/Members';
 import CheckData from 'modules/Developer/CheckData';
 import DailySummaryReport from 'modules/Reports/Milk/DailySummaryReport';
+import DailyMemberReport from 'modules/Reports/Milk/DailyMemberReport';
 
 const AuthLayout = React.lazy(() => import('../Container/AuthContainer'));
 
@@ -101,6 +102,7 @@ export const AppRouter = () => {
               path="daily-summary-report"
               element={<DailySummaryReport />}
             />
+            <Route path="daily-member-report" element={<DailyMemberReport />} />
             <Route path="pricing" element={<Pricing />} />
           </Route>
           <Route path={PERSON_PATH} element={privatedLayout}>

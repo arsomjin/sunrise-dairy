@@ -20,6 +20,7 @@ import { showWarning } from 'utils/functions/common';
 import { Numb } from 'utils/functions/common';
 import { isMobileNumber } from 'utils/functions/validator';
 import { Dates } from 'constants/Dates';
+import { showLog } from 'utils/functions/common';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -399,6 +400,7 @@ export const TableSummary = ({
             getIndexFromColumns(columns)
               .slice(startAt + 1)
               .map((k, li) => {
+                showLog({ k, li });
                 return sumKeys.includes(k) ? (
                   <Table.Summary.Cell key={`sk${li}`}>
                     <div style={{ textAlign: align || 'right' }}>

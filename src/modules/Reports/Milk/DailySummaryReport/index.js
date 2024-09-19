@@ -12,6 +12,7 @@ import { getDailySummaryReportColumns } from './api';
 import { distinctArr } from 'utils/functions/array';
 import { arrayForEach } from 'utils/functions/array';
 import { Numb } from 'utils/functions/common';
+import { TableSummary } from 'ui/components/common/Table';
 
 const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
   const { loading, setLoading } = useLoading();
@@ -126,11 +127,17 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
           return l;
         });
 
-        let fArr = Object.keys(fObj).map((k, id) => ({
-          ...fObj[k],
-          id,
-          key: id,
-        }));
+        let fArr = Object.keys(fObj).map((k, id) => {
+          let totalW = Numb(fObj[k].morningW) + Numb(fObj[k].eveningW);
+          const amount = totalW * Numb(fObj[k].accUnitPrice);
+          return {
+            ...fObj[k],
+            totalW,
+            amount,
+            id,
+            key: k,
+          };
+        });
 
         showLog({ arr, dArr, fArr, res });
         setLoading(false);
@@ -164,13 +171,15 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
           dataSource={data}
           columns={getDailySummaryReportColumns(data)}
           loading={loading}
-          // handleEdit={handleSelect}
-          // onRow={(record, rowIndex) => {
-          //   return {
-          //     onClick: () => handleSelect(record),
-          //   };
-          // }}
-          // hasEdit
+          summary={(pageData) => (
+            <TableSummary
+              pageData={pageData}
+              startAt={4}
+              columns={getDailySummaryReportColumns(data)}
+              sumKeys={['totalW', 'amount']}
+              sumClassName={['text-primary', 'text-success']}
+            />
+          )}
           pagination={{ pageSize: 50, hideOnSinglePage: true }}
         />
       </div>

@@ -14,8 +14,6 @@ export default forwardRef((props, ref) => {
   const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const selectRef = useRef();
-
   const getMembers = useCallback(
     async (sDate) => {
       try {
@@ -25,7 +23,7 @@ export default forwardRef((props, ref) => {
           ? Object.keys(res).map((k, id) => ({
               ...res[k],
               id,
-              key: id,
+              key: k,
               _id: k,
               nameSurname: `${res[k].prefix || ''}${res[k].firstName || ''} ${
                 res[k].lastName || ''
@@ -46,36 +44,10 @@ export default forwardRef((props, ref) => {
     getMembers();
   }, [getMembers]);
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      focus: () => {
-        selectRef.current.focus();
-      },
-
-      blur: () => {
-        selectRef.current.blur();
-      },
-
-      clear: () => {
-        selectRef.current.clear();
-      },
-
-      isFocused: () => {
-        return selectRef.current.isFocused();
-      },
-
-      setNativeProps(nativeProps) {
-        selectRef.current.setNativeProps(nativeProps);
-      },
-    }),
-    []
-  );
-
   const options = members.map((it) => ({
     value: it.memberId,
     label: `${it.bucketNo} - ${it.nameSurname}`,
   }));
 
-  return <Select ref={selectRef} loading={loading} {...options} {...props} />;
+  return <Select loading={loading} options={options} {...props} />;
 });
