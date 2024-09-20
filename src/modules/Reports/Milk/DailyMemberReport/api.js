@@ -12,7 +12,7 @@ export const getDailyMemberReportColumns = (data) => [
   {
     title: 'วันที่',
     dataIndex: 'recordDate',
-    width: 90,
+    width: 110,
     align: 'center',
   },
   // {
