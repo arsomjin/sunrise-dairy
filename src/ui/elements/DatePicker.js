@@ -71,7 +71,7 @@ export default forwardRef(
     const _onChange = (date, dateString) => {
       showLog({ date, dateString });
       if (isRange) {
-        onChange && onChange(dateString);
+        // onChange && onChange(dateString);
         onChange &&
           onChange([
             dayjs(dateString[0], 'DD/MM/YYYY').format('YYYY-MM-DD'),

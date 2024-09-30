@@ -119,10 +119,9 @@ const Sessions = ({ chartData, chartOptions, title }) => {
 
       <div className="pt-0">
         <Row className="border-bottom py-2 bg-light">
-          {/* DatePicker */}
-          <Col sm={12} style={{ display: 'flex' }} className="max-w-xs">
+          {/* <Col sm={12} style={{ display: 'flex' }} className="max-w-xs">
             <DatePicker isRange />
-          </Col>
+          </Col> */}
         </Row>
 
         <canvas
