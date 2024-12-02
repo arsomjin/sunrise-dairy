@@ -138,10 +138,10 @@ const DailyMemberReport = ({ children, title, subtitle, ...props }) => {
                 _id: k,
               }));
             }
+            showLog({ qUnitPriceArr });
             let qUnitPrice = null;
-            let isFirstHalf =
-              recordDate <
-              dayjs().startOf('month').add(15, 'day').format('YYYY-MM-DD');
+            let isFirstHalf = dayjs(recordDate, 'YYYY-MM-DD').format('DD') < 16;
+            showLog({ recordDate, isFirstHalf });
             let qArr = qUnitPriceArr.filter(
               (l) =>
                 l.affectingPeriod === (isFirstHalf ? 'firstHalf' : 'secondHalf')

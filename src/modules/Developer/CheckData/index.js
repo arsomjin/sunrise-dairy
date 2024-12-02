@@ -36,7 +36,7 @@ const CheckData = () => {
       setLoading(true);
       const res = await getFirestoreCollection('sections/milk/milkQC', [
         // ['deleted', '==', false],
-        // ['recordDate', '>=', '2024-06-01'],
+        ['recordDate', '>=', '2024-11-22'],
         // ['recordDate', '<=', '2024-06-30'],
         // ['bucketNo', '==', '889'],
       ]);
@@ -49,6 +49,10 @@ const CheckData = () => {
           _id: k,
         }));
       }
+      setLoading(false);
+      showLog({ dataArr });
+
+      return;
 
       const avaiDates = distinctArr(dataArr, ['recordDate']).map(
         (it) => it.recordDate

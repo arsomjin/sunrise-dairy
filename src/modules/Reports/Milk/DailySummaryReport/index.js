@@ -90,13 +90,12 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
               }));
             }
             let qUnitPrice = null;
-            let isFirstHalf =
-              recordDate <
-              dayjs().startOf('month').add(15, 'day').format('YYYY-MM-DD');
+            let isFirstHalf = dayjs(recordDate, 'YYYY-MM-DD').format('DD') < 16;
             let qArr = qUnitPriceArr.filter(
               (l) =>
                 l.affectingPeriod === (isFirstHalf ? 'firstHalf' : 'secondHalf')
             );
+            // showLog({ isFirstHalf });
             if (qArr.length > 0) {
               const { fat_price, snf_price, scc_price, fp_price } = qArr[0];
               qUnitPrice =
