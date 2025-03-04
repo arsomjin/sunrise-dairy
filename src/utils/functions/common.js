@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { isMobile } from 'react-device-detect';
 import Firebase from 'services/firebase/api';
 import { __DEV__ } from 'utils';
+import { isVerySmallNumber } from './number';
 
 export const capitalize = (word) =>
   `${word[0].toUpperCase()}${word.slice(1).toLowerCase()}`;
@@ -190,11 +191,12 @@ export const showToBeContinue = () =>
   );
 
 export const Numb = (val) => {
-  if (!val) {
+  if (!val || isNaN(val)) {
     return 0;
   }
   let mNum = val.toString().replace(/(\r\n|\n|\r|,| |)/g, '');
-  return isNaN(mNum) ? val : Number(mNum);
+  let rNum = isNaN(mNum) ? 0 : Number(mNum);
+  return isVerySmallNumber(rNum) ? 0 : rNum;
 };
 
 export const parser = (value) => {

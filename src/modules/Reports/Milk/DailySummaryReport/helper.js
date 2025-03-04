@@ -1,20 +1,43 @@
 import classNames from 'classnames';
-import numeral from 'numeral';
 import { distinctArr } from 'utils/functions/array';
+import { showLog } from 'utils/functions/common';
 import { Numb } from 'utils/functions/common';
+import { numer } from 'utils/functions/number';
 
-export const getDailyMemberReportColumns = (data) => [
+export const getDailySummaryReportColumns = (data) => [
   {
     title: '#',
     dataIndex: 'id',
     align: 'center',
   },
   {
-    title: 'วันที่',
-    dataIndex: 'recordDate',
-    width: 110,
-    align: 'center',
+    title: 'ชื่อ - สกุล',
+    dataIndex: 'nameSurname',
+    width: 160,
+    filters: distinctArr(data, ['nameSurname']).map((it) => ({
+      value: it.nameSurname,
+      text: it.nameSurname,
+    })),
+    onFilter: (value, record) => record.nameSurname === value,
   },
+  {
+    title: 'เบอร์',
+    dataIndex: 'memberId',
+    width: 80,
+    align: 'center',
+    // className: 'text-warning',
+    filters: distinctArr(data, ['memberId']).map((it) => ({
+      value: it.memberId,
+      text: it.memberId,
+    })),
+    onFilter: (value, record) => record.memberId === value,
+  },
+  // {
+  //   title: 'วันที่',
+  //   dataIndex: 'recordDate',
+  //   width: 130,
+  //   align: 'right',
+  // },
   // {
   //   title: 'ช่วงเวลา',
   //   dataIndex: 'period',
@@ -33,7 +56,7 @@ export const getDailyMemberReportColumns = (data) => [
     width: 80,
     // className: 'text-primary',
     align: 'right',
-    render: (text) => <div> {numeral(text).format('0,0.00')}</div>,
+    render: (text) => <div> {numer(text).format('0,0.00')}</div>,
   },
   {
     title: 'เย็น (kg)',
@@ -41,7 +64,7 @@ export const getDailyMemberReportColumns = (data) => [
     width: 80,
     // className: 'text-primary',
     align: 'right',
-    render: (text) => <div> {numeral(text).format('0,0.00')}</div>,
+    render: (text) => <div> {numer(text).format('0,0.00')}</div>,
   },
   {
     title: 'รวม (kg)',
@@ -52,7 +75,7 @@ export const getDailyMemberReportColumns = (data) => [
     render: (text, record) => {
       return (
         <div className={classNames('text-blue-400')}>
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -61,15 +84,16 @@ export const getDailyMemberReportColumns = (data) => [
     title: 'ราคา',
     dataIndex: 'unitPrice',
     width: 80,
-    render: (text) => {
+    render: (text, _) => {
+      showLog({ _ });
       return (
         <div
           className={classNames(
             'text-right',
-            Numb(text) < 0 ? 'text-warning' : ''
+            _.belowStandard ? 'text-warning' : ''
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -80,6 +104,7 @@ export const getDailyMemberReportColumns = (data) => [
     dataIndex: 'qUnitPrice',
     width: 80,
     render: (text) => {
+      showLog({ text, type: typeof text, NaN: isNaN(text) });
       return (
         <div
           className={classNames(
@@ -91,7 +116,7 @@ export const getDailyMemberReportColumns = (data) => [
               : ''
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -109,7 +134,7 @@ export const getDailyMemberReportColumns = (data) => [
             Numb(text) < 1 ? 'text-warning' : 'text-blue-400'
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -127,7 +152,7 @@ export const getDailyMemberReportColumns = (data) => [
             Numb(text) < 0 ? 'text-warning' : 'text-success'
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },

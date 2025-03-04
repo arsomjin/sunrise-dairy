@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import numeral from 'numeral';
 import { Numb } from 'utils/functions/common';
+import { numer } from 'utils/functions/number';
 
 export const getPricingColumns = (editable) => ({
   cleanliness: [
@@ -35,7 +35,7 @@ export const getPricingColumns = (editable) => ({
               : '';
           return (
             <div className={classNames('text-center', cName)}>
-              {text ? numeral(text).format('0,0.00') : '0.00'}
+              {text ? numer(text).format('0,0.00') : '0.00'}
             </div>
           );
         },
@@ -60,7 +60,7 @@ export const getPricingColumns = (editable) => ({
               : '';
           return (
             <div className={classNames('text-center', cName)}>
-              {text ? numeral(text).format('0,0.00') : '0.00'}
+              {text ? numer(text).format('0,0.00') : '0.00'}
             </div>
           );
         },
@@ -93,7 +93,7 @@ export const getPricingColumns = (editable) => ({
               : '';
           return (
             <div className={classNames('text-center', cName)}>
-              {text ? numeral(text).format('0,0.00') : '0.00'}
+              {text ? numer(text).format('0,0.00') : '0.00'}
             </div>
           );
         },
@@ -130,7 +130,7 @@ export const getPricingColumns = (editable) => ({
               : '';
           return (
             <div className={classNames('text-center', cName)}>
-              {text ? numeral(text).format('0,0.00') : '0.00'}
+              {text ? numer(text).format('0,0.00') : '0.00'}
             </div>
           );
         },
@@ -167,7 +167,7 @@ export const getPricingColumns = (editable) => ({
               : '';
           return (
             <div className={classNames('text-center', cName)}>
-              {text ? numeral(text).format('0,0.00') : '0.00'}
+              {text ? numer(text).format('0,0.00') : '0.00'}
             </div>
           );
         },
@@ -206,7 +206,7 @@ export const getPricingColumns = (editable) => ({
               : '';
           return (
             <div className={classNames('text-center', cName)}>
-              {text ? numeral(text).format('0,0.00') : '0.00'}
+              {text ? numer(text).format('0,0.00') : '0.00'}
             </div>
           );
         },
@@ -245,7 +245,7 @@ export const getPricingColumns = (editable) => ({
               : '';
           return (
             <div className={classNames('text-center', cName)}>
-              {text ? numeral(text).format('0,0.00') : '0.00'}
+              {text ? numer(text).format('0,0.00') : '0.00'}
             </div>
           );
         },

@@ -9,7 +9,6 @@ import {
   Typography,
   Button,
 } from 'antd';
-import numeral from 'numeral';
 import {
   ArrowRightOutlined,
   DeleteOutlined,
@@ -21,6 +20,7 @@ import { Numb } from 'utils/functions/common';
 import { isMobileNumber } from 'utils/functions/validator';
 import { Dates } from 'constants/Dates';
 import { showLog } from 'utils/functions/common';
+import { numer } from 'utils/functions/number';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -361,6 +361,7 @@ export const TableSummary = ({
   sumClassName,
   noDecimal,
   columns,
+  label,
 }) => {
   if (dataLength === 0) {
     return null;
@@ -383,7 +384,7 @@ export const TableSummary = ({
   if (pageData.length === 0) {
     return null;
   }
-  // showLog({ sumKeys, sumObj, dArr, columns, labels });
+  // showLog({ sumKeys, sumObj, dArr, columns, sumClassName });
   return (
     <>
       <Table.Summary.Row className="bg-light">
@@ -392,7 +393,7 @@ export const TableSummary = ({
         ))}
         <Table.Summary.Cell>
           <div style={{ textAlign: labelAlign || 'right' }}>
-            <Text>ยอดรวม</Text>
+            <Text>{label || 'ยอดรวม'}</Text>
           </div>
         </Table.Summary.Cell>
         {!!sumKeys ? (
@@ -400,18 +401,17 @@ export const TableSummary = ({
             getIndexFromColumns(columns)
               .slice(startAt + 1)
               .map((k, li) => {
-                showLog({ k, li });
+                // showLog({ li, className: sumClassName[li] });
                 return sumKeys.includes(k) ? (
                   <Table.Summary.Cell key={`sk${li}`}>
                     <div style={{ textAlign: align || 'right' }}>
                       <Text
+                        strong
                         className={
                           sumClassName ? sumClassName[li] : 'text-primary'
                         }
                       >
-                        {numeral(sumObj[k]).format(
-                          noDecimal ? '0,0' : '0,0.00'
-                        )}
+                        {numer(sumObj[k]).format(noDecimal ? '0,0' : '0,0.00')}
                       </Text>
                     </div>
                   </Table.Summary.Cell>
@@ -425,11 +425,12 @@ export const TableSummary = ({
                 <Table.Summary.Cell key={k}>
                   <div style={{ textAlign: align || 'right' }}>
                     <Text
+                      strong
                       className={
                         sumClassName ? sumClassName[i] : 'text-primary'
                       }
                     >
-                      {numeral(sumObj[k]).format(noDecimal ? '0,0' : '0,0.00')}
+                      {numer(sumObj[k]).format(noDecimal ? '0,0' : '0,0.00')}
                     </Text>
                   </div>
                 </Table.Summary.Cell>
@@ -439,8 +440,8 @@ export const TableSummary = ({
         ) : (
           <Table.Summary.Cell>
             <div style={{ textAlign: align || 'right' }}>
-              <Text className="text-primary">
-                {numeral(total).format(noDecimal ? '0,0' : '0,0.00')}
+              <Text strong className="text-primary">
+                {numer(total).format(noDecimal ? '0,0' : '0,0.00')}
               </Text>
             </div>
           </Table.Summary.Cell>

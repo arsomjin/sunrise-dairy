@@ -1,7 +1,7 @@
 import classNames from 'classnames';
-import numeral from 'numeral';
 import { distinctArr } from 'utils/functions/array';
 import { Numb } from 'utils/functions/common';
+import { numer } from 'utils/functions/number';
 
 export const getDailyQCReportColumns = (data) => [
   {
@@ -57,7 +57,7 @@ export const getDailyQCReportColumns = (data) => [
             Numb(text) > 1 ? 'text-warning' : 'text-success'
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -75,7 +75,7 @@ export const getDailyQCReportColumns = (data) => [
             Numb(grade) > 1 ? 'text-warning' : 'text-success'
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },

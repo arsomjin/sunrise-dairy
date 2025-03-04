@@ -9,7 +9,7 @@ import { distinctArr } from 'utils/functions/array';
 import { sortArr } from 'utils/functions/array';
 import { showLog } from 'utils/functions/common';
 import { showWarn } from 'utils/functions/common';
-import { getQCResultColumns } from './api';
+import { getQCResultColumns } from './helper';
 
 const QCResult = ({ children, title, subtitle, ...props }) => {
   const { loading, setLoading } = useLoading();

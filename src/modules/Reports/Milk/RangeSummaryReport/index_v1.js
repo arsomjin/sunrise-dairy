@@ -8,41 +8,60 @@ import DatePicker from 'ui/elements/DatePicker';
 import { sortArr } from 'utils/functions/array';
 import { showLog } from 'utils/functions/common';
 import { showWarn } from 'utils/functions/common';
-import { getDailySummaryReportColumns } from './helper';
+import { getRangeSummaryReportColumns } from './helper';
 import { distinctArr } from 'utils/functions/array';
 import { arrayForEach } from 'utils/functions/array';
 import { Numb } from 'utils/functions/common';
+import MemberSelector from 'ui/components/MemberSelector';
+import { Col, Form, Row } from 'antd';
+import { useResponsive } from 'hooks/useResponsive';
+import { ROW_GUTTER } from 'constants/Styles';
+import { getRules } from 'utils/functions/validator';
+import { useTranslation } from 'react-i18next';
+import Button from 'ui/elements/Button';
+import { CheckOutlined } from '@ant-design/icons';
+import { getFirestoreDoc } from 'services/firebase';
+import { formatValuesBeforeLoad } from 'utils/functions/common';
 import { TableSummary } from 'ui/components/common/Table';
+import { useSelector } from 'react-redux';
 import { findMaxValueByKey } from 'utils/functions/number';
 
-const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
+const RangeSummaryReport = ({ children, title, subtitle, ...props }) => {
+  const { USER, profile } = useSelector((state) => state.user);
   const { loading, setLoading } = useLoading();
   const [data, setData] = useState([]);
-  const [date, setDate] = useState(dayjs().format('YYYY-MM-DD'));
 
-  const getDailySummary = useCallback(
-    async (sDate) => {
+  const [form] = Form.useForm();
+  const { mobileOnly } = useResponsive();
+  const { t } = useTranslation();
+
+  const getRangeSum = useCallback(
+    async (val) => {
       try {
         setLoading(true);
+        const { dateRange } = val;
         const res = await getFirestoreCollection('sections/milk/weight', [
-          ['recordDate', '==', sDate],
+          ['recordDate', '>=', dateRange[0]],
+          ['recordDate', '<=', dateRange[1]],
         ]);
         let arr = res
           ? Object.keys(res).map((k) => ({
               ...res[k],
               _id: k,
-              // nameSurname: `${res[k].prefix}${res[k].firstName} ${
-              //   res[k].lastName || ''
-              // }`,
             }))
           : [];
-        arr = sortArr(arr, ['memberId']).map((it, id) => ({
+        showLog({ arr });
+        arr = sortArr(arr, ['recordDate']).map((it, id) => ({
           ...it,
           id,
           key: id,
         }));
 
-        let dArr = distinctArr(arr, ['memberId', 'period'], ['weight']);
+        let dArr = distinctArr(
+          arr,
+          ['memberId', 'recordDate', 'period'],
+          ['weight']
+        );
 
         let fObj = {};
         await arrayForEach(dArr, async (l, i) => {
@@ -54,7 +73,7 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
             systemDate,
             weight,
           } = l;
-          if (!fObj[memberId]) {
+          if (!fObj[`${recordDate}${memberId}`]) {
             // Get daily QC price.
             const res = await getFirestoreCollection('sections/milk/dailyQC', [
               ['recordDate', '==', recordDate],
@@ -65,7 +84,7 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
               unitPriceArr = Object.keys(res).map((k, id) => ({
                 ...res[k],
                 id,
-                key: id,
+                key: k,
                 _id: k,
               }));
             }
@@ -86,17 +105,18 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
               qUnitPriceArr = Object.keys(res2).map((k, id) => ({
                 ...res2[k],
                 id,
-                key: id,
+                key: k,
                 _id: k,
               }));
             }
+            showLog({ qUnitPriceArr });
             let qUnitPrice = null;
             let isFirstHalf = dayjs(recordDate, 'YYYY-MM-DD').format('DD') < 16;
+            showLog({ recordDate, isFirstHalf });
             let qArr = qUnitPriceArr.filter(
               (l) =>
                 l.affectingPeriod === (isFirstHalf ? 'firstHalf' : 'secondHalf')
             );
-            // showLog({ isFirstHalf });
             if (qArr.length > 0) {
               const { fat_price, snf_price, scc_price, fp_price } = qArr[0];
               qUnitPrice =
@@ -106,7 +126,7 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
                 Numb(fp_price);
             }
 
-            fObj[memberId] = {
+            fObj[`${recordDate}${memberId}`] = {
               memberId,
               nameSurname,
               recordDate,
@@ -119,9 +139,9 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
             };
           } else {
             if (period === 'เช้า') {
-              fObj[memberId].morningW = weight;
+              fObj[`${recordDate}${memberId}`].morningW = weight;
             } else {
-              fObj[memberId].eveningW = weight;
+              fObj[`${recordDate}${memberId}`].eveningW = weight;
             }
           }
           return l;
@@ -139,13 +159,19 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
           };
         });
 
-        let maxUnitPrice = findMaxValueByKey(fArr, 'unitPrice');
-        let result = fArr.map((l) => ({
+        let dfArr = distinctArr(
+          fArr,
+          ['memberId'],
+          ['morningW', 'eveningW', 'totalW', 'weight', 'amount']
+        );
+
+        let maxUnitPrice = findMaxValueByKey(dfArr, 'unitPrice');
+        let result = dfArr.map((l) => ({
           ...l,
           belowStandard: Numb(l.unitPrice) < maxUnitPrice,
         }));
 
-        showLog({ arr, dArr, fArr, res });
+        showLog({ arr, dArr, fArr, dfArr, res });
         setLoading(false);
         setData(result);
       } catch (e) {
@@ -156,36 +182,72 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
     [setLoading]
   );
 
-  useEffect(() => {
-    getDailySummary(date);
-  }, [date, getDailySummary]);
-
-  const onDateChange = async (val) => {
-    try {
-      setDate(val);
-    } catch (e) {
-      showWarn(e);
-    }
+  const onSubmit = (val) => {
+    showLog('onSubmit', val);
+    getRangeSum(val);
   };
 
   return (
-    <Page title="สรุปประจำวัน" subtitle="รุ่งอรุณ แดรี่">
-      <span className="mx-2 text-muted">วันที่</span>
-      <DatePicker value={date} onChange={onDateChange} />
+    <Page title="สรุปตามช่วงเวลา" subtitle="รุ่งอรุณ แดรี่">
+      <Form
+        form={form}
+        initialValues={{
+          dateRange: [
+            dayjs().subtract(7, 'day').format('YYYY-MM-DD'),
+            dayjs().format('YYYY-MM-DD'),
+          ],
+        }}
+        onValuesChange={() => setData([])}
+        onFinish={onSubmit}
+        layout="vertical"
+        scrollToFirstError
+      >
+        {(values) => {
+          return (
+            <div className="py-2">
+              <div className="pt-6 rounded-lg bg-background2 px-2">
+                <Row gutter={ROW_GUTTER}>
+                  <Col span={mobileOnly ? 32 : 8}>
+                    <Form.Item
+                      name="dateRange"
+                      label="วันที่"
+                      rules={getRules(['required'])}
+                    >
+                      <DatePicker isRange />
+                    </Form.Item>
+                  </Col>
+                  <Col span={mobileOnly ? 24 : 6}>
+                    <span className="mx-2"></span>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      icon={<CheckOutlined />}
+                      className="mt-2"
+                    >
+                      {t('ตกลง').toUpperCase()}
+                    </Button>
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          );
+        }}
+      </Form>
+
       <div className="mt-3">
         <EditableCellTable
           dataSource={data}
-          columns={getDailySummaryReportColumns(data)}
-          loading={loading}
+          columns={getRangeSummaryReportColumns(data)}
           summary={(pageData) => (
             <TableSummary
               pageData={pageData}
-              startAt={2}
-              columns={getDailySummaryReportColumns(data)}
+              startAt={1}
+              columns={getRangeSummaryReportColumns(data)}
               sumKeys={['morningW', 'eveningW', 'totalW', 'amount']}
               sumClassName={['text-primary', 'text-success']}
             />
           )}
+          loading={loading}
           pagination={{ pageSize: 50, hideOnSinglePage: true }}
         />
       </div>
@@ -193,4 +255,4 @@ const DailySummaryReport = ({ children, title, subtitle, ...props }) => {
   );
 };
 
-export default DailySummaryReport;
+export default RangeSummaryReport;

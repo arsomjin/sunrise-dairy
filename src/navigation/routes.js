@@ -13,6 +13,7 @@ export const routes = {
   MILK_QC_REPORT: '/milk/milk-qc-report',
   MILK_DAILY_REPORT: '/milk/milk-daily-report',
   DAILY_SUMMARY_REPORT: '/milk/daily-summary-report',
+  RANGE_SUMMARY_REPORT: '/milk/range-summary-report',
   DAILY_MEMBER_REPORT: '/milk/daily-member-report',
   PRICING: '/milk/pricing',
   ALL_USERS: '/persons/users',

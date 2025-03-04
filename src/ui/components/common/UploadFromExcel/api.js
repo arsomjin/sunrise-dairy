@@ -12,11 +12,11 @@ import dayjs from 'dayjs';
 import { getFirestoreCollection } from 'services/firebase';
 import { createArrOfLength } from 'utils/functions/array';
 import { showAlert } from 'utils/functions/common';
-import numeral from 'numeral';
 import { Numb } from 'utils/functions/common';
 import { setFirestore } from 'services/firebase';
 import { deleteFirestore } from 'services/firebase';
 import { Dates } from 'constants/Dates';
+import { numer } from 'utils/functions/number';
 var utc = require('dayjs/plugin/utc');
 var timezone = require('dayjs/plugin/timezone');
 
@@ -425,7 +425,7 @@ export const onConfirm = async ({
           setProgress({
             show: true,
             percent,
-            text: `กำลังอัปโหลด ${i + 1} จาก ${numeral(records).format(
+            text: `กำลังอัปโหลด ${i + 1} จาก ${numer(records).format(
               '0,0'
             )} รายการ`,
             subtext:

@@ -24,7 +24,6 @@ import { getFirestoreDoc } from 'services/firebase';
 import { formatValuesBeforeLoad } from 'utils/functions/common';
 import { TableSummary } from 'ui/components/common/Table';
 import { useSelector } from 'react-redux';
-import { findMaxValueByKey } from 'utils/functions/number';
 
 const DailyMemberReport = ({ children, title, subtitle, ...props }) => {
   const { USER, profile } = useSelector((state) => state.user);
@@ -189,15 +188,9 @@ const DailyMemberReport = ({ children, title, subtitle, ...props }) => {
           };
         });
 
-        let maxUnitPrice = findMaxValueByKey(fArr, 'unitPrice');
-        let result = fArr.map((l) => ({
-          ...l,
-          belowStandard: Numb(l.unitPrice) < maxUnitPrice,
-        }));
-
-        // showLog({ arr, dArr, fArr, res });
+        showLog({ arr, dArr, fArr, res });
         setLoading(false);
-        setData(result);
+        setData(fArr);
       } catch (e) {
         showWarn(e);
         setLoading(false);
@@ -232,7 +225,7 @@ const DailyMemberReport = ({ children, title, subtitle, ...props }) => {
           ],
           memberId: isMember ? defaultMember.memberId : null,
         }}
-        onValuesChange={() => setData([])}
+        // onValuesChange={onValuesChange}
         onFinish={onSubmit}
         layout="vertical"
         scrollToFirstError
@@ -272,7 +265,7 @@ const DailyMemberReport = ({ children, title, subtitle, ...props }) => {
                       </Form.Item>
                     )}
                   </Col>
-                  <Col span={mobileOnly ? 32 : 8}>
+                  <Col span={mobileOnly ? 24 : 6}>
                     <Form.Item
                       name="dateRange"
                       label="วันที่"
@@ -282,12 +275,12 @@ const DailyMemberReport = ({ children, title, subtitle, ...props }) => {
                     </Form.Item>
                   </Col>
                   <Col span={mobileOnly ? 24 : 6}>
-                    {!mobileOnly && <span className="mx-2"></span>}
+                    <span className="mx-2"></span>
                     <Button
                       type="primary"
                       htmlType="submit"
                       icon={<CheckOutlined />}
-                      className={mobileOnly ? 'ml-2' : 'mt-2 ml-2'}
+                      className="mt-2"
                     >
                       {t('ตกลง').toUpperCase()}
                     </Button>

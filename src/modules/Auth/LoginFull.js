@@ -68,41 +68,50 @@ const LoginFull = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   }, [loading, navigate, show]);
 
   const onLogin = async (values) => {
+    if (loading) return;
+
+    const { emailOrPhone, password } = values;
+    const isMail = isEmail(emailOrPhone);
+    const isPhone = isMobileNumber(emailOrPhone);
+
     try {
-      if (loading) {
-        return;
-      }
-      const { emailOrPhone, password } = values;
-      const isMail = isEmail(emailOrPhone);
-      const isPhone = isMobileNumber(emailOrPhone);
-      isMail && loginUser(emailOrPhone, password);
-      if (isPhone) {
+      if (isMail) {
+        // Login with email and password.
+        await loginUser(emailOrPhone, password);
+      } else if (isPhone) {
+        // Initialize recaptcha if not already initialized.
         if (!window.recaptchaVerifier) {
           window.recaptchaVerifier = new RecaptchaVerifier(
-            'ra-dairy-recaptcha-container',
-            {
-              size: 'invisible',
-            },
+            'ra-dairy-recaptcha-container', // The ID of the container element.
+            { size: 'invisible' },
             auth
           );
-          window.recaptchaVerifier.render();
+          await window.recaptchaVerifier.render();
         }
+
         const appVerifier = window.recaptchaVerifier;
         const countryCode = '+66';
+        // Attempt phone sign-in.
         await loginUserWithPhone(
           `${countryCode}${emailOrPhone}`,
           appVerifier,
-          (cb) => {
-            cb &&
-              notificationController['success']({
-                message: `${t('ส่งรหัส OTP สำเร็จ')}`,
+          (callbackResult) => {
+            if (callbackResult) {
+              notificationController.success({
+                message: t('ส่งรหัส OTP สำเร็จ'),
               });
-            return setShow(cb);
+            }
+            setShow(callbackResult);
           }
         );
+      } else {
+        // If input is neither a valid email nor a phone number, notify the user.
+        notificationController.error({
+          message: t('รูปแบบอีเมลหรือเบอร์โทรไม่ถูกต้อง'),
+        });
       }
-    } catch (e) {
-      showWarn(e);
+    } catch (error) {
+      showWarn(error);
       setShow(false);
     }
   };

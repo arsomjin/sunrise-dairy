@@ -1,5 +1,5 @@
-import numeral from 'numeral';
 import { distinctArr } from 'utils/functions/array';
+import { numer } from 'utils/functions/number';
 
 export const getMilkColumns = (data) => [
   {
@@ -68,7 +68,7 @@ export const getMilkColumns = (data) => [
     className: 'text-primary',
     render: (text) => (
       <div className="text-right">
-        {text ? numeral(text).format('0,0.00') : '-'}
+        {text ? numer(text).format('0,0.00') : '-'}
       </div>
     ),
     sorter: (a, b) => a.weight - b.weight,

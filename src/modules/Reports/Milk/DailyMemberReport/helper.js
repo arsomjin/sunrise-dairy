@@ -1,42 +1,21 @@
 import classNames from 'classnames';
-import numeral from 'numeral';
-import { distinctArr } from 'utils/functions/array';
+import { showLog } from 'utils/functions/common';
 import { Numb } from 'utils/functions/common';
+import { numer } from 'utils/functions/number';
+import { isVerySmallNumber } from 'utils/functions/number';
 
-export const getDailySummaryReportColumns = (data) => [
+export const getDailyMemberReportColumns = (data) => [
   {
     title: '#',
     dataIndex: 'id',
     align: 'center',
   },
   {
-    title: 'ชื่อ - สกุล',
-    dataIndex: 'nameSurname',
-    width: 160,
-    filters: distinctArr(data, ['nameSurname']).map((it) => ({
-      value: it.nameSurname,
-      text: it.nameSurname,
-    })),
-    onFilter: (value, record) => record.nameSurname === value,
-  },
-  {
-    title: 'เบอร์',
-    dataIndex: 'memberId',
-    width: 80,
+    title: 'วันที่',
+    dataIndex: 'recordDate',
+    width: 110,
     align: 'center',
-    // className: 'text-warning',
-    filters: distinctArr(data, ['memberId']).map((it) => ({
-      value: it.memberId,
-      text: it.memberId,
-    })),
-    onFilter: (value, record) => record.memberId === value,
   },
-  // {
-  //   title: 'วันที่',
-  //   dataIndex: 'recordDate',
-  //   width: 130,
-  //   align: 'right',
-  // },
   // {
   //   title: 'ช่วงเวลา',
   //   dataIndex: 'period',
@@ -52,29 +31,29 @@ export const getDailySummaryReportColumns = (data) => [
   {
     title: 'เช้า (kg)',
     dataIndex: 'morningW',
-    width: 80,
+    width: 100,
     // className: 'text-primary',
     align: 'right',
-    render: (text) => <div> {numeral(text).format('0,0.00')}</div>,
+    render: (text) => <div> {numer(text).format('0,0.00')}</div>,
   },
   {
     title: 'เย็น (kg)',
     dataIndex: 'eveningW',
-    width: 80,
+    width: 100,
     // className: 'text-primary',
     align: 'right',
-    render: (text) => <div> {numeral(text).format('0,0.00')}</div>,
+    render: (text) => <div> {numer(text).format('0,0.00')}</div>,
   },
   {
     title: 'รวม (kg)',
     dataIndex: 'totalW',
-    width: 80,
+    width: 100,
     className: 'text-warning',
     align: 'right',
     render: (text, record) => {
       return (
         <div className={classNames('text-blue-400')}>
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -83,15 +62,16 @@ export const getDailySummaryReportColumns = (data) => [
     title: 'ราคา',
     dataIndex: 'unitPrice',
     width: 80,
-    render: (text) => {
+    render: (text, _) => {
+      showLog({ _ });
       return (
         <div
           className={classNames(
             'text-right',
-            Numb(text) < 0 ? 'text-warning' : ''
+            _.belowStandard ? 'text-warning' : ''
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -113,7 +93,7 @@ export const getDailySummaryReportColumns = (data) => [
               : ''
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -131,7 +111,7 @@ export const getDailySummaryReportColumns = (data) => [
             Numb(text) < 1 ? 'text-warning' : 'text-blue-400'
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },
@@ -149,7 +129,7 @@ export const getDailySummaryReportColumns = (data) => [
             Numb(text) < 0 ? 'text-warning' : 'text-success'
           )}
         >
-          {numeral(text).format('0,0.00')}
+          {numer(text).format('0,0.00')}
         </div>
       );
     },

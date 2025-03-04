@@ -1,6 +1,5 @@
-import numeral from 'numeral';
 import { distinctArr } from 'utils/functions/array';
-import { Numb } from 'utils/functions/common';
+import { numer } from 'utils/functions/number';
 
 export const getMilkQCColumns = (data) => [
   {
@@ -61,7 +60,7 @@ export const getMilkQCColumns = (data) => [
         render: (text, record) => {
           return (
             <div className="text-center">
-              {text ? numeral(text).format('0,0') : '0'}
+              {text ? numer(text).format('0,0') : '0'}
             </div>
           );
         },

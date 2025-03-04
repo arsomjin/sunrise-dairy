@@ -15,7 +15,7 @@ import { sortArr } from 'utils/functions/array';
 import { showLog } from 'utils/functions/common';
 import { Numb } from 'utils/functions/common';
 import { distinctArr } from 'utils/functions/array';
-import numeral from 'numeral';
+import { numer } from 'utils/functions/number';
 const Dashboard = ({ smallStats, chartData }) => {
   const { loading, setLoading } = useLoading();
   const [data, setData] = useState([]);
@@ -129,25 +129,25 @@ const Dashboard = ({ smallStats, chartData }) => {
       let chg2 = ((thisWeek - lastWeek) / lastWeek) * 100;
       let chg3 = ((tDay - yDay) / yDay) * 100;
 
-      smst[0].value = numeral(thisMonth / 1000).format('0,0.00');
+      smst[0].value = numer(thisMonth / 1000).format('0,0.00');
       smst[0].datasets[0].data = dailySum
         .slice(dailySum.length - 10, dailySum.length)
         .map((l) => l.weight);
-      smst[0].percentage = `${numeral(chg1).format('0.00')}%`;
+      smst[0].percentage = `${numer(chg1).format('0.00')}%`;
       smst[0].increase = chg1 > 0;
       smst[0].decrease = chg1 < 0;
-      smst[1].value = numeral(thisWeek / 1000).format('0,0.00');
+      smst[1].value = numer(thisWeek / 1000).format('0,0.00');
       smst[1].datasets[0].data = dailySum
         .slice(dailySum.length - 5, dailySum.length)
         .map((l) => l.weight);
-      smst[1].percentage = `${numeral(chg2).format('0.00')}%`;
+      smst[1].percentage = `${numer(chg2).format('0.00')}%`;
       smst[1].increase = chg2 > 0;
       smst[1].decrease = chg2 < 0;
-      smst[2].value = numeral(tDay).format('0,0.00');
+      smst[2].value = numer(tDay).format('0,0.00');
       smst[2].datasets[0].data = dailySum
         .slice(dailySum.length - 5, dailySum.length)
         .map((l) => l.weight);
-      smst[2].percentage = `${numeral(chg3).format('0.00')}%`;
+      smst[2].percentage = `${numer(chg3).format('0.00')}%`;
       smst[2].increase = chg3 > 0;
       smst[2].decrease = chg3 < 0;
       smst[3].value = mArr.length;

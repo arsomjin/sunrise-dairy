@@ -34,6 +34,7 @@ export const menuItems = (isPrivated, isDev, isMember) => {
         getItem('ผลการตรวจน้ำนมดิบประจำวัน', 'MILK_DAILY_REPORT'),
         getItem('ผลการตรวจคุณภาพน้ำนมดิบ', 'MILK_QC_REPORT'),
         getItem('สรุปประจำวัน', 'DAILY_SUMMARY_REPORT'),
+        getItem('สรุปตามช่วงเวลา', 'RANGE_SUMMARY_REPORT'),
         getItem('สรุปแยกรายสมาชิก', 'DAILY_MEMBER_REPORT'),
       ]),
       getItem('ราคาน้ำนมดิบ', 'PRICING', <TagOutlined />),
