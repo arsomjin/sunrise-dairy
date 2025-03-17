@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react';
 import DatePick from './DatePick';
 import RangePick from './RangePick';
+import { isMobile, isTablet } from 'react-device-detect';
 
 export default forwardRef(
   (
@@ -25,18 +26,18 @@ export default forwardRef(
     const mFormat = isMonth
       ? 'YYYY-MM'
       : isYear
-      ? 'YYYY'
-      : isTime
-      ? 'HH:mm'
-      : 'YYYY-MM-DD';
+        ? 'YYYY'
+        : isTime
+          ? 'HH:mm'
+          : 'YYYY-MM-DD';
 
     const dFormat = isMonth
       ? 'MM/YYYY'
       : isYear
-      ? 'YYYY'
-      : isTime
-      ? 'HH:mm'
-      : 'DD/MM/YYYY';
+        ? 'YYYY'
+        : isTime
+          ? 'HH:mm'
+          : 'DD/MM/YYYY';
 
     const mProps = {
       ...{
@@ -52,7 +53,7 @@ export default forwardRef(
     };
 
     return isRange ? (
-      <RangePick ref={ref} {...mProps} />
+      <RangePick ref={ref} {...mProps} allowClear inputReadOnly={isMobile || isTablet} />
     ) : (
       <DatePick ref={ref} disabledDate={disabledDate} {...mProps} />
     );

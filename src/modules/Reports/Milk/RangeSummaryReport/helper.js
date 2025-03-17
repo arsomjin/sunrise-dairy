@@ -16,12 +16,12 @@ export const getRangeSummaryReportColumns = (data) => [
   {
     title: 'ชื่อ - สกุล',
     dataIndex: 'nameSurname',
-    width: 160,
+    width: 170,
   },
   {
     title: 'เบอร์',
     dataIndex: 'memberId',
-    width: 80,
+    width: 100,
     align: 'center',
     sorter: {
       compare: (a, b) => a.memberId - b.memberId,
@@ -31,21 +31,21 @@ export const getRangeSummaryReportColumns = (data) => [
   {
     title: 'เช้า (kg)',
     dataIndex: 'morningW',
-    width: 80,
+    width: 100,
     align: 'right',
     render: (text) => <div>{numer(text).format('0,0.00')}</div>,
   },
   {
     title: 'เย็น (kg)',
     dataIndex: 'eveningW',
-    width: 80,
+    width: 100,
     align: 'right',
     render: (text) => <div>{numer(text).format('0,0.00')}</div>,
   },
   {
     title: 'รวม (kg)',
     dataIndex: 'totalW',
-    width: 80,
+    width: 100,
     className: 'text-warning',
     align: 'right',
     render: (text) => (
@@ -57,7 +57,7 @@ export const getRangeSummaryReportColumns = (data) => [
   {
     title: 'รวมเงิน',
     dataIndex: 'amount',
-    width: 100,
+    width: 120,
     render: (text) => (
       <div
         className={classNames(
@@ -121,11 +121,11 @@ export const fetchAndProcessData = async (dateRange, setLoading) => {
     // Convert Firestore collection to an array.
     const records = res
       ? Object.entries(res).map(([key, value], index) => ({
-          ...value,
-          _id: key,
-          id: index,
-          key: index,
-        }))
+        ...value,
+        _id: key,
+        id: index,
+        key: index,
+      }))
       : [];
 
     // Sort records by date.

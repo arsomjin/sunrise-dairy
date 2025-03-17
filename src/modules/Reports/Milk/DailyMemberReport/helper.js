@@ -89,8 +89,8 @@ export const getDailyMemberReportColumns = (data) => [
             Numb(text) < 0
               ? 'text-warning'
               : Numb(text) > 0
-              ? 'text-success'
-              : ''
+                ? 'text-success'
+                : ''
           )}
         >
           {numer(text).format('0,0.00')}
@@ -120,7 +120,7 @@ export const getDailyMemberReportColumns = (data) => [
   {
     title: 'รวมเงิน',
     dataIndex: 'amount',
-    width: 100,
+    width: 120,
     render: (text, record) => {
       return (
         <div

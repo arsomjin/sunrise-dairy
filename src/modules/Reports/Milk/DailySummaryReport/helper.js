@@ -53,7 +53,7 @@ export const getDailySummaryReportColumns = (data) => [
   {
     title: 'เช้า (kg)',
     dataIndex: 'morningW',
-    width: 80,
+    width: 100,
     // className: 'text-primary',
     align: 'right',
     render: (text) => <div> {numer(text).format('0,0.00')}</div>,
@@ -61,7 +61,7 @@ export const getDailySummaryReportColumns = (data) => [
   {
     title: 'เย็น (kg)',
     dataIndex: 'eveningW',
-    width: 80,
+    width: 100,
     // className: 'text-primary',
     align: 'right',
     render: (text) => <div> {numer(text).format('0,0.00')}</div>,
@@ -69,7 +69,7 @@ export const getDailySummaryReportColumns = (data) => [
   {
     title: 'รวม (kg)',
     dataIndex: 'totalW',
-    width: 80,
+    width: 100,
     className: 'text-warning',
     align: 'right',
     render: (text, record) => {
@@ -112,8 +112,8 @@ export const getDailySummaryReportColumns = (data) => [
             Numb(text) < 0
               ? 'text-warning'
               : Numb(text) > 0
-              ? 'text-success'
-              : ''
+                ? 'text-success'
+                : ''
           )}
         >
           {numer(text).format('0,0.00')}
@@ -143,7 +143,7 @@ export const getDailySummaryReportColumns = (data) => [
   {
     title: 'รวมเงิน',
     dataIndex: 'amount',
-    width: 100,
+    width: 120,
     render: (text, record) => {
       return (
         <div
