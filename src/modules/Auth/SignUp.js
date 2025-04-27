@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { routes } from 'navigation/routes';
 import { notificationController } from 'controllers/notificationController';
 import Load from 'ui/components/common/Load';
-import logo from 'assets/logo-new/roongaroon-dairy.png';
+import logo from 'assets/logo-new/roongaroon-dairy.jpg';
 import { sendVerifyEmail } from 'services/firebase';
 
 const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
@@ -102,7 +102,7 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
               {t('กรุณาลงชื่อเพื่อสร้างบัญชีของคุณ')}
             </p>
           </div>
-          <div>
+          <div className="auth-form-logo-wrapper">
             <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>

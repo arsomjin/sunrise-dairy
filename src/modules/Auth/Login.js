@@ -15,7 +15,7 @@ import { routes } from 'navigation/routes';
 import Firebase from 'services/firebase/api';
 import { showWarn } from 'utils/functions/common';
 import Load from 'ui/components/common/Load';
-import logo from 'assets/logo-new/roongaroon-dairy.png';
+import logo from 'assets/logo-new/roongaroon-dairy.jpg';
 
 const Login = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
   const { t } = useTranslation();
@@ -78,7 +78,7 @@ const Login = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
               {t('กรุณาลงชื่อเข้าใช้บัญชีของคุณ')}
             </p>
           </div>
-          <div>
+          <div className="auth-form-logo-wrapper">
             <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>

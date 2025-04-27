@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { useSelector } from 'react-redux';
-import logo from 'assets/logo-new/roongaroon-dairy.png';
+import logo from 'assets/logo-new/roongaroon-dairy.jpg';
 
 const Splash = forwardRef((props, ref) => {
   const { theme } = useSelector((state) => state.global);

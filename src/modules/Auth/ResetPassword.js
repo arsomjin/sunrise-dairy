@@ -19,7 +19,7 @@ import { routes } from 'navigation/routes';
 import { showSuccess } from 'utils/functions/common';
 import Load from 'ui/components/common/Load';
 import { showConfirm } from 'utils/functions/common';
-import logo from 'assets/logo-new/roongaroon-dairy.png';
+import logo from 'assets/logo-new/roongaroon-dairy.jpg';
 
 const ResetPassword = () => {
   const { t } = useTranslation();
@@ -101,7 +101,7 @@ const ResetPassword = () => {
               {t('กรุณาระบุอีเมลที่ใช้สมัครบัญชีของคุณ')}
             </p>
           </div>
-          <div>
+          <div className="auth-form-logo-wrapper">
             <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>

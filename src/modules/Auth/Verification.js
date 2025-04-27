@@ -25,7 +25,7 @@ import {
 import { sendVerifyEmail, firebaseSignOut } from 'services/firebase';
 import { currentUser } from 'services/firebase';
 import Load from 'ui/components/common/Load';
-import logo from 'assets/logo-new/roongaroon-dairy.png';
+import logo from 'assets/logo-new/roongaroon-dairy.jpg';
 
 const SEND_PERIOD = 300;
 
@@ -131,7 +131,7 @@ const Verification = ({ email }) => {
               {t('ระบบได้ส่งลิงค์ยืนยัน ไปยังอีเมลของคุณ')}
             </p>
           </div>
-          <div>
+          <div className="auth-form-logo-wrapper">
             <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>

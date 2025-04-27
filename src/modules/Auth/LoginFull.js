@@ -17,7 +17,7 @@ import { routes } from 'navigation/routes';
 import Firebase from 'services/firebase/api';
 import { showWarn } from 'utils/functions/common';
 import Load from 'ui/components/common/Load';
-import logo from 'assets/logo-new/roongaroon-dairy.png';
+import logo from 'assets/logo-new/roongaroon-dairy.jpg';
 import { isEmail } from 'utils/functions/validator';
 import { isMobileNumber } from 'utils/functions/validator';
 import PhoneInput from 'ui/elements/PhoneInput';
@@ -164,7 +164,7 @@ const LoginFull = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
               {t('กรุณาลงชื่อเข้าใช้บัญชีของคุณ')}
             </p>
           </div>
-          <div>
+          <div className="auth-form-logo-wrapper">
             <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>
@@ -394,7 +394,7 @@ const LoginFull = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
           <div className="relative mt-10 mb-2 h-px bg-gray-300">
             <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
               <span className="bg-background1 px-4 text-xs text-gray-500 uppercase">
-                {t('หรือ เข้าสู่ระบบด้วย')}
+                {t('หรือ')}
               </span>
             </div>
           </div>

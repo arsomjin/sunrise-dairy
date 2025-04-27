@@ -1,23 +1,36 @@
 import React from 'react';
 import BarTitle from 'ui/components/common/BarTitle';
 import { Socials } from 'utils/footers';
-import logo from 'assets/logo-new/roongaroon-dairy.png';
+import logo from 'assets/logo-new/roongaroon-dairy.jpg';
 
 const About = () => {
   return (
     <>
       <BarTitle>เกี่ยวกับเรา</BarTitle>
       <div className="h-full flex flex-col justify-center items-center px-4 pb-4">
-        <img
-          id="main-logo"
-          className="d-inline-block align-top mr-1"
+        <div
           style={{
-            maxWidth: '128px', // Reduced from 128px to match favicon size
-            marginBottom: '30px',
+            width: '128px',
+            height: '128px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '30px'
           }}
-          src={logo}
-          alt="Rungaroon Dairy"
-        />
+        >
+          <img
+            id="main-logo"
+            src={logo}
+            alt="Rungaroon Dairy"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
+            }}
+          />
+        </div>
         <h3 className="text-3xl font-extrabold text-black text-center">
           บริษัท รุ่งอรุณ แดรี่ จำกัด
         </h3>
