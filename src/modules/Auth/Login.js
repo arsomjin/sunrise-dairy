@@ -79,7 +79,7 @@ const Login = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
             </p>
           </div>
           <div>
-            <img src={logo} alt="" />
+            <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>
         <div className="mt-4">

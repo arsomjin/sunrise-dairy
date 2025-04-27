@@ -132,7 +132,7 @@ const Verification = ({ email }) => {
             </p>
           </div>
           <div>
-            <img src={logo} alt="" />
+            <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>
         <div className="mt-2">

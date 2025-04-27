@@ -1,39 +1,45 @@
 @import url(https://use.fontawesome.com/releases/v5.0.8/css/all.css);
 
 .form-wrapper {
+  padding: 2.5rem;
+  width: 31.75rem;
+  overflow: auto;
+  background-color: rgba(var(--background-rgb-color), 0.93);
+}
+
+@media only screen and (max-width: 575px) {
+  .form-wrapper {
+    padding: 2.5rem 1.25rem;
+    width: 20.75rem;
+    max-height: calc(100vh - 3rem);
+  }
+}
+
+@media only screen and (min-width: 576px) and (max-width: 991px) {
+  .form-wrapper {
     padding: 2.5rem;
     width: 31.75rem;
-    overflow: auto;
-    background-color: rgba(var(--background-rgb-color), 0.93);
+    max-height: calc(100vh - 3rem);
   }
-  
-  @media only screen and (max-width: 575px) {
-    .form-wrapper {
-      padding: 2.5rem 1.25rem;
-      width: 20.75rem;
-      max-height: calc(100vh - 3rem);
-    }
-  }
-  
-  @media only screen and (min-width: 576px) and (max-width: 991px) {
-    .form-wrapper {
-      padding: 2.5rem;
-      width: 31.75rem;
-      max-height: calc(100vh - 3rem);
-    }
-  }
-  
-  .login-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-  .select-container.ant-form-item-control-wrapper {
-    width: 100%;
-  }
+}
 
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.select-container.ant-form-item-control-wrapper {
+  width: 100%;
+}
+
+/* Logo size constraints for auth forms */
+.auth-form-logo {
+  width: 64px;
+  height: auto;
+  object-fit: contain;
+}

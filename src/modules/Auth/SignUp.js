@@ -46,9 +46,8 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
     const noUserName = !email || email === '';
     if (noPassword || noUserName) {
       notificationController.error({
-        message: `${capitalize(t('กรุณาป้อน'))} ${
-          noUserName ? `${t('อีเมล').toLowerCase()},` : ''
-        } ${noPassword ? t('รหัสผ่าน').toLowerCase() : ''}.`,
+        message: `${capitalize(t('กรุณาป้อน'))} ${noUserName ? `${t('อีเมล').toLowerCase()},` : ''
+          } ${noPassword ? t('รหัสผ่าน').toLowerCase() : ''}.`,
       });
       return;
     }
@@ -104,7 +103,7 @@ const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {
             </p>
           </div>
           <div>
-            <img src={logo} alt="" />
+            <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>
 

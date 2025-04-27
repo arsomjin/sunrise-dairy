@@ -80,7 +80,7 @@ const ResetPassword = () => {
     if (loading) {
       return;
     }
-    resetPassword(values.email, () => {});
+    resetPassword(values.email, () => { });
     setEmail(values.email);
   };
 
@@ -92,16 +92,17 @@ const ResetPassword = () => {
     <>
       <BarTitle>{t('รีเซ็ตรหัสผ่าน')}</BarTitle>
       <div className="flex flex-col z-10 bg-slate-100 shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-2xl w-full max-w-md">
-        <div className="mb-4">
-          <h3 className="font-semibold text-2xl text-gray-800">
-            {t('รีเซ็ตรหัสผ่าน')}
-          </h3>
-          <div className="mt-2">
-            <span className="text-sm text-slate-500">
-              {`${t(
-                'ระบบจะส่งลิงค์ชั่วคราวสำหรับเปลี่ยนรหัสผ่าน ไปยังอีเมลของคุณ'
-              )} \n (${t('อีเมลอาจอยู่ในกล่องจดหมายขยะ')})`}
-            </span>
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-2xl text-gray-800">
+              {t('รีเซ็ตรหัสผ่าน')}
+            </h3>
+            <p className="text-gray-500">
+              {t('กรุณาระบุอีเมลที่ใช้สมัครบัญชีของคุณ')}
+            </p>
+          </div>
+          <div>
+            <img src={logo} alt="" className="auth-form-logo" />
           </div>
         </div>
         <div className="mt-2">

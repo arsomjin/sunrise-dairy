@@ -12,9 +12,13 @@ const Splash = forwardRef((props, ref) => {
     >
       <img
         src={logo}
-        className="h-52 pointer-events-none"
+        className="pointer-events-none"
         alt="logo"
-        style={{ width: 'auto', objectFit: 'contain' }}
+        style={{
+          height: '120px',  // Adjusted from h-52 to a fixed height
+          width: 'auto',
+          objectFit: 'contain'
+        }}
       />
     </div>
   );

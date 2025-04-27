@@ -12,8 +12,7 @@ const About = () => {
           id="main-logo"
           className="d-inline-block align-top mr-1"
           style={{
-            maxWidth: '128px',
-            size: '122px',
+            maxWidth: '128px', // Reduced from 128px to match favicon size
             marginBottom: '30px',
           }}
           src={logo}
