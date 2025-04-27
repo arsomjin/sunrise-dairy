@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { routes } from 'navigation/routes';
 import { notificationController } from 'controllers/notificationController';
 import Load from 'ui/components/common/Load';
-import logo from 'assets/logo/favicon-96x96.png';
+import logo from 'assets/logo-new/roongaroon-dairy.png';
 import { sendVerifyEmail } from 'services/firebase';
 
 const SignUp = ({ hasGoogleSignIn, hasFacebookSignIn, hasAppleSignIn }) => {

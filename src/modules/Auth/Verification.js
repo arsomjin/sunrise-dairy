@@ -25,7 +25,7 @@ import {
 import { sendVerifyEmail, firebaseSignOut } from 'services/firebase';
 import { currentUser } from 'services/firebase';
 import Load from 'ui/components/common/Load';
-import logo from 'assets/logo/favicon-96x96.png';
+import logo from 'assets/logo-new/roongaroon-dairy.png';
 
 const SEND_PERIOD = 300;
 

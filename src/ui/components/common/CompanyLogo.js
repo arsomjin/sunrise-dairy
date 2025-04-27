@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from 'assets/logo/favicon-32x32.png';
+import logo from 'assets/logo-new/roongaroon-dairy.png';
 import { APP_NAME } from 'constants';
 
 const CompanyLogo = ({ logoOnly, size, ...props }) => {
@@ -11,7 +11,15 @@ const CompanyLogo = ({ logoOnly, size, ...props }) => {
       };
   return (
     <div style={{ ...mStyle, ...props.style }}>
-      <img src={logo} alt="" {...(size && { style: { height: size } })} />
+      <img 
+        src={logo} 
+        alt={APP_NAME} 
+        style={{ 
+          height: size || 32,
+          width: 'auto',
+          objectFit: 'contain'
+        }} 
+      />
       {!logoOnly && (
         <h5 className="text-md text-primary mt-3 ml-2 mr-2">
           {APP_NAME.toUpperCase()}

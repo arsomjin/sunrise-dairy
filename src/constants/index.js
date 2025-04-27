@@ -1,4 +1,4 @@
-export const APP_NAME = 'รุ่งอรุณ แดรี่';
+export const APP_NAME = 'รุ่งอรุณแดรี่';
 export const APP_NAME_ENG = 'RUNGAROON DAIRY COMPANY LIMITED';
 export const COMPANY_ADDRESS = {
   name: 'บริษัท รุ่งอรุณ แดรี่ จำกัด',

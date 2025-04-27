@@ -19,6 +19,7 @@ import { routes } from 'navigation/routes';
 import { showSuccess } from 'utils/functions/common';
 import Load from 'ui/components/common/Load';
 import { showConfirm } from 'utils/functions/common';
+import logo from 'assets/logo-new/roongaroon-dairy.png';
 
 const ResetPassword = () => {
   const { t } = useTranslation();

@@ -1,6 +1,7 @@
 import React from 'react';
 import BarTitle from 'ui/components/common/BarTitle';
 import { Socials } from 'utils/footers';
+import logo from 'assets/logo-new/roongaroon-dairy.png';
 
 const About = () => {
   return (
@@ -15,7 +16,7 @@ const About = () => {
             size: '122px',
             marginBottom: '30px',
           }}
-          src={require('assets/logo/logo192.png')}
+          src={logo}
           alt="Rungaroon Dairy"
         />
         <h3 className="text-3xl font-extrabold text-black text-center">

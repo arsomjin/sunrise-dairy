@@ -17,7 +17,7 @@ import { routes } from 'navigation/routes';
 import Firebase from 'services/firebase/api';
 import { showWarn } from 'utils/functions/common';
 import Load from 'ui/components/common/Load';
-import logo from 'assets/logo/favicon-96x96.png';
+import logo from 'assets/logo-new/roongaroon-dairy.png';
 import { isEmail } from 'utils/functions/validator';
 import { isMobileNumber } from 'utils/functions/validator';
 import PhoneInput from 'ui/elements/PhoneInput';

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { useSelector } from 'react-redux';
-import logo from '../../../logo.svg';
+import logo from 'assets/logo-new/roongaroon-dairy.png';
 
 const Splash = forwardRef((props, ref) => {
   const { theme } = useSelector((state) => state.global);
@@ -12,8 +12,9 @@ const Splash = forwardRef((props, ref) => {
     >
       <img
         src={logo}
-        className="h-52 logo-spin pointer-events-none"
+        className="h-52 pointer-events-none"
         alt="logo"
+        style={{ width: 'auto', objectFit: 'contain' }}
       />
     </div>
   );
